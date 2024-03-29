@@ -7,6 +7,8 @@ import { initialState } from './reducer';
 
 const selectGlobal = state => state.global || initialState;
 
+export const selectAppContainer = () => state => state.app;
+
 const selectRouter = state => state.router;
 
 const makeSelectCurrentUser = () =>
@@ -39,6 +41,11 @@ const makeSelectLocation = () =>
     routerState => routerState.location,
   );
 
+const selectUser = createSelector(
+  selectAppContainer(),
+  app => app.user,
+);
+
 export {
   selectGlobal,
   makeSelectCurrentUser,
@@ -46,4 +53,5 @@ export {
   makeSelectError,
   makeSelectRepos,
   makeSelectLocation,
+  selectUser,
 };
