@@ -1,3 +1,5 @@
+import { createAction } from 'redux-actions';
+import * as T from './constants';
 /*
  * App Actions
  *
@@ -15,7 +17,6 @@
  *    }
  */
 
-import { LOAD_REPOS, LOAD_REPOS_SUCCESS, LOAD_REPOS_ERROR } from './constants';
 
 /**
  * Load the repositories, this action starts the request saga
@@ -24,7 +25,7 @@ import { LOAD_REPOS, LOAD_REPOS_SUCCESS, LOAD_REPOS_ERROR } from './constants';
  */
 export function loadRepos() {
   return {
-    type: LOAD_REPOS,
+    type: T.LOAD_REPOS,
   };
 }
 
@@ -38,7 +39,7 @@ export function loadRepos() {
  */
 export function reposLoaded(repos, username) {
   return {
-    type: LOAD_REPOS_SUCCESS,
+    type: T.LOAD_REPOS_SUCCESS,
     repos,
     username,
   };
@@ -53,7 +54,19 @@ export function reposLoaded(repos, username) {
  */
 export function repoLoadingError(error) {
   return {
-    type: LOAD_REPOS_ERROR,
+    type: T.LOAD_REPOS_ERROR,
     error,
   };
 }
+
+export const storeUserAction = createAction(T.STORE_USER);
+export const loadDataSuccess = createAction(T.LOAD_DATA_SUCCESS);
+export const loadDataFailure = createAction(T.LOAD_DATA_FAILURE);
+export const user = createAction(T.USER);
+
+export default {
+  loadDataSuccess,
+  loadDataFailure,
+  storeUserAction,
+  user,
+};
