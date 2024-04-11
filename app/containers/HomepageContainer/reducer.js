@@ -8,6 +8,7 @@ export const initialState = {
 
 const homepageContainerReducer = handleActions(
   {
+    //todo: remove this example
     [T.SIGN_IN]: state => ({ ...state, isLoading: false }),
   },
   initialState,

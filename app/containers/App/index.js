@@ -13,18 +13,17 @@ import { Switch, Route } from 'react-router-dom';
 
 import LoginContainer from 'containers/LoginContainer/Loadable';
 import HomepageContainer from 'containers/HomepageContainer/Loadable';
-import FeaturePage from 'containers/FeaturePage/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
-
-import { RegisterContainer } from '../RegisterContainer';
+import RegistereContainer from 'containers/RegisterContainer/Loadable';
+import NavBar from 'components/NavBar';
 
 const AppWrapper = styled.div`
-  max-width: calc(768px + 16px * 2);
-  margin: 0 auto;
-  display: flex;
-  min-height: 100%;
-  padding: 0 16px;
-  flex-direction: column;
+  //max-width: calc(768px + 16px * 2);
+  //margin: 0 auto;
+  //display: flex;
+  //min-height: 100%;
+  //padding: 0 16px;
+  //flex-direction: column;
 `;
 
 export default function App() {
@@ -36,16 +35,17 @@ export default function App() {
       >
         <meta name="description" content="A React.js Boilerplate application" />
       </Helmet>
-      {/*<Header />*/}
+      <Route
+        render={({ location }) =>
+          !['/login', '/register'].includes(location.pathname) && <NavBar />
+        }
+      />
       <Switch>
-        <Route exact path="/" component={HomepageContainer} />
         <Route exact path="/login" component={LoginContainer} />
-        <Route path="/register" component={RegisterContainer} />
-        <Route path="/features" component={FeaturePage} />
+        <Route path="/register" component={RegistereContainer} />
+        <Route exact path="/" component={HomepageContainer} />
         <Route path="" component={NotFoundPage} />
       </Switch>
-      {/*<Footer />*/}
-      {/*<GlobalStyle />*/}
     </AppWrapper>
   );
 }

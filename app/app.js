@@ -7,6 +7,7 @@
 
 // Needed for redux-saga es6 generator support
 import '@babel/polyfill';
+import { ChakraProvider } from '@chakra-ui/react';
 
 // Import all the third party stuff
 import React from 'react';
@@ -48,9 +49,11 @@ const render = messages => {
   ReactDOM.render(
     <Provider store={store}>
       <LanguageProvider messages={messages}>
-        <ConnectedRouter history={history}>
-          <App />
-        </ConnectedRouter>
+        <ChakraProvider>
+          <ConnectedRouter history={history}>
+            <App />
+          </ConnectedRouter>
+        </ChakraProvider>
       </LanguageProvider>
     </Provider>,
     MOUNT_NODE,

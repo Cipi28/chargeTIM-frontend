@@ -1,119 +1,72 @@
-// todo: doo the page fron start
-
-import React, { useEffect, memo } from 'react';
-import PropTypes from 'prop-types';
-import { Helmet } from 'react-helmet';
-import { FormattedMessage } from 'react-intl';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { compose } from 'redux';
-import { createStructuredSelector } from 'reselect';
-import { useInjectReducer } from 'utils/injectReducer';
-import { useInjectSaga } from 'utils/injectSaga';
-import {
-  makeSelectRepos,
-  makeSelectLoading,
-  makeSelectError,
-} from 'containers/App/selectors';
-import H2 from 'components/H2';
-import ReposList from 'components/ReposList';
-// import AtPrefix from './AtPrefix';
-// import CenteredSection from './CenteredSection';
-// import Form from './Form';
-// import Input from './Input';
-// import Section from './Section';
-// import messages from './messages';
-// import { loadRepos } from '../App/actions';
-// import { changeUsername } from './actions';
-// import { makeSelectUsername } from './selectors';
-// import reducer from './reducer';
-// import saga from './saga';
+import { bindActionCreators, compose } from 'redux';
+import * as RegisterContainerActionCreators from './actions';
 
-const key = 'home';
+export function RegisterContainer(props) {
+  const { actions } = props;
 
-export function RegisterContainer({
-                                 // username,
-                                 // loading,
-                                 // error,
-                                 // repos,
-                                 // onSubmitForm,
-                                 // onChangeUsername,
-                               }) {
-  // useInjectReducer({ key, reducer });
-  // useInjectSaga({ key, saga });
-  //
-  // useEffect(() => {
-  //   // When initial state username is not null, submit the form to load repos
-  //   if (username && username.trim().length > 0) onSubmitForm();
-  // }, []);
-  //
-  // const reposListProps = {
-  //   loading,
-  //   error,
-  //   repos,
-  // };
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleRegister = () => {
+    actions.registerAction({ username, email, password });
+  };
 
   return (
     <div>
       <h1>Register</h1>
-      <form>
-        <label>
-          Name:
-          <input type="text" name="name" />
-        </label>
-        <br/>
-        <label>
-          Email:
-          <input type="text" name="email" />
-        </label>
-        <br/>
-        <label>
-          Password:
-          <input type="password" name="password" />
-        </label>
-        <br/>
-        <label>
-          Confirm Password:
-          <input type="password" name="confirmPassword" />
-        </label>
-        <br/>
-        <input type="submit" value="Submit"  />
-      </form>
+      <br />
+      <label>
+        Username:
+        <input
+          type="text"
+          name="email"
+          value={username}
+          onChange={e => setUsername(e.target.value)}
+        />
+      </label>
+      <br />
+      <label>
+        Email:
+        <input
+          type="text"
+          name="email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+        />
+      </label>
+      <br />
+      <label>
+        Password:
+        <input
+          type="password"
+          name="password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+        />
+      </label>
+      <br />
+      <button onClick={() => handleRegister()}>Submit</button>
     </div>
   );
 }
 
-// HomePage.propTypes = {
-//   loading: PropTypes.bool,
-//   error: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
-//   repos: PropTypes.oneOfType([PropTypes.array, PropTypes.bool]),
-//   onSubmitForm: PropTypes.func,
-//   username: PropTypes.string,
-//   onChangeUsername: PropTypes.func,
-// };
-//
-// const mapStateToProps = createStructuredSelector({
-//   repos: makeSelectRepos(),
-//   username: makeSelectUsername(),
-//   loading: makeSelectLoading(),
-//   error: makeSelectError(),
-// });
+const mapStateToProps = state => ({
+  isLoading: false,
+  // errorLoading: selectError(state),
+});
 
-// export function mapDispatchToProps(dispatch) {
-//   return {
-//     onChangeUsername: evt => dispatch(changeUsername(evt.target.value)),
-//     onSubmitForm: evt => {
-//       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
-//       dispatch(loadRepos());
-//     },
-//   };
-// }
-//
-// const withConnect = connect(
-//   mapStateToProps,
-//   mapDispatchToProps,
-// );
+const mapDispatchToProps = dispatch => ({
+  actions: bindActionCreators(RegisterContainerActionCreators, dispatch),
+});
 
-// export default compose(
-//   withConnect,
-//   memo,
-// )(LoginContainer);
+const ConnectedRegisterContainer = compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
+)(RegisterContainer);
+
+export default ConnectedRegisterContainer;

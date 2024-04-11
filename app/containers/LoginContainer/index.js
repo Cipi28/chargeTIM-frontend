@@ -15,6 +15,8 @@ export function LoginContainer(props) {
     actions.signInAction({ email, password });
   };
 
+  const ana = email ?? password;
+
   return (
     <div>
       <h1>Login</h1>
