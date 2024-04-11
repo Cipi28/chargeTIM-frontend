@@ -10,6 +10,7 @@ import globalReducer from 'containers/App/reducer';
 import languageProviderReducer from 'containers/LanguageProvider/reducer';
 import loginContainer from './containers/LoginContainer/reducer';
 import homepageContainer from './containers/HomepageContainer/reducer';
+import registerContainer from "./containers/RegisterContainer/reducer";
 
 /**
  * Merges the main reducer with the router state and dynamically injected reducers
@@ -22,6 +23,7 @@ export default function createReducer(injectedReducers = {}) {
     ...injectedReducers,
     loginContainer,
     homepageContainer,
+    registerContainer,
   });
 
   return rootReducer;

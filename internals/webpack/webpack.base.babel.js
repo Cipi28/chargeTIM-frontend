@@ -20,8 +20,8 @@ module.exports = options => ({
   module: {
     rules: [
       {
-        test: /\.jsx?$/, // Transform all .js and .jsx files required somewhere with Babel
-        exclude: /node_modules/,
+        test: /\.js$/, // Match files with .js or .jsx extensions
+        exclude: /node_modules/, // Exclude files in node_modules directory
         use: {
           loader: 'babel-loader',
           options: options.babelQuery,
