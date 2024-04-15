@@ -1,3 +1,4 @@
 
-//todo: remove this example
-export const SIGN_IN = 'SIGNINCONTAINER/SIGN_IN'; //todo: delite this as its only for fiiling
+export const GET_USER_CARS = 'HOMEPAGECONTAINER/GET_USER_CARS';
+export const GET_USER_CARS_SUCCESS = 'HOMEPAGECONTAINER/GET_USER_CARS_SUCCESS';
+export const GET_USER_CARS_FAILURE = 'HOMEPAGECONTAINER/GET_USER_CARS_FAILURE';

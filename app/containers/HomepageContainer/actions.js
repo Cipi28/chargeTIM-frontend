@@ -2,9 +2,13 @@ import { createAction } from 'redux-actions';
 import * as T from './constants';
 
 
-//todo: remove this example
-export const signInAction = createAction(T.SIGN_IN);
+export const getUserCars = createAction(T.GET_USER_CARS);
+export const getUserCarsSuccess = createAction(T.GET_USER_CARS_SUCCESS);
+export const getUserCarsFailure = createAction(T.GET_USER_CARS_FAILURE);
+
 
 export default {
-  signInAction,
+  getUserCars,
+  getUserCarsSuccess,
+  getUserCarsFailure,
 };

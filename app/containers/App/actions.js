@@ -64,9 +64,12 @@ export const loadDataSuccess = createAction(T.LOAD_DATA_SUCCESS);
 export const loadDataFailure = createAction(T.LOAD_DATA_FAILURE);
 export const user = createAction(T.USER);
 
+export const loadUserAction = createAction(T.LOAD_USER);
+
 export default {
   loadDataSuccess,
   loadDataFailure,
   storeUserAction,
   user,
+  loadUserAction,
 };

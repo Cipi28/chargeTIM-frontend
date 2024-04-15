@@ -7,11 +7,21 @@ import * as T from './constants';
 import * as A from './actions';
 import { post, get } from '../../api';
 
-function* hpmepage(action) {
+function* getUserCars(action) {
+  try {
+    const { userId } = action.payload;
+    const cars = yield call(get, `/cars/${userId}`);
+
+    if(cars.data && cars.data.length > 0) {
+      yield put(A.getUserCarsSuccess(cars.data));
+    }
+  } catch (e) {
+    yield put(A.getUserCarsFailure(e.message));
+  }
 }
 
 function* homepageContainerSaga() {
-  // yield takeLatest(T.SIGN_IN, hpmepage);
+  yield takeLatest(T.GET_USER_CARS, getUserCars);
 }
 
 export default homepageContainerSaga;

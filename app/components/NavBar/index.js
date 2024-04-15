@@ -1,13 +1,11 @@
 import React from 'react';
 import {
+  FiActivity,
   FiBell,
   FiChevronDown,
-  FiCompass,
-  FiHome,
-  FiMenu,
-  FiSettings,
-  FiStar,
-  FiTrendingUp,
+  FiCompass, FiHeart,
+  FiHome, FiLogOut,
+  FiMenu, FiUser,
 } from 'react-icons/fi';
 import {
   Avatar,
@@ -32,11 +30,12 @@ import {
 
 function NavBar() {
   const LinkItems = [
-    { name: 'Home', icon: FiHome },
-    { name: 'Trending', icon: FiTrendingUp },
-    { name: 'Explore', icon: FiCompass },
-    { name: 'Favourites', icon: FiStar },
-    { name: 'Settings', icon: FiSettings },
+    { name: 'My cars', icon: FiHome, href: '/' },
+    { name: 'Favourites', icon: FiHeart, href: '/favourites' },
+    { name: 'Map', icon: FiCompass, href: '/map' },
+    { name: 'Order History', icon: FiActivity, href: '/order-history' },
+    { name: 'Profile', icon: FiUser, href: '/profile' },
+    { name: 'Log Out', icon: FiLogOut, href: '/login' },
   ];
 
   const SidebarContent = ({ onClose, ...rest }) => (
@@ -52,12 +51,16 @@ function NavBar() {
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-          Logo
+          ChargeTIM
         </Text>
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       {LinkItems.map(link => (
-        <NavItem key={link.name} icon={link.icon}>
+        <NavItem
+          key={link.name}
+          icon={link.icon}
+          onClick={() => window.history.pushState({}, '', link.href)}
+        >
           {link.name}
         </NavItem>
       ))}
@@ -125,7 +128,7 @@ function NavBar() {
         fontFamily="monospace"
         fontWeight="bold"
       >
-        Logo
+        ChargeTIM
       </Text>
 
       <HStack spacing={{ base: '0', md: '6' }}>
@@ -153,9 +156,9 @@ function NavBar() {
                   spacing="1px"
                   ml="2"
                 >
-                  <Text fontSize="sm">Justina Clark</Text>
+                  <Text fontSize="sm">Manea Ciprian</Text>
                   <Text fontSize="xs" color="gray.600">
-                    Admin
+                    User
                   </Text>
                 </VStack>
                 <Box display={{ base: 'none', md: 'flex' }}>
@@ -167,9 +170,7 @@ function NavBar() {
               bg={useColorModeValue('white', 'gray.900')}
               borderColor={useColorModeValue('gray.200', 'gray.700')}
             >
-              <MenuItem>Profile</MenuItem>
-              <MenuItem>Settings</MenuItem>
-              <MenuItem>Billing</MenuItem>
+              <MenuItem >Profile</MenuItem>
               <MenuDivider />
               <MenuItem>Sign out</MenuItem>
             </MenuList>

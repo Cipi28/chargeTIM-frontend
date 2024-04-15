@@ -1,1 +1,51 @@
 
+.car-list-container {
+  display: flex;
+  justify-content: center!important;
+}
+
+.car-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start!important;
+  /*grid-gap: 50px;*/
+}
+
+.car-card {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.car-card:hover {
+  transform: scale(1.05);
+}
+
+.input-wrapper {
+  width: 100%;
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+  margin-left: 32%;
+  margin-right: 32%;
+  margin-bottom: 40px
+}
+
+@media screen and (max-width: 1200px) {
+  .input-wrapper {
+    margin-left: 20%;
+    margin-right: 20%;
+  }
+}
+
+@media screen and (max-width: 716px) {
+  .input-wrapper {
+    margin-left: 8%;
+    margin-right: 8%;
+  }
+}
+
+
+
+
