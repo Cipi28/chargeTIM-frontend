@@ -139,15 +139,15 @@ function checkCode(code, response) {
 export function request(url, options) {
 
   // todo: see if this is still needed
-  // const {
-  //   app: { user },
-  // } = store.getState();
-  // if (user && user.token) {
-  //   if (isUndefined(options.headers.Authorization)) {
-  //     // allow custom authorizations also
-  //     options.headers.Authorization = `Bearer ${user.token}`;
-  //   }
-  // }
+  const {
+    global: { user },
+  } = store.getState();
+  if (user && user.token) {
+    if (isUndefined(options.headers.Authorization)) {
+      // allow custom authorizations also
+      options.headers.Authorization = `Bearer ${user.token}`;
+    }
+  }
 
   return fetch(url, options)
     .then(checkStatus)
@@ -187,8 +187,8 @@ function getUrl(url, options) {
 }
 
 export function get(url, options = {}) {
+  console.log("VVVVVVV",options );
   return request(getUrl(url, options), {
-    mode: 'no-cors',
     code: options.code,
     headers: { ...defaultHeaders, ...(options.headers || {}) },
     ...options,

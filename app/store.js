@@ -12,8 +12,9 @@ import { connectedReduxRedirect } from 'redux-auth-wrapper/history4/redirect';
 import initialState from './state';
 import createReducer from './reducers';
 import sagas from './sagas';
-import locationHelperBuilder from 'redux-auth-wrapper/history4/locationHelper';
-import {find, isNil} from "lodash";
+import { LOCALSTORAGE_KEY } from './containers/App/constants';
+import { loadUserAction } from './containers/App/actions';
+import {validateUserData} from "./components/Utils";
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -61,21 +62,17 @@ sagas.map(sagaMiddleware.run);
 // if (validateAttempts(attempts)) {
 //   // todo: backend validation login throttle
 //   localStorage.removeItem(LOCALSTORAGE_ATTEMPTS_KEY);
-//
-//   const userRaw = localStorage.getItem(LOCALSTORAGE_KEY);
-//   if (userRaw) {
-//     const user = JSON.parse(userRaw);
-//     const userData = validateUserData(user);
-//     if (!userData) {
-//       localStorage.removeItem(LOCALSTORAGE_KEY);
-//     } else {
-//       store.dispatch(loadUserAction({ ...user, ...userData }));
-//       store.dispatch(loadLanguages());
-//     }
-//   }
-// } else {
-//   store.dispatch(setMaxAttemptsAction());
-// }
+
+const userRaw = localStorage.getItem(LOCALSTORAGE_KEY);
+if (userRaw) {
+  const user = JSON.parse(userRaw);
+  const userData = validateUserData(user);
+  if (!userData) {
+    localStorage.removeItem(LOCALSTORAGE_KEY);
+  } else {
+    store.dispatch(loadUserAction({ ...user, ...userData }));
+  }
+}
 
 // todo: see if this is needed
 
@@ -88,12 +85,13 @@ sagas.map(sagaMiddleware.run);
 //   return !!state.app.user;
 // };
 
-const redirectPathTo = (module, permission, state) => !state.app.user ? '/' : '/';
+const redirectPathTo = (state) =>
+  !state.global.user ? '/' : '/';
 
-const userIsAuthenticated = (module, permission) =>
+const userIsAuthenticated = () =>
   connectedReduxRedirect({
-    redirectPath: state => redirectPathTo(module, permission, state),
-    authenticatingSelector: state => state.app.user.isLoading,
+    redirectPath: state => redirectPathTo(state),
+    authenticatingSelector: state => () => {},
     // authenticatedSelector: state => isAllowed(module, permission, state),
     redirectAction: routerActions.replace,
     wrapperDisplayName: 'UserIsAuthenticated',
@@ -107,7 +105,7 @@ const userIsNotAuthenticated = connectedReduxRedirect({
   //   state.app.user?.role === '/',
   redirectPath: '/',
   allowRedirectBack: false,
-  authenticatedSelector: state => !state.app,
+  // authenticatedSelector: state => !state.app,
   // authenticatedSelector: state => !state.app.user,
   wrapperDisplayName: 'UserIsNotAuthenticated',
   redirectAction: routerActions.replace,

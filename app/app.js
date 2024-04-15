@@ -12,6 +12,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 // Import all the third party stuff
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 import FontFaceObserver from 'fontfaceobserver';
@@ -44,9 +45,10 @@ openSansObserver.load().then(() => {
 
 // Create redux store with history
 const MOUNT_NODE = document.getElementById('app');
+const root = createRoot(MOUNT_NODE);
 
 const render = messages => {
-  ReactDOM.render(
+  root.render(
     <Provider store={store}>
       <LanguageProvider messages={messages}>
         <ChakraProvider>
@@ -56,7 +58,6 @@ const render = messages => {
         </ChakraProvider>
       </LanguageProvider>
     </Provider>,
-    MOUNT_NODE,
   );
 };
 

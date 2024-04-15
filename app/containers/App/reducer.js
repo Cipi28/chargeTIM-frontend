@@ -104,6 +104,7 @@ const appReducer = handleActions(
 
       return { ...state, user: storeUser };
     },
+    [T.LOAD_USER]: (state, { payload }) => ({ ...state, user: payload }),
   },
   initialState,
 );

@@ -4,12 +4,15 @@ import * as T from './constants';
 export const initialState = {
   isLoading: false,
   error: null,
+  userCars: [],
 };
 
 const homepageContainerReducer = handleActions(
   {
-    //todo: remove this example
-    [T.SIGN_IN]: state => ({ ...state, isLoading: false }),
+    [T.GET_USER_CARS_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      userCars: payload,
+    }),
   },
   initialState,
 );
