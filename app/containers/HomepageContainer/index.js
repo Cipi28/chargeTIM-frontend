@@ -4,8 +4,8 @@ import { bindActionCreators, compose } from 'redux';
 import * as HomepageContainerActionCreators from './actions';
 import './index.css';
 import CarCard from "../../components/CarCard";
-import { Icon, Input } from '@chakra-ui/react'
-import { FiSearch } from "react-icons/fi";
+import { Icon, Input, Button, Flex } from '@chakra-ui/react'
+import { FiSearch, FiPlus } from "react-icons/fi";
 import * as S from './selectors';
 import {store} from '../../store';
 
@@ -54,7 +54,7 @@ export function HomepageContainer(props) {
           {/* Content for the first div */}
         </div>
       )}
-      <div className="car-list-container">
+      <div className="car-list-container" >
         <div className="car-list">
           <div className="input-wrapper"> {/* Added wrapper div for Input */}
             <Icon
@@ -80,6 +80,33 @@ export function HomepageContainer(props) {
                 );
               }}
             />
+            <Flex justifyContent="center" alignItems="center" ml={20}>
+              <Button
+                fontSize={'sm'}
+                rounded={'full'}
+                bg={'blue.400'}
+                color={'white'}
+                boxShadow={
+                  '0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)'
+                }
+                _hover={{
+                  bg: 'blue.500',
+                }}
+                _focus={{
+                  bg: 'blue.500',
+                }}>
+                Add Car
+                <Icon
+                  ml="2"
+                  title={'filterSurveyTags'}
+                  fontSize="20"
+                  _groupHover={{
+                    color: 'white',
+                  }}
+                  as={FiPlus}
+                />
+              </Button>
+            </Flex>
           </div>
           {carItems.map((car, index) => (
             <React.Fragment key={index}>

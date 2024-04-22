@@ -57,6 +57,7 @@ function NavBar() {
       </Flex>
       {LinkItems.map(link => (
         <NavItem
+          mt={4}
           key={link.name}
           icon={link.icon}
           onClick={() => window.history.pushState({}, '', link.href)}

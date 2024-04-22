@@ -13,6 +13,7 @@ import { Switch, Route } from 'react-router-dom';
 
 import LoginContainer from 'containers/LoginContainer/Loadable';
 import HomepageContainer from 'containers/HomepageContainer/Loadable';
+import MapContainer from 'containers/MapContainer/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import RegistereContainer from 'containers/RegisterContainer/Loadable';
 import NavBar from 'components/NavBar';
@@ -44,6 +45,7 @@ export default function App() {
         <Route exact path="/login" component={LoginContainer} />
         <Route path="/register" component={RegistereContainer} />
         <Route exact path="/" component={HomepageContainer} />
+        <Route exact path="/map" component={MapContainer} />
         <Route path="" component={NotFoundPage} />
       </Switch>
     </AppWrapper>

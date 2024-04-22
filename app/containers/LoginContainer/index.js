@@ -4,6 +4,12 @@ import { bindActionCreators, compose } from 'redux';
 import * as LoginContainerActionCreators from './actions';
 import { userIsNotAuthenticated } from '../../store';
 import { selectIsLoading, selectError } from './selectors';
+import {
+  Flex,
+  Heading,
+  Input,
+  Button,
+} from '@chakra-ui/react';
 
 export function LoginContainer(props) {
   const { actions } = props;
@@ -15,34 +21,41 @@ export function LoginContainer(props) {
     actions.signInAction({ email, password });
   };
 
-  const ana = email ?? password;
-
   return (
-    <div>
-      <h1>Login</h1>
-      <br />
-      <label>
-        Email:
-        <input
-          type="text"
-          name="email"
+    <Flex h="100vh" alignItems="center" justifyContent="center">
+      <Flex
+        flexDirection="column"
+        bg="gray.100"
+        p={12}
+        borderRadius={8}
+        boxShadow="lg"
+      >
+        <Heading mb={6} ml={14}>Log In</Heading>
+        <Input
+          placeholder="email"
+          type="email"
+          variant="filled"
           value={email}
           onChange={e => setEmail(e.target.value)}
+          mb={3}
         />
-      </label>
-      <br />
-      <label>
-        Password:
-        <input
+        <Input
+          placeholder="password"
           type="password"
-          name="password"
+          variant="filled"
           value={password}
           onChange={e => setPassword(e.target.value)}
+          mb={6}
         />
-      </label>
-      <br />
-      <button onClick={() => handleLogin()}>Submit</button>
-    </div>
+        <Button
+          colorScheme="teal"
+          mb={8}
+          onClick={() => handleLogin()}
+        >
+          Log In
+        </Button>
+      </Flex>
+    </Flex>
   );
 }
 
@@ -62,4 +75,5 @@ const ConnectedLoginContainer = compose(
   ),
 )(LoginContainer);
 
-export default userIsNotAuthenticated(ConnectedLoginContainer);
+// export default userIsNotAuthenticated(ConnectedLoginContainer);
+export default ConnectedLoginContainer;
