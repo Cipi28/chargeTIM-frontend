@@ -67,9 +67,23 @@ export default function CarCard({key, plate, plugType, image, name}) {
           <Heading fontSize={'2xl'} fontFamily={'body'} fontWeight={500}>
             {name}
           </Heading>
+          <div>
           <Button
-            w={'full'}
             mt={4}
+            mr={3}
+            bg={useColorModeValue('#FFFFFF', 'gray.900')}
+            variant='outline'
+            rounded={'md'}
+            _hover={{
+              transform: 'translateY(-2px)',
+              boxShadow: 'lg',
+            }}>
+            Details
+          </Button>
+          <Button
+            // w={'full'}
+            mt={4}
+            ml={3}
             bg={useColorModeValue('#151f21', 'gray.900')}
             color={'white'}
             rounded={'md'}
@@ -79,6 +93,7 @@ export default function CarCard({key, plate, plugType, image, name}) {
             }}>
             Book now
           </Button>
+          </div>
         </Stack>
       </Box>
     </Center>
