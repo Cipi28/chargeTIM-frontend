@@ -8,12 +8,14 @@ import { Icon, Input, Button, Flex } from '@chakra-ui/react'
 import { FiSearch, FiPlus } from "react-icons/fi";
 import * as S from './selectors';
 import {store} from '../../store';
+import AddCarModal from "../../components/AddCarModal";
 
 export function HomepageContainer(props) {
   const { actions, isLoading } = props;
   const [showFirstDiv, setShowFirstDiv] = useState(window.innerWidth >= 768);
   const [carItems, setCarItems] = useState([]);
   const [searchField, setSearchField] = useState('');
+  const [isAddCarOpen, setIsAddCarOpen] = useState(false);
 
   useEffect(() => {
     const {
@@ -46,6 +48,7 @@ export function HomepageContainer(props) {
     const file = new File([byteArray], filename, { type: contentType });
     return URL.createObjectURL(file);
   }
+  console.log("wwwwwwwwww", isAddCarOpen);
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center' }}> {/* Added justifyContent: 'center' */}
@@ -94,7 +97,9 @@ export function HomepageContainer(props) {
                 }}
                 _focus={{
                   bg: 'blue.500',
-                }}>
+                }}
+                onClick={() => setIsAddCarOpen(true)}
+              >
                 Add Car
                 <Icon
                   ml="2"
@@ -117,6 +122,7 @@ export function HomepageContainer(props) {
           ))}
         </div>
       </div>
+      <AddCarModal isOpen2={isAddCarOpen}/>
     </div>
   );
 }
