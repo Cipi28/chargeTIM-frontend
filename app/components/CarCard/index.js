@@ -12,7 +12,7 @@ import {
   Button
 } from '@chakra-ui/react'
 
-export default function CarCard({key, plate, plugType, image, name}) {
+export default function CarCard({index, plate, plugType, image, name, openCarDetails}) {
   return (
     <Center py={12}>
       <Box
@@ -77,7 +77,9 @@ export default function CarCard({key, plate, plugType, image, name}) {
             _hover={{
               transform: 'translateY(-2px)',
               boxShadow: 'lg',
-            }}>
+            }}
+            onClick={() => {openCarDetails(index)}}
+          >
             Details
           </Button>
           <Button

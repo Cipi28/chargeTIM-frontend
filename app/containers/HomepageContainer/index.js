@@ -3,23 +3,31 @@ import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
 import * as HomepageContainerActionCreators from './actions';
 import './index.css';
-import CarCard from "../../components/CarCard";
-import { Icon, Input, Button, Flex } from '@chakra-ui/react'
-import { FiSearch, FiPlus } from "react-icons/fi";
+import CarCard from '../../components/CarCard';
+import { Icon, Input, Button, Flex, useDisclosure } from '@chakra-ui/react';
+import { FiSearch, FiPlus } from 'react-icons/fi';
 import * as S from './selectors';
-import {store} from '../../store';
+import { store } from '../../store';
+import AddCarModal from '../../components/AddCarModal';
+import CarDetailsModal from '../../components/CarDetailsModal';
 
 export function HomepageContainer(props) {
   const { actions, isLoading } = props;
   const [showFirstDiv, setShowFirstDiv] = useState(window.innerWidth >= 768);
   const [carItems, setCarItems] = useState([]);
   const [searchField, setSearchField] = useState('');
+  const [userInfo, setUserInfo] = useState(null);
+  const [isOpenEdit, setIsOpenEdit] = useState(false);
+  const [selectedCar, setSelectedCar] = useState(null);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     const {
       global: { user },
     } = store.getState();
-    if ( user && user.user ) {
+    if (user && user.user) {
+      setUserInfo(user.user);
       actions.getUserCars({ userId: user.user.id });
     }
 
@@ -47,16 +55,45 @@ export function HomepageContainer(props) {
     return URL.createObjectURL(file);
   }
 
+  const addCar = (name, plate, plug_type, image) => {
+    actions.addCar({ userId: userInfo.id, name, plate, plug_type, image });
+    actions.getUserCars({ userId: userInfo.id });
+  };
+
+  const openCarDetails = carIndex => {
+    setSelectedCar(carItems[carIndex]);
+    setIsOpenEdit(true);
+  };
+
+  const deleteCar = carId => {
+    actions.deleteCar({ id: carId });
+    setCarItems(carItems.filter(car => car.id !== carId));
+    actions.getUserCars({ userId: userInfo.id });
+    setIsOpenEdit(false);
+  };
+
+  const updateCar = (id, name, plate, plug_type, image) => {
+    actions.updateCar({ id, name, plate, plug_type, image });
+    actions.getUserCars({ userId: userInfo.id });
+    setIsOpenEdit(false);
+  };
+
   return (
-    <div style={{ display: 'flex', justifyContent: 'center' }}> {/* Added justifyContent: 'center' */}
+    <div style={{ display: 'flex', justifyContent: 'center' }}>
+      {' '}
+      {/* Added justifyContent: 'center' */}
       {showFirstDiv && (
-        <div style={{ width: '240px', flexShrink: 0 }}> {/* Added flexShrink: 0 */}
+        <div style={{ width: '240px', flexShrink: 0 }}>
+          {' '}
+          {/* Added flexShrink: 0 */}
           {/* Content for the first div */}
         </div>
       )}
-      <div className="car-list-container" >
+      <div className="car-list-container">
         <div className="car-list">
-          <div className="input-wrapper"> {/* Added wrapper div for Input */}
+          <div className="input-wrapper">
+            {' '}
+            {/* Added wrapper div for Input */}
             <Icon
               mr="4"
               mt="1"
@@ -68,9 +105,9 @@ export function HomepageContainer(props) {
             />
             <Input
               className="search-bar"
-              placeholder='Search Car'
+              placeholder="Search Car"
               value={searchField}
-              onChange={(event) => {
+              onChange={event => {
                 const searchTerm = event.target.value.toLowerCase();
                 setSearchField(event.target.value);
                 setCarItems(
@@ -82,23 +119,23 @@ export function HomepageContainer(props) {
             />
             <Flex justifyContent="center" alignItems="center" ml={20}>
               <Button
-                fontSize={'sm'}
-                rounded={'full'}
-                bg={'blue.400'}
-                color={'white'}
-                boxShadow={
-                  '0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)'
-                }
+                fontSize="sm"
+                rounded="full"
+                bg="blue.400"
+                color="white"
+                boxShadow="0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
                 _hover={{
                   bg: 'blue.500',
                 }}
                 _focus={{
                   bg: 'blue.500',
-                }}>
+                }}
+                onClick={onOpen}
+              >
                 Add Car
                 <Icon
                   ml="2"
-                  title={'filterSurveyTags'}
+                  title="filterSurveyTags"
                   fontSize="20"
                   _groupHover={{
                     color: 'white',
@@ -111,12 +148,31 @@ export function HomepageContainer(props) {
           {carItems.map((car, index) => (
             <React.Fragment key={index}>
               <div className="car-card">
-                <CarCard plate={car.plate} plugType={car.plug_type} image={base64toFile(car.image, 'carImage', 'jpeg')} name={car.name} />
+                <CarCard
+                  index={index}
+                  plate={car.plate}
+                  plugType={car.plug_type}
+                  image={base64toFile(car.image, 'carImage', 'jpeg')}
+                  name={car.name}
+                  openCarDetails={openCarDetails}
+                />
               </div>
             </React.Fragment>
           ))}
         </div>
       </div>
+      <AddCarModal
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onClose={onClose}
+        addCar={addCar}
+      />
+      {(isOpenEdit && selectedCar) && <CarDetailsModal
+        setIsOpenEdit={setIsOpenEdit}
+        selectedCar={selectedCar}
+          deleteCar={deleteCar}
+        updateCar={updateCar}
+      />}
     </div>
   );
 }
