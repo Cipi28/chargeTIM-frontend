@@ -1,18 +1,15 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
-
-import { ERROR_DATA } from '../App/constants';
-import { storeUserAction } from '../App/actions';
+import {call, put, takeLatest} from 'redux-saga/effects';
 
 import * as T from './constants';
 import * as A from './actions';
-import { post, get, del, patch } from '../../api';
+import {post, get, del, patch} from '../../api';
 
 function* getUserCars(action) {
   try {
-    const { userId } = action.payload;
+    const {userId} = action.payload;
     const cars = yield call(get, `/cars/${userId}`);
 
-    if(cars.data && cars.data.length > 0) {
+    if (cars.data && cars.data.length > 0) {
       yield put(A.getUserCarsSuccess(cars.data));
     }
   } catch (e) {
@@ -22,7 +19,7 @@ function* getUserCars(action) {
 
 function* addCar(action) {
   try {
-    const { userId, name, plate, plug_type, image } = action.payload;
+    const {userId, name, plate, plug_type, image} = action.payload;
     const car = yield call(post, `/cars/create/${userId}`, {
       name,
       plate,
@@ -36,7 +33,7 @@ function* addCar(action) {
 
 function* deleteCar(action) {
   try {
-    const { id } = action.payload;
+    const {id} = action.payload;
     const car = yield call(del, `/cars/delete/${id}`);
   } catch (e) {
     yield put(A.getUserCarsFailure(e.message));
@@ -45,7 +42,7 @@ function* deleteCar(action) {
 
 function* updateCar(action) {
   try {
-    const { id, name, plate, plug_type, image } = action.payload;
+    const {id, name, plate, plug_type, image} = action.payload;
     const car = yield call(patch, `/cars/update/${id}`, {
       name,
       plate,
