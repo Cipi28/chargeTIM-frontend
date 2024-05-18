@@ -1,18 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators, compose } from 'redux';
+import React, {useEffect, useState} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators, compose} from 'redux';
 import * as HomepageContainerActionCreators from './actions';
 import './index.css';
 import CarCard from '../../components/CarCard';
-import { Icon, Input, Button, Flex, useDisclosure } from '@chakra-ui/react';
-import { FiSearch, FiPlus } from 'react-icons/fi';
+import {Icon, Input, Button, Flex, useDisclosure, Heading} from '@chakra-ui/react';
+import {FiSearch, FiPlus} from 'react-icons/fi';
 import * as S from './selectors';
-import { store } from '../../store';
+import {store} from '../../store';
 import AddCarModal from '../../components/AddCarModal';
 import CarDetailsModal from '../../components/CarDetailsModal';
+import {isEmpty} from "lodash";
+
 
 export function HomepageContainer(props) {
-  const { actions, isLoading } = props;
+  const {actions} = props;
   const [showFirstDiv, setShowFirstDiv] = useState(window.innerWidth >= 768);
   const [carItems, setCarItems] = useState([]);
   const [searchField, setSearchField] = useState('');
@@ -20,15 +22,15 @@ export function HomepageContainer(props) {
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   const [selectedCar, setSelectedCar] = useState(null);
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {isOpen, onOpen, onClose} = useDisclosure();
 
   useEffect(() => {
     const {
-      global: { user },
+      global: {user},
     } = store.getState();
     if (user && user.user) {
       setUserInfo(user.user);
-      actions.getUserCars({ userId: user.user.id });
+      actions.getUserCars({userId: user.user.id});
     }
 
     const handleResize = () => {
@@ -51,13 +53,13 @@ export function HomepageContainer(props) {
       byteNumbers[i] = byteCharacters.charCodeAt(i);
     }
     const byteArray = new Uint8Array(byteNumbers);
-    const file = new File([byteArray], filename, { type: contentType });
+    const file = new File([byteArray], filename, {type: contentType});
     return URL.createObjectURL(file);
   }
 
   const addCar = (name, plate, plug_type, image) => {
-    actions.addCar({ userId: userInfo.id, name, plate, plug_type, image });
-    actions.getUserCars({ userId: userInfo.id });
+    actions.addCar({userId: userInfo.id, name, plate, plug_type, image});
+    actions.getUserCars({userId: userInfo.id});
   };
 
   const openCarDetails = carIndex => {
@@ -66,24 +68,24 @@ export function HomepageContainer(props) {
   };
 
   const deleteCar = carId => {
-    actions.deleteCar({ id: carId });
+    actions.deleteCar({id: carId});
     setCarItems(carItems.filter(car => car.id !== carId));
-    actions.getUserCars({ userId: userInfo.id });
+    actions.getUserCars({userId: userInfo.id});
     setIsOpenEdit(false);
   };
 
   const updateCar = (id, name, plate, plug_type, image) => {
-    actions.updateCar({ id, name, plate, plug_type, image });
-    actions.getUserCars({ userId: userInfo.id });
+    actions.updateCar({id, name, plate, plug_type, image});
+    actions.getUserCars({userId: userInfo.id});
     setIsOpenEdit(false);
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center' }}>
+    <div style={{display: 'flex', justifyContent: 'center'}}>
       {' '}
       {/* Added justifyContent: 'center' */}
       {showFirstDiv && (
-        <div style={{ width: '240px', flexShrink: 0 }}>
+        <div style={{width: '240px', flexShrink: 0}}>
           {' '}
           {/* Added flexShrink: 0 */}
           {/* Content for the first div */}
@@ -159,6 +161,14 @@ export function HomepageContainer(props) {
               </div>
             </React.Fragment>
           ))}
+          {
+            isEmpty(carItems) &&
+            <div>
+              <Heading fontSize={'3xl'} fontFamily={'body'} fontWeight={500} align="center">
+                No cars added yet
+              </Heading>
+            </div>
+          }
         </div>
       </div>
       <AddCarModal
@@ -170,7 +180,7 @@ export function HomepageContainer(props) {
       {(isOpenEdit && selectedCar) && <CarDetailsModal
         setIsOpenEdit={setIsOpenEdit}
         selectedCar={selectedCar}
-          deleteCar={deleteCar}
+        deleteCar={deleteCar}
         updateCar={updateCar}
       />}
     </div>
