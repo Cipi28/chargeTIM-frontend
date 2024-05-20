@@ -3,9 +3,9 @@
 import loginContainer from './containers/LoginContainer/saga';
 import homepageContainer from './containers/HomepageContainer/saga';
 import registerContainer from './containers/RegisterContainer/saga';
-import favouriteStationsContainer from "./containers/FavouriteStationsContainer/saga";
-import stationDetailsContainer from "./containers/StationDetailsContainer/saga";
-import mapContainer from "./containers/MapContainer/saga";
+import favouriteStationsContainer from './containers/FavouriteStationsContainer/saga';
+import stationDetailsContainer from './containers/StationDetailsContainer/saga';
+import mapContainer from './containers/MapContainer/saga';
 
 const sagas = [
   /* GENERATOR: Compile all of your sagas */
