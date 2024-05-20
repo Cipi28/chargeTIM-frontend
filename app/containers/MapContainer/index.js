@@ -1,8 +1,8 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators, compose} from 'redux';
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators, compose } from 'redux';
 import {
   APIProvider,
   InfoWindow,
@@ -18,19 +18,49 @@ import {
   Text,
 } from '@chakra-ui/react';
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
-import {store} from '../../store';
+import StarOutlinedIcon from '@mui/icons-material/StarOutlined';
+import { store } from '../../store';
 import * as MapContainerActionCreators from './actions';
 import GlobalAPI from '../../components/Utils/GlobalAPI';
+import * as S from './selectors';
 
 export function MapContainer(props) {
   const [showFirstDiv, setShowFirstDiv] = useState(window.innerWidth >= 768);
-  const position = {lat: 45.76132373523073, lng: 21.24378051068943};
-  const [publicStations, setPublicStations] = useState([]);
+  const position = { lat: 45.76132373523073, lng: 21.24378051068943 };
+  const [stationsInfo, setStationsInfo] = useState([]);
   const [isOpenUserLocation, setIsOpenUserLocation] = useState(false);
   const [activeMarkerStation, setActiveMarkerStation] = useState(null);
   const [selectedStation, setSelectedStation] = useState(null);
+  const [favoriteStations, setFavoriteStations] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
 
-  const {actions} = props;
+  const { actions } = props;
+
+  useEffect(() => {
+    const {
+      global: { user },
+    } = store.getState();
+
+    GetNearByPlaces();
+
+    if (user && user.user) {
+      setCurrentUser(user.user);
+      actions.getUserFavouriteStations({ userId: user.user.id });
+    }
+
+    const handleResize = () => {
+      setShowFirstDiv(window.innerWidth >= 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    setStationsInfo(props.stations);
+    setFavoriteStations(props.favouriteStations);
+  }, [props.stations, props.favouriteStations]);
 
   const GetNearByPlaces = () => {
     const data = {
@@ -47,47 +77,44 @@ export function MapContainer(props) {
       },
     };
     GlobalAPI.NewNearByPlace(data).then(response => {
-      setPublicStations(response.data.places);
+      const stationsForSave = getNecessaryProps(response.data.places);
+      actions.saveStations({ stations: stationsForSave });
     });
   };
 
-  useEffect(() => {
-    GetNearByPlaces();
-
-    // todo: add location change in order to get new places every time the user moves
-  }, []);
-
-  useEffect(() => {
-    const {
-      global: {user},
-    } = store.getState();
-
-    if (user && user.user) {
-      actions.getUserFavouritePublicStations({userId: user.user.id});
-    }
-
-    const handleResize = () => {
-      setShowFirstDiv(window.innerWidth >= 768);
-    };
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+  const getNecessaryProps = places => {
+    return places.map(place => {
+      return {
+        publicId: place.id,
+        name: place.displayName.text,
+        adress: place.formattedAddress,
+        latitude: parseFloat(place.location.latitude),
+        longitude: parseFloat(place.location.longitude),
+        image: 'image logic to be added',
+        phone: place.nationalPhoneNumber || null,
+        openPeriods: 'encode currentOpeningHours.periods' || null,
+        mapsURL: place.googleMapsUri || null,
+        websiteURL: place.websiteUri || null,
+        rating: place.rating || null,
+        raitingCount: place.userRatingCount || null,
+        isPublic: true,
+      };
+    });
+  };
 
   const splitStringByComma = inputString =>
     inputString.split(',').map(element => element.trim());
 
   return (
-    <div style={{display: 'flex'}}>
+    <div style={{ display: 'flex' }}>
       {showFirstDiv && (
-        <div style={{width: '240px', flexShrink: 0}}>
+        <div style={{ width: '240px', flexShrink: 0 }}>
           {' '}
           {/* Added flexShrink: 0 */}
           {/* Content for the first div */}
         </div>
       )}
-      <div style={{height: '80vh', width: '100%', marginTop: '60px'}}>
+      <div style={{ height: '80vh', width: '100%', marginTop: '60px' }}>
         <APIProvider apiKey="AIzaSyBfvGY364KnQcQCaKGVGtRJHRIELiZfC7o">
           <Map
             defaultCenter={position}
@@ -108,20 +135,20 @@ export function MapContainer(props) {
                 </div>
               </InfoWindow>
             )}
-            {publicStations.map((station, index) => {
+            {stationsInfo.map((station, index) => {
               const position = {
-                lat: station.location?.latitude,
-                lng: station.location?.longitude,
+                lat: station.latitude,
+                lng: station.longitude,
               };
 
-              const adressLines = splitStringByComma(station.formattedAddress);
+              const adressLines = splitStringByComma(station.adress);
               return (
                 <>
                   <AdvancedMarker
                     key={index}
                     position={position}
-                    title={station.displayName.text}
-                    lable={station.displayName.text}
+                    title={station.name}
+                    lable={station.name}
                     onClick={() => {
                       setSelectedStation(station);
                       setActiveMarkerStation(index);
@@ -156,7 +183,7 @@ export function MapContainer(props) {
                               fontFamily="body"
                               fontWeight={500}
                             >
-                              {station.displayName.text}
+                              {station.name}
                             </Heading>
                             {adressLines.map((line, index) => (
                               <Text fontSize="sm" mt={2}>
@@ -182,12 +209,40 @@ export function MapContainer(props) {
                           >
                             <div align="right">
                               {/* <StarIcon sx={{color: "#ff8833"}} fontSize="large"/> */}
-                              <StarBorderOutlinedIcon
-                                sx={{color: '#ff8833'}}
-                                fontSize="large"
-                                lable="add to favourites"
-                                onClick={() => console.log('adfavourites')}
-                              />
+                              {favoriteStations.includes(station.id) ? (
+                                <StarOutlinedIcon
+                                  sx={{ color: '#ff8833' }}
+                                  fontSize="large"
+                                  lable="remove from favourites"
+                                  onClick={() => {
+                                    actions.deleteFavouriteStation({
+                                      userId: currentUser.id,
+                                      stationId: station.id,
+                                    });
+                                    setFavoriteStations(
+                                      favoriteStations.filter(
+                                        item => item !== station.id,
+                                      ),
+                                    );
+                                  }}
+                                />
+                              ) : (
+                                <StarBorderOutlinedIcon
+                                  sx={{ color: '#ff8833' }}
+                                  fontSize="large"
+                                  lable="add to favourites"
+                                  onClick={() => {
+                                    actions.addStationToFavourites({
+                                      userId: currentUser.id,
+                                      stationId: station.id,
+                                    });
+                                    setFavoriteStations([
+                                      ...favoriteStations,
+                                      station.id,
+                                    ]);
+                                  }}
+                                />
+                              )}
                             </div>
                           </GridItem>
                           <GridItem
@@ -239,8 +294,9 @@ export function MapContainer(props) {
 }
 
 const mapStateToProps = state => ({
-  // isLoading: selectIsLoading(state),
   // errorLoading: selectError(state),
+  stations: S.selectStations(state),
+  favouriteStations: S.selectFavouriteStations(state),
 });
 
 const mapDispatchToProps = dispatch => ({
