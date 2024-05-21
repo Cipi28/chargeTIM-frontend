@@ -14,7 +14,7 @@ const mapContainerReducer = handleActions(
       ...state,
       stations: action.payload,
     }),
-    [T.GET_FAVOURITE_STATIONS_SUCCESS]: (state, action) => ({
+    [T.GET_FAVOURITE_STATIONS_INDEX_SUCCESS]: (state, action) => ({
       ...state,
       favouriteStations: action.payload,
     }),

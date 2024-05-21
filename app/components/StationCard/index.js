@@ -1,6 +1,6 @@
 import React from 'react';
 
-'use client'
+('use client');
 
 import {
   Box,
@@ -10,11 +10,18 @@ import {
   Text,
   Stack,
   Image,
-  Button
-} from '@chakra-ui/react'
+  Button,
+} from '@chakra-ui/react';
 
-export default function StationCard({index, name, adress, image, openStationDetails}) {
-  const defaultImage = 'https://static.vecteezy.com/system/resources/previews/006/683/801/non_2x/electric-vehicle-sport-car-charging-parking-at-the-charger-station-with-a-plug-in-cable-charging-in-the-top-side-of-car-to-battery-isolated-flat-illustration-on-white-background-vector.jpg'
+export default function StationCard({
+  index,
+  name,
+  adress,
+  image,
+  openStationDetails,
+}) {
+  const defaultImage =
+    'https://static.vecteezy.com/system/resources/previews/006/683/801/non_2x/electric-vehicle-sport-car-charging-parking-at-the-charger-station-with-a-plug-in-cable-charging-in-the-top-side-of-car-to-battery-isolated-flat-illustration-on-white-background-vector.jpg';
 
   return (
     <Center py={12}>
@@ -50,18 +57,24 @@ export default function StationCard({index, name, adress, image, openStationDeta
             _after: {
               filter: 'blur(20px)',
             },
-          }}>
+          }}
+        >
           <Image
             rounded={'lg'}
             height={230}
             width={282}
             objectFit={'cover'}
-            src={defaultImage}
+            src={image ? image : defaultImage}
             alt="#"
           />
         </Box>
         <Stack pt={7} align={'center'}>
-          <Text color={'gray.500'} fontSize={'sm'} textTransform={'uppercase'} textAlign="center">
+          <Text
+            color={'gray.500'}
+            fontSize={'sm'}
+            textTransform={'uppercase'}
+            textAlign="center"
+          >
             Adress: {adress}
           </Text>
           <Heading fontSize={'2xl'} fontFamily={'body'} fontWeight={500}>
@@ -72,7 +85,7 @@ export default function StationCard({index, name, adress, image, openStationDeta
               mt={4}
               mr={3}
               bg={useColorModeValue('#FFFFFF', 'gray.900')}
-              variant='outline'
+              variant="outline"
               rounded={'md'}
               _hover={{
                 transform: 'translateY(-2px)',
@@ -80,7 +93,9 @@ export default function StationCard({index, name, adress, image, openStationDeta
               }}
               as="a"
               href="#"
-              onClick={() => window.history.pushState({}, '', `/station/${index}`)}
+              onClick={() =>
+                window.history.pushState({}, '', `/station/${index}`)
+              }
             >
               Details
             </Button>
@@ -93,12 +108,13 @@ export default function StationCard({index, name, adress, image, openStationDeta
               _hover={{
                 transform: 'translateY(-2px)',
                 boxShadow: 'lg',
-              }}>
+              }}
+            >
               Book now
             </Button>
           </div>
         </Stack>
       </Box>
     </Center>
-  )
+  );
 }

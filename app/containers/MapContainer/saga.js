@@ -15,15 +15,18 @@ function* saveStations(action) {
   }
 }
 
-function* getFavouriteStations(action) {
+function* getFavouriteStationsIndex(action) {
   try {
     const { userId } = action.payload;
-    const favouriteStations = yield call(get, `/favourite-stations/${userId}`);
+    const favouriteStations = yield call(
+      get,
+      `/favourite-stations/index/${userId}`,
+    );
     if (favouriteStations) {
-      yield put(A.getUserFavouriteStationsSuccess(favouriteStations.data));
+      yield put(A.getUserFavouriteStationsIndexSuccess(favouriteStations.data));
     }
   } catch (e) {
-    yield put(A.getUserFavouriteStationsFailure(e.message));
+    yield put(A.getUserFavouriteStationsIndexFailure(e.message));
   }
 }
 
@@ -59,7 +62,7 @@ function* deleteFavStation(action) {
 
 function* mapContainerSaga() {
   yield takeLatest(T.SAVE_STATIONS, saveStations);
-  yield takeLatest(T.GET_FAVOURITE_STATIONS, getFavouriteStations);
+  yield takeLatest(T.GET_FAVOURITE_STATIONS_INDEX, getFavouriteStationsIndex);
   yield takeLatest(T.ADD_STATION_TO_FAVOURITES, addStationToFav);
   yield takeLatest(T.DELETE_FAVOURITE_STATION, deleteFavStation);
 }

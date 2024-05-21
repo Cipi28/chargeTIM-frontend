@@ -45,7 +45,7 @@ export function MapContainer(props) {
 
     if (user && user.user) {
       setCurrentUser(user.user);
-      actions.getUserFavouriteStations({ userId: user.user.id });
+      actions.getUserFavouriteStationsIndex({ userId: user.user.id });
     }
 
     const handleResize = () => {
@@ -90,7 +90,13 @@ export function MapContainer(props) {
         adress: place.formattedAddress,
         latitude: parseFloat(place.location.latitude),
         longitude: parseFloat(place.location.longitude),
-        image: 'image logic to be added',
+        image: place?.photos
+          ? 'https://places.googleapis.com/v1/' +
+            place?.photos[0]?.name +
+            '/media?key=' +
+            'AIzaSyBfvGY364KnQcQCaKGVGtRJHRIELiZfC7o' +
+            '&maxHeightPx=800&maxWidthPx=1200'
+          : null,
         phone: place.nationalPhoneNumber || null,
         openPeriods: 'encode currentOpeningHours.periods' || null,
         mapsURL: place.googleMapsUri || null,
