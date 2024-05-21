@@ -1,8 +1,9 @@
-import {createSelector} from 'reselect';
+import { createSelector } from 'reselect';
 
-export const selectFavouriteStationsContainer = () => state => state.favouriteStationsContainer;
+export const selectFavouriteStationsContainer = () => state =>
+  state.favouriteStationsContainer;
 
-// export const selectUserCars = createSelector(
-//   selectHomepageContainer(),
-//   homepageContainer => homepageContainer.userCars,
-// );
+export const selectFavouriteStations = createSelector(
+  selectFavouriteStationsContainer(),
+  favouriteStationsContainer => favouriteStationsContainer.favouriteStations,
+);
