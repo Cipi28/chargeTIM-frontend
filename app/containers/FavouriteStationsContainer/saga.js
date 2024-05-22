@@ -16,8 +16,34 @@ function* getFavouriteStations(action) {
   }
 }
 
+function* getPlugs(action) {
+  try {
+    const { stationId } = action.payload;
+    const plugs = yield call(get, `/plugs/${stationId}`);
+    if (plugs) {
+      yield put(A.getPlugsSuccessAction(plugs.data));
+    }
+  } catch (e) {
+    yield put(A.getPlugsFailureAction(e.message));
+  }
+}
+
+function* getReviews(action) {
+  try {
+    const { stationId } = action.payload;
+    const plugs = yield call(get, `/reviews/${stationId}`);
+    if (plugs) {
+      yield put(A.getReviewsSuccessAction(plugs.data));
+    }
+  } catch (e) {
+    yield put(A.getReviewsFailureAction(e.message));
+  }
+}
+
 function* favouriteStationsContainerSaga() {
   yield takeLatest(T.GET_FAVOURITE_STATIONS, getFavouriteStations);
+  yield takeLatest(T.GET_PLUGS, getPlugs);
+  yield takeLatest(T.GET_REVIEWS, getReviews);
 }
 
 export default favouriteStationsContainerSaga;

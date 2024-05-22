@@ -15,6 +15,7 @@ import {
 
 export default function StationCard({
   index,
+  id,
   name,
   adress,
   image,
@@ -91,11 +92,7 @@ export default function StationCard({
                 transform: 'translateY(-2px)',
                 boxShadow: 'lg',
               }}
-              as="a"
-              href="#"
-              onClick={() =>
-                window.history.pushState({}, '', `/station/${index}`)
-              }
+              onClick={() => openStationDetails(index)}
             >
               Details
             </Button>
