@@ -6,6 +6,8 @@ export const initialState = {
   error: null,
   stations: [],
   favouriteStations: [],
+  selectedPlugs: [],
+  selectedReviews: [],
 };
 
 const mapContainerReducer = handleActions(
@@ -25,6 +27,14 @@ const mapContainerReducer = handleActions(
     [T.DELETE_FAVOURITE_STATION_SUCCESS]: (state, action) => ({
       ...state,
       favouriteStations: action.payload,
+    }),
+    [T.GET_PLUGS_SUCCESS]: (state, action) => ({
+      ...state,
+      selectedPlugs: action.payload,
+    }),
+    [T.GET_REVIEWS_SUCCESS]: (state, action) => ({
+      ...state,
+      selectedReviews: action.payload,
     }),
   },
   initialState,

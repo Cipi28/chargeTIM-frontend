@@ -8,6 +8,8 @@ import { FiSearch } from 'react-icons/fi';
 import { store } from '../../store';
 import StationCard from '../../components/StationCard';
 import { selectFavouriteStations } from './selectors';
+import StationDetailsModal from '../../components/StationDetailsModal';
+import * as S from './selectors';
 
 export function FavouriteStationsContainer(props) {
   const { actions } = props;
@@ -15,8 +17,10 @@ export function FavouriteStationsContainer(props) {
   const [stations, setStations] = useState([]);
   const [searchField, setSearchField] = useState('');
   const [userInfo, setUserInfo] = useState(null);
-  const [isOpenStationDetails, setIsOpenStationDetails] = useState(false);
+  const [openStationDetailsModal, setOpenStationDetailsModal] = useState(false);
   const [selectedStation, setSelectedStation] = useState(null);
+  const [currentPlugs, setCurrentPlugs] = useState([]);
+  const [currentReviews, setCurrentReviews] = useState([]);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -40,11 +44,16 @@ export function FavouriteStationsContainer(props) {
 
   useEffect(() => {
     setStations(props.favouriteStations);
-  }, [props.favouriteStations]);
+    setCurrentPlugs(props.selectedPlugs);
+    setCurrentReviews(props.selectedReviews);
+  }, [props.favouriteStations, props.selectedPlugs, props.selectedReviews]);
 
   const openStationDetails = index => {
+    console.log('HEREEEE');
+    actions.getPlugsAction({ stationId: stations[index].id });
+    actions.getReviewsAction({ stationId: stations[index].id });
+    setOpenStationDetailsModal(stations[index]);
     setSelectedStation(stations[index]);
-    setIsOpenStationDetails(true);
   };
 
   return (
@@ -92,6 +101,7 @@ export function FavouriteStationsContainer(props) {
               <div className="car-card">
                 <StationCard
                   index={index}
+                  id={station.id}
                   adress={station.adress}
                   image={station.image}
                   name={station.name}
@@ -103,10 +113,14 @@ export function FavouriteStationsContainer(props) {
           ))}
         </div>
       </div>
-      {/*{(isOpenStationDetails && selectedStation) && <BookingDetailsModal*/}
-      {/*  setIsOpenStationDetails={setIsOpenStationDetails}*/}
-      {/*  station={selectedStation}*/}
-      {/*/>}*/}
+      {openStationDetailsModal && selectedStation && (
+        <StationDetailsModal
+          setOpenStationDetailsModal={setOpenStationDetailsModal}
+          station={selectedStation}
+          plugs={currentPlugs}
+          reviews={currentReviews}
+        />
+      )}
     </div>
   );
 }
@@ -114,6 +128,8 @@ export function FavouriteStationsContainer(props) {
 const mapStateToProps = state => ({
   isLoading: false,
   favouriteStations: selectFavouriteStations(state),
+  selectedPlugs: S.selectSelectedPlugs(state),
+  selectedReviews: S.selectSelectedReviews(state),
 });
 
 const mapDispatchToProps = dispatch => ({

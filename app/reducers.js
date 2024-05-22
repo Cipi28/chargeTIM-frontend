@@ -12,7 +12,6 @@ import loginContainer from './containers/LoginContainer/reducer';
 import homepageContainer from './containers/HomepageContainer/reducer';
 import registerContainer from './containers/RegisterContainer/reducer';
 import favouriteStationsContainer from './containers/FavouriteStationsContainer/reducer';
-import stationDetailsContainer from './containers/StationDetailsContainer/reducer';
 import mapContainer from './containers/MapContainer/reducer';
 
 /**
@@ -28,7 +27,6 @@ export default function createReducer(injectedReducers = {}) {
     homepageContainer,
     registerContainer,
     favouriteStationsContainer,
-    stationDetailsContainer,
     mapContainer,
   });
 

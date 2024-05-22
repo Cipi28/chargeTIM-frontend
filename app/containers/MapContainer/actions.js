@@ -30,6 +30,18 @@ export const deleteFavouriteStationFailure = createAction(
   T.DELETE_FAVOURITE_STATION_FAILURE,
 );
 
+// export const savePlugAction = createAction(T.SAVE_PLUG);
+// export const savePlugSuccessAction = createAction(T.SAVE_PLUG_SUCCESS);
+// export const savePlugFailureAction = createAction(T.SAVE_PLUG_FAILURE);
+
+export const getPlugsAction = createAction(T.GET_PLUGS);
+export const getPlugsSuccessAction = createAction(T.GET_PLUGS_SUCCESS);
+export const getPlugsFailureAction = createAction(T.GET_PLUGS_FAILURE);
+
+export const getReviewsAction = createAction(T.GET_REVIEWS);
+export const getReviewsSuccessAction = createAction(T.GET_REVIEWS_SUCCESS);
+export const getReviewsFailureAction = createAction(T.GET_REVIEWS_FAILURE);
+
 export default {
   getUserFavouriteStationsIndex,
   getUserFavouriteStationsIndexSuccess,
@@ -43,4 +55,13 @@ export default {
   deleteFavouriteStation,
   deleteFavouriteStationSuccess,
   deleteFavouriteStationFailure,
+  // savePlugAction,
+  // savePlugSuccessAction,
+  // savePlugFailureAction,
+  getPlugsAction,
+  getPlugsSuccessAction,
+  getPlugsFailureAction,
+  getReviewsAction,
+  getReviewsSuccessAction,
+  getReviewsFailureAction,
 };

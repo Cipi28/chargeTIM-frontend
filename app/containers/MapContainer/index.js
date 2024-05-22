@@ -23,6 +23,9 @@ import { store } from '../../store';
 import * as MapContainerActionCreators from './actions';
 import GlobalAPI from '../../components/Utils/GlobalAPI';
 import * as S from './selectors';
+import StationDetailsModal from '../../components/StationDetailsModal';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 export function MapContainer(props) {
   const [showFirstDiv, setShowFirstDiv] = useState(window.innerWidth >= 768);
@@ -30,9 +33,12 @@ export function MapContainer(props) {
   const [stationsInfo, setStationsInfo] = useState([]);
   const [isOpenUserLocation, setIsOpenUserLocation] = useState(false);
   const [activeMarkerStation, setActiveMarkerStation] = useState(null);
-  const [selectedStation, setSelectedStation] = useState(null);
   const [favoriteStations, setFavoriteStations] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
+  const [openStationDetailsModal, setOpenStationDetailsModal] = useState(false);
+  const [selectedStation, setSelectedStation] = useState(null);
+  const [currentPlugs, setCurrentPlugs] = useState([]);
+  const [currentReviews, setCurrentReviews] = useState([]);
 
   const { actions } = props;
 
@@ -60,7 +66,14 @@ export function MapContainer(props) {
   useEffect(() => {
     setStationsInfo(props.stations);
     setFavoriteStations(props.favouriteStations);
-  }, [props.stations, props.favouriteStations]);
+    setCurrentPlugs(props.selectedPlugs);
+    setCurrentReviews(props.selectedReviews);
+  }, [
+    props.stations,
+    props.favouriteStations,
+    props.selectedPlugs,
+    props.selectedReviews,
+  ]);
 
   const GetNearByPlaces = () => {
     const data = {
@@ -84,6 +97,33 @@ export function MapContainer(props) {
 
   const getNecessaryProps = places => {
     return places.map(place => {
+      const plugs = place.evChargeOptions
+        ? place.evChargeOptions.connectorAggregation.map(plug => {
+            return {
+              type: plug.type,
+              kwPower: plug.maxChargeRateKw,
+              count: plug.count,
+              costPerKw: 0.8,
+              status: 1, //1 - available, 2 - occupied, 0 - out of order
+            };
+          })
+        : [];
+
+      const reviews = place.reviews
+        ? place.reviews.map(review => {
+            return {
+              comment: review.text?.text || null,
+              rating: review.rating,
+              reviewerName: review.authorAttribution.displayName,
+              reviewerPhoto: review.authorAttribution.photoUri,
+              isPublicReviewer: true,
+              publishedAt: review.publishTime,
+              stationId: place.id,
+              userId: null,
+            };
+          })
+        : [];
+
       return {
         publicId: place.id,
         name: place.displayName.text,
@@ -98,12 +138,16 @@ export function MapContainer(props) {
             '&maxHeightPx=800&maxWidthPx=1200'
           : null,
         phone: place.nationalPhoneNumber || null,
-        openPeriods: 'encode currentOpeningHours.periods' || null,
+        openPeriods: place.currentOpeningHours?.periods
+          ? JSON.stringify(place.currentOpeningHours?.periods)
+          : null,
         mapsURL: place.googleMapsUri || null,
         websiteURL: place.websiteUri || null,
         rating: place.rating || null,
-        raitingCount: place.userRatingCount || null,
+        ratingCount: place.userRatingCount || null,
         isPublic: true,
+        plugs: plugs,
+        reviews: reviews,
       };
     });
   };
@@ -158,6 +202,8 @@ export function MapContainer(props) {
                     onClick={() => {
                       setSelectedStation(station);
                       setActiveMarkerStation(index);
+                      actions.getPlugsAction({ stationId: station.id });
+                      actions.getReviewsAction({ stationId: station.id });
                     }}
                   >
                     <img
@@ -196,18 +242,6 @@ export function MapContainer(props) {
                                 {line}
                               </Text>
                             ))}
-                            {/* {station.currentOpeningHours.weekdayDescriptions && ( */}
-                            {/*  <> */}
-                            {/*    <Text fontSize={'sm'} mt={2}> */}
-                            {/*      Orar: */}
-                            {/*    </Text> */}
-                            {/*    {station.currentOpeningHours.weekdayDescriptions.map((day, index) => ( */}
-                            {/*      <Text fontSize={'sm'} key={index}> */}
-                            {/*        {day} */}
-                            {/*      </Text> */}
-                            {/*    ))} */}
-                            {/*  </> */}
-                            {/* )} */}
                           </GridItem>
                           <GridItem
                             colSpan={1}
@@ -216,8 +250,8 @@ export function MapContainer(props) {
                             <div align="right">
                               {/* <StarIcon sx={{color: "#ff8833"}} fontSize="large"/> */}
                               {favoriteStations.includes(station.id) ? (
-                                <StarOutlinedIcon
-                                  sx={{ color: '#ff8833' }}
+                                <FavoriteIcon
+                                  sx={{ color: '#E1306C' }}
                                   fontSize="large"
                                   lable="remove from favourites"
                                   onClick={() => {
@@ -233,8 +267,8 @@ export function MapContainer(props) {
                                   }}
                                 />
                               ) : (
-                                <StarBorderOutlinedIcon
-                                  sx={{ color: '#ff8833' }}
+                                <FavoriteBorderIcon
+                                  sx={{ color: '#E1306C' }}
                                   fontSize="large"
                                   lable="add to favourites"
                                   onClick={() => {
@@ -268,6 +302,10 @@ export function MapContainer(props) {
                                 }}
                                 as="a"
                                 href="#"
+                                onClick={() => {
+                                  setOpenStationDetailsModal(true);
+                                  setSelectedStation(station);
+                                }}
                               >
                                 Details
                               </Button>
@@ -295,6 +333,14 @@ export function MapContainer(props) {
           </Map>
         </APIProvider>
       </div>
+      {openStationDetailsModal && selectedStation && (
+        <StationDetailsModal
+          setOpenStationDetailsModal={setOpenStationDetailsModal}
+          station={selectedStation}
+          plugs={currentPlugs}
+          reviews={currentReviews}
+        />
+      )}
     </div>
   );
 }
@@ -303,6 +349,8 @@ const mapStateToProps = state => ({
   // errorLoading: selectError(state),
   stations: S.selectStations(state),
   favouriteStations: S.selectFavouriteStations(state),
+  selectedPlugs: S.selectSelectedPlugs(state),
+  selectedReviews: S.selectSelectedReviews(state),
 });
 
 const mapDispatchToProps = dispatch => ({
