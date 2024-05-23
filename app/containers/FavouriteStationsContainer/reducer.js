@@ -7,6 +7,7 @@ export const initialState = {
   favouriteStations: [],
   selectedPlugs: [],
   selectedReviews: [],
+  userCars: [],
 };
 
 const favouriteStationsContainerReducer = handleActions(
@@ -22,6 +23,10 @@ const favouriteStationsContainerReducer = handleActions(
     [T.GET_REVIEWS_SUCCESS]: (state, action) => ({
       ...state,
       selectedReviews: action.payload,
+    }),
+    [T.GET_USER_CARS_SUCCESS]: (state, action) => ({
+      ...state,
+      userCars: action.payload,
     }),
   },
   initialState,

@@ -10,6 +10,7 @@ import StationCard from '../../components/StationCard';
 import { selectFavouriteStations } from './selectors';
 import StationDetailsModal from '../../components/StationDetailsModal';
 import * as S from './selectors';
+import BookingDetailsModal from '../../components/BookingDetailsModal';
 
 export function FavouriteStationsContainer(props) {
   const { actions } = props;
@@ -21,6 +22,8 @@ export function FavouriteStationsContainer(props) {
   const [selectedStation, setSelectedStation] = useState(null);
   const [currentPlugs, setCurrentPlugs] = useState([]);
   const [currentReviews, setCurrentReviews] = useState([]);
+  const [currentCars, setCurrentCars] = useState([]);
+  const [openBookingModal, setOpenBookingModal] = useState(false);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -46,14 +49,31 @@ export function FavouriteStationsContainer(props) {
     setStations(props.favouriteStations);
     setCurrentPlugs(props.selectedPlugs);
     setCurrentReviews(props.selectedReviews);
-  }, [props.favouriteStations, props.selectedPlugs, props.selectedReviews]);
+    setCurrentCars(props.userCars);
+  }, [
+    props.favouriteStations,
+    props.selectedPlugs,
+    props.selectedReviews,
+    props.userCars,
+  ]);
 
   const openStationDetails = index => {
-    console.log('HEREEEE');
     actions.getPlugsAction({ stationId: stations[index].id });
     actions.getReviewsAction({ stationId: stations[index].id });
     setOpenStationDetailsModal(stations[index]);
     setSelectedStation(stations[index]);
+  };
+
+  const handleBookButton = () => {
+    actions.getUserCarsAction({
+      userId: userInfo.id,
+    });
+    actions.getPlugsAction({
+      stationId: selectedStation.id,
+    });
+    actions.getPlugsAction({ stationId: selectedStation.id });
+    setSelectedStation(selectedStation);
+    setOpenBookingModal(true);
   };
 
   return (
@@ -106,7 +126,7 @@ export function FavouriteStationsContainer(props) {
                   image={station.image}
                   name={station.name}
                   openStationDetails={openStationDetails}
-                  // goToStationDetails={goToStationDetails}
+                  handleBookButton={handleBookButton}
                 />
               </div>
             </React.Fragment>
@@ -119,6 +139,17 @@ export function FavouriteStationsContainer(props) {
           station={selectedStation}
           plugs={currentPlugs}
           reviews={currentReviews}
+          handleBookButton={handleBookButton}
+        />
+      )}
+      {openBookingModal && (
+        <BookingDetailsModal
+          setOpenBookingModal={setOpenBookingModal}
+          cars={currentCars}
+          stations={stations}
+          plugs={currentPlugs}
+          saveBookingAction={actions.saveBookingAction}
+          selectedStation={selectedStation}
         />
       )}
     </div>
@@ -130,6 +161,7 @@ const mapStateToProps = state => ({
   favouriteStations: selectFavouriteStations(state),
   selectedPlugs: S.selectSelectedPlugs(state),
   selectedReviews: S.selectSelectedReviews(state),
+  userCars: S.selectUserCars(state),
 });
 
 const mapDispatchToProps = dispatch => ({

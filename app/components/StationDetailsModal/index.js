@@ -31,31 +31,14 @@ import { TbRecharging } from 'react-icons/tb';
 import { isEmpty } from 'lodash';
 import StarRatingDisplay from '../StarRatingDisplay';
 import moment from 'moment';
-
-const formatConnectorType = connectorType => {
-  // Remove the prefix "EV_CONNECTOR_TYPE_" if it exists
-  const prefix = 'EV_CONNECTOR_TYPE_';
-  if (connectorType.startsWith(prefix)) {
-    connectorType = connectorType.slice(prefix.length);
-  }
-
-  // Split the string on underscores, convert to lowercase and capitalize the first letter of each part
-  const formattedName = connectorType
-    .split('_')
-    .map(word => {
-      // Convert to lowercase and capitalize the first letter
-      return word.charAt(0) + word.slice(1).toLowerCase();
-    })
-    .join(' ');
-
-  return formattedName;
-};
+import { formatConnectorType } from '../Utils';
 
 function StationDetailsModal({
   setOpenStationDetailsModal,
   station,
   plugs,
   reviews,
+  handleBookButton,
 }) {
   const initialRef = React.useRef();
   const finalRef = React.useRef();
@@ -193,6 +176,7 @@ function StationDetailsModal({
               bg={useColorModeValue('#151f21', 'gray.900')}
               color="white"
               rounded="md"
+              onClick={() => handleBookButton()}
               _hover={{
                 transform: 'translateY(-2px)',
                 boxShadow: 'lg',

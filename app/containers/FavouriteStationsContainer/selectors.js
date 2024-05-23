@@ -10,11 +10,16 @@ export const selectFavouriteStations = createSelector(
 );
 
 export const selectSelectedPlugs = createSelector(
-  selectMapContainer(),
-  mapContainer => mapContainer?.selectedPlugs,
+  selectFavouriteStationsContainer(),
+  favouriteStationsContainer => favouriteStationsContainer?.selectedPlugs,
 );
 
 export const selectSelectedReviews = createSelector(
-  selectMapContainer(),
-  mapContainer => mapContainer?.selectedReviews,
+  selectFavouriteStationsContainer(),
+  favouriteStationsContainer => favouriteStationsContainer?.selectedReviews,
+);
+
+export const selectUserCars = createSelector(
+  selectFavouriteStationsContainer(),
+  favouriteStationsContainer => favouriteStationsContainer?.userCars,
 );

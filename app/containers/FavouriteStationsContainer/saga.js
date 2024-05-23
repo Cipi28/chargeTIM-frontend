@@ -40,10 +40,24 @@ function* getReviews(action) {
   }
 }
 
+function* getUserCars(action) {
+  try {
+    const { userId } = action.payload;
+    const cars = yield call(get, `/cars/${userId}`);
+
+    if (cars.data && cars.data.length > 0) {
+      yield put(A.getUserCarsSuccessAction(cars.data));
+    }
+  } catch (e) {
+    yield put(A.getUserCarsFailureAction(e.message));
+  }
+}
+
 function* favouriteStationsContainerSaga() {
   yield takeLatest(T.GET_FAVOURITE_STATIONS, getFavouriteStations);
   yield takeLatest(T.GET_PLUGS, getPlugs);
   yield takeLatest(T.GET_REVIEWS, getReviews);
+  yield takeLatest(T.GET_USER_CARS, getUserCars);
 }
 
 export default favouriteStationsContainerSaga;

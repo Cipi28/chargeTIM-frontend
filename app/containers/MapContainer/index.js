@@ -26,6 +26,7 @@ import * as S from './selectors';
 import StationDetailsModal from '../../components/StationDetailsModal';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import BookingDetailsModal from '../../components/BookingDetailsModal';
 
 export function MapContainer(props) {
   const [showFirstDiv, setShowFirstDiv] = useState(window.innerWidth >= 768);
@@ -39,6 +40,7 @@ export function MapContainer(props) {
   const [selectedStation, setSelectedStation] = useState(null);
   const [currentPlugs, setCurrentPlugs] = useState([]);
   const [currentReviews, setCurrentReviews] = useState([]);
+  const [openBookingModal, setOpenBookingModal] = useState(false);
 
   const { actions } = props;
 
@@ -155,6 +157,13 @@ export function MapContainer(props) {
   const splitStringByComma = inputString =>
     inputString.split(',').map(element => element.trim());
 
+  const handleBookButton = station => {
+    actions.getUserCarsAction({
+      userId: currentUser.id,
+    });
+    setOpenBookingModal(true);
+  };
+
   return (
     <div style={{ display: 'flex' }}>
       {showFirstDiv && (
@@ -200,10 +209,11 @@ export function MapContainer(props) {
                     title={station.name}
                     lable={station.name}
                     onClick={() => {
+                      actions.getPlugsAction({
+                        stationId: station.id,
+                      });
                       setSelectedStation(station);
                       setActiveMarkerStation(index);
-                      actions.getPlugsAction({ stationId: station.id });
-                      actions.getReviewsAction({ stationId: station.id });
                     }}
                   >
                     <img
@@ -231,6 +241,7 @@ export function MapContainer(props) {
                             // bg='papayawhip'
                           >
                             <Heading
+                              key={index}
                               fontSize="md"
                               fontFamily="body"
                               fontWeight={500}
@@ -303,6 +314,10 @@ export function MapContainer(props) {
                                 as="a"
                                 href="#"
                                 onClick={() => {
+                                  setActiveMarkerStation(null);
+                                  actions.getReviewsAction({
+                                    stationId: station.id,
+                                  });
                                   setOpenStationDetailsModal(true);
                                   setSelectedStation(station);
                                 }}
@@ -314,6 +329,7 @@ export function MapContainer(props) {
                                 bg={useColorModeValue('#151f21', 'gray.900')}
                                 color="white"
                                 rounded="md"
+                                onClick={() => handleBookButton()}
                                 _hover={{
                                   transform: 'translateY(-2px)',
                                   boxShadow: 'lg',
@@ -339,6 +355,17 @@ export function MapContainer(props) {
           station={selectedStation}
           plugs={currentPlugs}
           reviews={currentReviews}
+          handleBookButton={handleBookButton}
+        />
+      )}
+      {openBookingModal && (
+        <BookingDetailsModal
+          setOpenBookingModal={setOpenBookingModal}
+          cars={props.userCars}
+          stations={stationsInfo}
+          plugs={currentPlugs}
+          saveBookingAction={actions.saveBookingAction}
+          selectedStation={selectedStation}
         />
       )}
     </div>
@@ -351,6 +378,7 @@ const mapStateToProps = state => ({
   favouriteStations: S.selectFavouriteStations(state),
   selectedPlugs: S.selectSelectedPlugs(state),
   selectedReviews: S.selectSelectedReviews(state),
+  userCars: S.selectUserCars(state),
 });
 
 const mapDispatchToProps = dispatch => ({

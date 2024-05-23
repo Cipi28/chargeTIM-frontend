@@ -20,3 +20,8 @@ export const selectSelectedReviews = createSelector(
   selectMapContainer(),
   mapContainer => mapContainer?.selectedReviews,
 );
+
+export const selectUserCars = createSelector(
+  selectMapContainer(),
+  mapContainer => mapContainer?.userCars,
+);

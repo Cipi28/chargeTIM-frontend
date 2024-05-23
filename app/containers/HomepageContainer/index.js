@@ -1,37 +1,47 @@
-import React, {useEffect, useState} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators, compose} from 'redux';
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators, compose } from 'redux';
 import * as HomepageContainerActionCreators from './actions';
 import './index.css';
 import CarCard from '../../components/CarCard';
-import {Icon, Input, Button, Flex, useDisclosure, Heading} from '@chakra-ui/react';
-import {FiSearch, FiPlus} from 'react-icons/fi';
+import {
+  Icon,
+  Input,
+  Button,
+  Flex,
+  useDisclosure,
+  Heading,
+} from '@chakra-ui/react';
+import { FiSearch, FiPlus } from 'react-icons/fi';
 import * as S from './selectors';
-import {store} from '../../store';
+import { store } from '../../store';
 import AddCarModal from '../../components/AddCarModal';
 import CarDetailsModal from '../../components/CarDetailsModal';
-import {isEmpty} from "lodash";
-
+import { isEmpty } from 'lodash';
+import BookingDetailsModal from '../../components/BookingDetailsModal';
 
 export function HomepageContainer(props) {
-  const {actions} = props;
+  const { actions } = props;
   const [showFirstDiv, setShowFirstDiv] = useState(window.innerWidth >= 768);
   const [carItems, setCarItems] = useState([]);
   const [searchField, setSearchField] = useState('');
   const [userInfo, setUserInfo] = useState(null);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   const [selectedCar, setSelectedCar] = useState(null);
+  const [openBookingModal, setOpenBookingModal] = useState(false);
+  const [stations, setStations] = useState([]);
 
-  const {isOpen, onOpen, onClose} = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     const {
-      global: {user},
+      global: { user },
     } = store.getState();
     if (user && user.user) {
       setUserInfo(user.user);
-      actions.getUserCars({userId: user.user.id});
+      actions.getUserCars({ userId: user.user.id });
     }
+    actions.getStationsAction();
 
     const handleResize = () => {
       setShowFirstDiv(window.innerWidth >= 768);
@@ -42,9 +52,12 @@ export function HomepageContainer(props) {
     };
   }, []);
 
+  console.log('carItemssss', props, stations);
+
   useEffect(() => {
     setCarItems(props.userCars);
-  }, [props.userCars]);
+    setStations(props.allStations);
+  }, [props.userCars, props.allStations]);
 
   function base64toFile(base64String, filename, contentType) {
     const byteCharacters = atob(base64String); // Decode base64 string
@@ -53,13 +66,13 @@ export function HomepageContainer(props) {
       byteNumbers[i] = byteCharacters.charCodeAt(i);
     }
     const byteArray = new Uint8Array(byteNumbers);
-    const file = new File([byteArray], filename, {type: contentType});
+    const file = new File([byteArray], filename, { type: contentType });
     return URL.createObjectURL(file);
   }
 
   const addCar = (name, plate, plug_type, image) => {
-    actions.addCar({userId: userInfo.id, name, plate, plug_type, image});
-    actions.getUserCars({userId: userInfo.id});
+    actions.addCar({ userId: userInfo.id, name, plate, plug_type, image });
+    actions.getUserCars({ userId: userInfo.id });
   };
 
   const openCarDetails = carIndex => {
@@ -68,24 +81,29 @@ export function HomepageContainer(props) {
   };
 
   const deleteCar = carId => {
-    actions.deleteCar({id: carId});
+    actions.deleteCar({ id: carId });
     setCarItems(carItems.filter(car => car.id !== carId));
-    actions.getUserCars({userId: userInfo.id});
+    actions.getUserCars({ userId: userInfo.id });
     setIsOpenEdit(false);
   };
 
   const updateCar = (id, name, plate, plug_type, image) => {
-    actions.updateCar({id, name, plate, plug_type, image});
-    actions.getUserCars({userId: userInfo.id});
+    actions.updateCar({ id, name, plate, plug_type, image });
+    actions.getUserCars({ userId: userInfo.id });
     setIsOpenEdit(false);
   };
 
+  const handleBookButton = carIndex => {
+    setSelectedCar(carItems[carIndex]);
+    setOpenBookingModal(true);
+  };
+
   return (
-    <div style={{display: 'flex', justifyContent: 'center'}}>
+    <div style={{ display: 'flex', justifyContent: 'center' }}>
       {' '}
       {/* Added justifyContent: 'center' */}
       {showFirstDiv && (
-        <div style={{width: '240px', flexShrink: 0}}>
+        <div style={{ width: '240px', flexShrink: 0 }}>
           {' '}
           {/* Added flexShrink: 0 */}
           {/* Content for the first div */}
@@ -157,18 +175,23 @@ export function HomepageContainer(props) {
                   image={base64toFile(car.image, 'carImage', 'jpeg')}
                   name={car.name}
                   openCarDetails={openCarDetails}
+                  handleBookButton={handleBookButton}
                 />
               </div>
             </React.Fragment>
           ))}
-          {
-            isEmpty(carItems) &&
+          {isEmpty(carItems) && (
             <div>
-              <Heading fontSize={'3xl'} fontFamily={'body'} fontWeight={500} align="center">
+              <Heading
+                fontSize={'3xl'}
+                fontFamily={'body'}
+                fontWeight={500}
+                align="center"
+              >
                 No cars added yet
               </Heading>
             </div>
-          }
+          )}
         </div>
       </div>
       <AddCarModal
@@ -177,12 +200,24 @@ export function HomepageContainer(props) {
         onClose={onClose}
         addCar={addCar}
       />
-      {(isOpenEdit && selectedCar) && <CarDetailsModal
-        setIsOpenEdit={setIsOpenEdit}
-        selectedCar={selectedCar}
-        deleteCar={deleteCar}
-        updateCar={updateCar}
-      />}
+      {isOpenEdit && selectedCar && (
+        <CarDetailsModal
+          setIsOpenEdit={setIsOpenEdit}
+          selectedCar={selectedCar}
+          deleteCar={deleteCar}
+          updateCar={updateCar}
+        />
+      )}
+      {openBookingModal && (
+        <BookingDetailsModal
+          setOpenBookingModal={setOpenBookingModal}
+          cars={carItems}
+          stations={stations}
+          // plugs={currentPlugs}
+          // saveBookingAction={actions.saveBookingAction}
+          selectedCar={selectedCar}
+        />
+      )}
     </div>
   );
 }
@@ -190,6 +225,7 @@ export function HomepageContainer(props) {
 const mapStateToProps = state => ({
   isLoading: false,
   userCars: S.selectUserCars(state),
+  allStations: S.selectAllStations(state),
   // errorLoading: selectError(state),
 });
 

@@ -17,6 +17,10 @@ export const getReviewsAction = createAction(T.GET_REVIEWS);
 export const getReviewsSuccessAction = createAction(T.GET_REVIEWS_SUCCESS);
 export const getReviewsFailureAction = createAction(T.GET_REVIEWS_FAILURE);
 
+export const getUserCarsAction = createAction(T.GET_USER_CARS);
+export const getUserCarsSuccessAction = createAction(T.GET_USER_CARS_SUCCESS);
+export const getUserCarsFailureAction = createAction(T.GET_USER_CARS_FAILURE);
+
 export default {
   getFavouriteStations,
   getFavouriteStationsSuccess,
@@ -27,4 +31,7 @@ export default {
   getReviewsAction,
   getReviewsSuccessAction,
   getReviewsFailureAction,
+  getUserCarsAction,
+  getUserCarsSuccessAction,
+  getUserCarsFailureAction,
 };
