@@ -82,3 +82,22 @@ export function validateUserData({ token, lastLogin: lastLoginTimestamp }) {
     expirationDate,
   };
 }
+
+export const formatConnectorType = connectorType => {
+  // Remove the prefix "EV_CONNECTOR_TYPE_" if it exists
+  const prefix = 'EV_CONNECTOR_TYPE_';
+  if (connectorType.startsWith(prefix)) {
+    connectorType = connectorType.slice(prefix.length);
+  }
+
+  // Split the string on underscores, convert to lowercase and capitalize the first letter of each part
+  const formattedName = connectorType
+    .split('_')
+    .map(word => {
+      // Convert to lowercase and capitalize the first letter
+      return word.charAt(0) + word.slice(1).toLowerCase();
+    })
+    .join(' ');
+
+  return formattedName;
+};

@@ -1,7 +1,6 @@
 import { createAction } from 'redux-actions';
 import * as T from './constants';
 
-
 export const getUserCars = createAction(T.GET_USER_CARS);
 export const getUserCarsSuccess = createAction(T.GET_USER_CARS_SUCCESS);
 export const getUserCarsFailure = createAction(T.GET_USER_CARS_FAILURE);
@@ -18,6 +17,13 @@ export const updateCar = createAction(T.UPDATE_CAR);
 export const updateCarSuccess = createAction(T.UPDATE_CAR_SUCCESS);
 export const updateCarFailure = createAction(T.UPDATE_CAR_FAILURE);
 
+export const getPlugsAction = createAction(T.GET_PLUGS);
+export const getPlugsSuccessAction = createAction(T.GET_PLUGS_SUCCESS);
+export const getPlugsFailureAction = createAction(T.GET_PLUGS_FAILURE);
+
+export const getStationsAction = createAction(T.GET_STATIONS);
+export const getStationsSuccessAction = createAction(T.GET_STATIONS_SUCCESS);
+export const getStationsFailureAction = createAction(T.GET_STATIONS_FAILURE);
 
 export default {
   getUserCars,
@@ -32,4 +38,10 @@ export default {
   updateCar,
   updateCarSuccess,
   updateCarFailure,
+  getPlugsAction,
+  getPlugsSuccessAction,
+  getPlugsFailureAction,
+  getStationsAction,
+  getStationsSuccessAction,
+  getStationsFailureAction,
 };

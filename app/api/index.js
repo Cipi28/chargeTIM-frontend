@@ -68,7 +68,8 @@ function parseJSON(response) {
             const errors = groupBy(newData.messages, 'row');
             newData.messages = mapValues(errors, x => x.map(y => y.error));
           }
-        reject({ //eslint-disable-line
+          reject({
+            //eslint-disable-line
             response: newData,
             httpCode: response.status,
             recoverable: true,
@@ -137,7 +138,6 @@ function checkCode(code, response) {
  * @return {object}           The response data
  */
 export function request(url, options) {
-
   // todo: see if this is still needed
   const {
     global: { user },
@@ -187,7 +187,6 @@ function getUrl(url, options) {
 }
 
 export function get(url, options = {}) {
-  console.log("VVVVVVV",options );
   return request(getUrl(url, options), {
     code: options.code,
     headers: { ...defaultHeaders, ...(options.headers || {}) },
@@ -227,8 +226,10 @@ export function download(url, name, options = {}) {
 
 export function post(url, data, options = {}) {
   return request(getUrl(url, options), {
-    headers: { 'Content-Type': 'application/json',
-      'X-Requested-With': 'fetch', },
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Requested-With': 'fetch',
+    },
     method: 'POST',
     code: options.code,
     body: options.raw ? data : JSON.stringify(data),

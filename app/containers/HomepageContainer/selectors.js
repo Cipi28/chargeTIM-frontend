@@ -6,3 +6,8 @@ export const selectUserCars = createSelector(
   selectHomepageContainer(),
   homepageContainer => homepageContainer.userCars,
 );
+
+export const selectAllStations = createSelector(
+  selectHomepageContainer(),
+  homepageContainer => homepageContainer.allStations,
+);

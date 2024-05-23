@@ -97,6 +97,38 @@ function* getReviews(action) {
   }
 }
 
+function* getUserCars(action) {
+  try {
+    const { userId } = action.payload;
+    const cars = yield call(get, `/cars/${userId}`);
+
+    if (cars.data && cars.data.length > 0) {
+      yield put(A.getUserCarsSuccessAction(cars.data));
+    }
+  } catch (e) {
+    yield put(A.getUserCarsFailureAction(e.message));
+  }
+}
+
+function* saveBooking({ payload }) {
+  try {
+    const { carId, stationId, plugId, startDate, endDate } = payload;
+    const cars = yield call(post, `/bookings`, {
+      carId,
+      stationId,
+      plugId,
+      startDate,
+      endDate,
+    });
+
+    if (cars.data && cars.data.length > 0) {
+      yield put(A.getUserCarsSuccessAction(cars.data));
+    }
+  } catch (e) {
+    yield put(A.getUserCarsFailureAction(e.message));
+  }
+}
+
 function* mapContainerSaga() {
   yield takeLatest(T.SAVE_STATIONS, saveStations);
   yield takeLatest(T.GET_FAVOURITE_STATIONS_INDEX, getFavouriteStationsIndex);
@@ -105,6 +137,8 @@ function* mapContainerSaga() {
   // yield takeLatest(T.SAVE_PLUG, savePlug);
   yield takeLatest(T.GET_PLUGS, getPlugs);
   yield takeLatest(T.GET_REVIEWS, getReviews);
+  yield takeLatest(T.GET_USER_CARS, getUserCars);
+  yield takeLatest(T.SAVE_BOOKING, saveBooking);
 }
 
 export default mapContainerSaga;

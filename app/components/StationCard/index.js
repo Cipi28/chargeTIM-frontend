@@ -20,6 +20,7 @@ export default function StationCard({
   adress,
   image,
   openStationDetails,
+  handleBookButton,
 }) {
   const defaultImage =
     'https://static.vecteezy.com/system/resources/previews/006/683/801/non_2x/electric-vehicle-sport-car-charging-parking-at-the-charger-station-with-a-plug-in-cable-charging-in-the-top-side-of-car-to-battery-isolated-flat-illustration-on-white-background-vector.jpg';
@@ -102,6 +103,7 @@ export default function StationCard({
               bg={useColorModeValue('#151f21', 'gray.900')}
               color={'white'}
               rounded={'md'}
+              onClick={() => handleBookButton()}
               _hover={{
                 transform: 'translateY(-2px)',
                 boxShadow: 'lg',
