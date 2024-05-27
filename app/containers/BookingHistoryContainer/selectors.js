@@ -1,9 +1,9 @@
 import { createSelector } from 'reselect';
 
-export const selectActiveBookingsContainer = () => state =>
-  state.activeBookingsContainer;
+export const selectBookingHistoryContainer = () => state =>
+  state.bookingHistoryContainer;
 
 export const selectBookings = createSelector(
-  selectActiveBookingsContainer(),
-  activeBookingsContainer => activeBookingsContainer?.bookings,
+  selectBookingHistoryContainer(),
+  bookingHistoryContainer => bookingHistoryContainer?.bookings,
 );

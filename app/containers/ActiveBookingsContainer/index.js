@@ -102,8 +102,8 @@ export function ActiveBookingsContainer(props) {
                 <Box borderRadius="lg" overflow="hidden">
                   <Flex alignItems="center" wrap="wrap">
                     {!isEmpty(activeBookings) &&
-                      activeBookings.map(booking => (
-                        <Box p={3} width="400px" mx={10} mb={12}>
+                      activeBookings.map((booking, index) => (
+                        <Box p={3} width="400px" mx={10} mb={12} key={index}>
                           <ActiveBookingCard
                             booking={booking}
                             status={BOOKING_STATUS_BOOKED}
@@ -123,8 +123,8 @@ export function ActiveBookingsContainer(props) {
                 >
                   <Flex alignItems="center" wrap="wrap">
                     {!isEmpty(pendingBookings) &&
-                      pendingBookings.map(booking => (
-                        <Box p={3} width="400px" mx={10} mb={12}>
+                      pendingBookings.map((booking, index) => (
+                        <Box p={3} width="400px" mx={10} mb={12} key={index}>
                           <ActiveBookingCard
                             booking={booking}
                             status={BOOKING_STATUS_PENDING}

@@ -44,7 +44,11 @@ function calculateDuration(date1, date2) {
   return durationString;
 }
 
-export default function HistoryBookingCard({ booking, status }) {
+export default function HistoryBookingCard({
+  booking,
+  status,
+  openReviewModal,
+}) {
   return (
     <Center py={6}>
       <Box
@@ -150,12 +154,14 @@ export default function HistoryBookingCard({ booking, status }) {
           <Flex w="full" justifyContent="space-between">
             {status === BOOKING_STATUS_ENDED && (
               <Button
+                isDisabled={booking.is_reviewed}
                 mt={10}
                 w="full"
                 bg={'green.400'}
                 color={'white'}
                 rounded={'xl'}
                 boxShadow={'0 5px 20px 0px rgb(72 187 120 / 43%)'}
+                onClick={() => openReviewModal(booking)}
                 _hover={{
                   bg: 'green.500',
                 }}
@@ -163,7 +169,7 @@ export default function HistoryBookingCard({ booking, status }) {
                   bg: 'green.500',
                 }}
               >
-                Leave a review
+                {booking.is_reviewed ? 'Already reviewed' : 'Leave a review'}
               </Button>
             )}
           </Flex>

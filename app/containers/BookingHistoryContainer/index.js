@@ -18,8 +18,9 @@ import {
 } from '@chakra-ui/react';
 import { BOOKING_STATUS_ENDED, BOOKING_STATUS_REJECTED } from './constants';
 import { selectBookings } from './selectors';
-import { isEmpty } from 'lodash';
+import { cloneDeep, isEmpty } from 'lodash';
 import HistoryBookingCard from '../../components/HistoryBookingCard';
+import ReviewModal from '../../components/ReviewModal';
 
 export function BookingHistoryContainer(props) {
   const { actions } = props;
@@ -27,6 +28,8 @@ export function BookingHistoryContainer(props) {
   const [userInfo, setUserInfo] = useState(null);
   const [endedBookings, setEndedBookings] = useState([]);
   const [rejectedBookings, setRejectedBookings] = useState([]);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState(null);
 
   useEffect(() => {
     const {
@@ -55,7 +58,26 @@ export function BookingHistoryContainer(props) {
     setRejectedBookings(props.bookings[BOOKING_STATUS_REJECTED]);
   }, [props.bookings]);
 
-  console.log('endedBookings', endedBookings);
+  const openReviewModal = booking => {
+    setIsReviewModalOpen(true);
+    setSelectedBooking(booking);
+  };
+
+  const updateBooking = booking => {
+    actions.updateBookingAction(booking);
+    const bookings = cloneDeep(endedBookings);
+    const updatedBookings = bookings.map((el, index) => {
+      if (el.id === booking.id) {
+        return booking;
+      }
+      return el;
+    });
+    setEndedBookings(updatedBookings);
+  };
+
+  const saveReview = review => {
+    actions.saveReviewAction({ ...review, userId: userInfo.id });
+  };
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -95,6 +117,7 @@ export function BookingHistoryContainer(props) {
                           <HistoryBookingCard
                             booking={booking}
                             status={BOOKING_STATUS_ENDED}
+                            openReviewModal={openReviewModal}
                           />
                         </Box>
                       ))}
@@ -126,6 +149,14 @@ export function BookingHistoryContainer(props) {
           </Tabs>
         </Box>
       </div>
+      {isReviewModalOpen && (
+        <ReviewModal
+          booking={selectedBooking}
+          setIsOpen={setIsReviewModalOpen}
+          saveReview={saveReview}
+          updateBooking={updateBooking}
+        />
+      )}
     </div>
   );
 }

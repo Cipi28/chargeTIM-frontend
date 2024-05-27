@@ -28,9 +28,35 @@ function* deleteBooking(action) {
   }
 }
 
-function* activeBookingsContainerSaga() {
-  yield takeLatest(T.GET_USER_BOOKINGS, getUserBookings);
-  yield takeLatest(T.DELETE_BOOKING, deleteBooking);
+function* saveReview(action) {
+  try {
+    const review = yield call(post, `/reviews`, { ...action.payload });
+    if (review) {
+      yield put(A.saveReviewActionSuccess(review.data));
+    }
+  } catch (e) {
+    yield put(A.saveReviewActionFailure(e.message));
+  }
 }
 
-export default activeBookingsContainerSaga;
+function* updateBooking(action) {
+  try {
+    const booking = yield call(patch, `/bookings/${action.payload.id}`, {
+      ...action.payload,
+    });
+    if (booking) {
+      yield put(A.updateBookingActionSuccess(booking.data));
+    }
+  } catch (e) {
+    yield put(A.updateBookingActionFailure(e.message));
+  }
+}
+
+function* bookingHistoryContainerSaga() {
+  yield takeLatest(T.GET_USER_BOOKINGS, getUserBookings);
+  yield takeLatest(T.DELETE_BOOKING, deleteBooking);
+  yield takeLatest(T.SAVE_REVIEW, saveReview);
+  yield takeLatest(T.UPDATE_BOOKING, updateBooking);
+}
+
+export default bookingHistoryContainerSaga;
