@@ -150,6 +150,7 @@ export function FavouriteStationsContainer(props) {
           plugs={currentPlugs}
           saveBookingAction={actions.saveBookingAction}
           selectedStation={selectedStation}
+          userId={userInfo.id}
         />
       )}
     </div>

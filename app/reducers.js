@@ -13,6 +13,7 @@ import homepageContainer from './containers/HomepageContainer/reducer';
 import registerContainer from './containers/RegisterContainer/reducer';
 import favouriteStationsContainer from './containers/FavouriteStationsContainer/reducer';
 import mapContainer from './containers/MapContainer/reducer';
+import activeBookingsContainer from './containers/ActiveBookingsContainer/reducer';
 
 /**
  * Merges the main reducer with the router state and dynamically injected reducers
@@ -28,6 +29,7 @@ export default function createReducer(injectedReducers = {}) {
     registerContainer,
     favouriteStationsContainer,
     mapContainer,
+    activeBookingsContainer,
   });
 
   return rootReducer;

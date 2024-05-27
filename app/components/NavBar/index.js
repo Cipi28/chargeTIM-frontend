@@ -3,6 +3,7 @@ import {
   FiActivity,
   FiBell,
   FiChevronDown,
+  FiBookOpen,
   FiCompass,
   FiHeart,
   FiHome,
@@ -36,7 +37,8 @@ function NavBar() {
     { name: 'My cars', icon: FiHome, href: '/' },
     { name: 'Favourites', icon: FiHeart, href: '/favourites' },
     { name: 'Map', icon: FiCompass, href: '/map' },
-    { name: 'Order History', icon: FiActivity, href: '/order-history' },
+    { name: 'Active Bookings', icon: FiBookOpen, href: '/bookings' },
+    { name: 'Booking History', icon: FiActivity, href: '/order-history' },
     { name: 'Profile', icon: FiUser, href: '/profile' },
     { name: 'Log Out', icon: FiLogOut, href: '/login' },
   ];

@@ -32,6 +32,7 @@ function BookingDetailsModal({
   selectedCar = null,
   selectedStation = null,
   selectedPlug = null,
+  userId,
 }) {
   const initialRef = React.useRef();
   const finalRef = React.useRef();
@@ -174,6 +175,8 @@ function BookingDetailsModal({
                   plugId: selectedPlugId,
                   startDate: selectedStartDate,
                   endDate: selectedEndDate,
+                  userId: userId,
+                  status: 0,
                 });
               }}
               _hover={{

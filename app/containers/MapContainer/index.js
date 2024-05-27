@@ -366,6 +366,7 @@ export function MapContainer(props) {
           plugs={currentPlugs}
           saveBookingAction={actions.saveBookingAction}
           selectedStation={selectedStation}
+          userId={currentUser.id}
         />
       )}
     </div>
