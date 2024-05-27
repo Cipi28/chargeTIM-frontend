@@ -112,20 +112,30 @@ function* getUserCars(action) {
 
 function* saveBooking({ payload }) {
   try {
-    const { carId, stationId, plugId, startDate, endDate } = payload;
+    const {
+      carId,
+      stationId,
+      plugId,
+      startDate,
+      endDate,
+      userId,
+      status,
+    } = payload;
     const cars = yield call(post, `/bookings`, {
       carId,
       stationId,
       plugId,
       startDate,
       endDate,
+      userId,
+      status,
     });
 
     if (cars.data && cars.data.length > 0) {
-      yield put(A.getUserCarsSuccessAction(cars.data));
+      yield put(A.saveBookingSuccessAction(cars.data));
     }
   } catch (e) {
-    yield put(A.getUserCarsFailureAction(e.message));
+    yield put(A.saveBookingfailureAction(e.message));
   }
 }
 

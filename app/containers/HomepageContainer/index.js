@@ -216,6 +216,7 @@ export function HomepageContainer(props) {
           // plugs={currentPlugs}
           // saveBookingAction={actions.saveBookingAction}
           selectedCar={selectedCar}
+          userId={userInfo.id}
         />
       )}
     </div>

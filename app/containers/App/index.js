@@ -17,6 +17,8 @@ import MapContainer from 'containers/MapContainer/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import RegistereContainer from 'containers/RegisterContainer/Loadable';
 import FavouriteStationsContainer from 'containers/FavouriteStationsContainer/Loadable';
+import ActiveBookingsContainer from 'containers/ActiveBookingsContainer/Loadable';
+import BookingHistoryContainer from 'containers/BookingHistoryContainer/Loadable';
 import NavBar from 'components/NavBar';
 
 const AppWrapper = styled.div`
@@ -43,10 +45,16 @@ export default function App() {
         }
       />
       <Switch>
+        <Route exact path="/" component={HomepageContainer} />
         <Route exact path="/login" component={LoginContainer} />
         <Route path="/register" component={RegistereContainer} />
-        <Route exact path="/" component={HomepageContainer} />
         <Route exact path="/map" component={MapContainer} />
+        <Route exact path="/bookings" component={ActiveBookingsContainer} />
+        <Route
+          exact
+          path="/order-history"
+          component={BookingHistoryContainer}
+        />
         <Route
           exact
           path="/favourites"

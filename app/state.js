@@ -5,6 +5,7 @@ import { initialState as homepageContainer } from './containers/HomepageContaine
 import { initialState as registerContainer } from './containers/RegisterContainer/reducer';
 import { initialState as favouriteStationsContainer } from './containers/FavouriteStationsContainer/reducer';
 import { initialState as mapContainer } from './containers/MapContainer/reducer';
+import { initialState as activeBookingsContainer } from './containers/ActiveBookingsContainer/reducer';
 
 export default {
   global,
@@ -13,4 +14,5 @@ export default {
   registerContainer,
   favouriteStationsContainer,
   mapContainer,
+  activeBookingsContainer,
 };
