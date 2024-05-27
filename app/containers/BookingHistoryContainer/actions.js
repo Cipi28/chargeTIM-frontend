@@ -16,3 +16,15 @@ export const deleteBookingActionSuccess = createAction(
 export const deleteBookingActionFailure = createAction(
   T.DELETE_BOOKING_FAILURE,
 );
+
+export const saveReviewAction = createAction(T.SAVE_REVIEW);
+export const saveReviewActionSuccess = createAction(T.SAVE_REVIEW_SUCCESS);
+export const saveReviewActionFailure = createAction(T.SAVE_REVIEW_FAILURE);
+
+export const updateBookingAction = createAction(T.UPDATE_BOOKING);
+export const updateBookingActionSuccess = createAction(
+  T.UPDATE_BOOKING_SUCCESS,
+);
+export const updateBookingActionFailure = createAction(
+  T.UPDATE_BOOKING_FAILURE,
+);

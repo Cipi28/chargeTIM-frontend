@@ -6,6 +6,7 @@ import { initialState as registerContainer } from './containers/RegisterContaine
 import { initialState as favouriteStationsContainer } from './containers/FavouriteStationsContainer/reducer';
 import { initialState as mapContainer } from './containers/MapContainer/reducer';
 import { initialState as activeBookingsContainer } from './containers/ActiveBookingsContainer/reducer';
+import { initialState as bookingHistoryContainer } from './containers/BookingHistoryContainer/reducer';
 
 export default {
   global,
@@ -15,4 +16,5 @@ export default {
   favouriteStationsContainer,
   mapContainer,
   activeBookingsContainer,
+  bookingHistoryContainer,
 };

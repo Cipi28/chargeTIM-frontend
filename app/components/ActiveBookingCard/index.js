@@ -44,7 +44,6 @@ function calculateDuration(date1, date2) {
 }
 
 export default function ActiveBookingCard({ booking, status, deleteBooking }) {
-  console.log('BBB', calculateDuration(booking.start_time, booking.end_time));
   return (
     <Center py={6}>
       <Box
