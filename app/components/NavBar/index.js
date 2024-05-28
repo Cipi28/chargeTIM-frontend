@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FiActivity,
   FiBell,
@@ -31,6 +31,18 @@ import {
   useDisclosure,
   VStack,
 } from '@chakra-ui/react';
+import store from '../../store';
+
+function base64toFile(base64String, filename, contentType) {
+  const byteCharacters = atob(base64String); // Decode base64 string
+  const byteNumbers = new Array(byteCharacters.length);
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+  const byteArray = new Uint8Array(byteNumbers);
+  const file = new File([byteArray], filename, { type: contentType });
+  return URL.createObjectURL(file);
+}
 
 function NavBar() {
   const LinkItems = [
@@ -42,6 +54,20 @@ function NavBar() {
     { name: 'Profile', icon: FiUser, href: '/profile' },
     { name: 'Log Out', icon: FiLogOut, href: '/login' },
   ];
+  const [userInfo, setUserInfo] = useState(null);
+  const defaultImage =
+    'https://t3.ftcdn.net/jpg/05/70/71/06/360_F_570710660_Jana1ujcJyQTiT2rIzvfmyXzXamVcby8.jpg';
+
+  useEffect(() => {
+    const {
+      global: { user },
+    } = store.getState();
+
+    const { profileContainer } = store.getState();
+    if (user && user.user) {
+      setUserInfo(user.user);
+    }
+  }, []);
 
   const SidebarContent = ({ onClose, ...rest }) => (
     <Box
@@ -154,7 +180,11 @@ function NavBar() {
               <HStack>
                 <Avatar
                   size="md"
-                  src="https://images.unsplash.com/photo-1619946794135-5bc917a27793?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
+                  src={
+                    userInfo?.profile_photo
+                      ? base64toFile(userInfo?.profile_photo, 'image', 'jpeg')
+                      : defaultImage
+                  }
                 />
                 <VStack
                   display={{ base: 'none', md: 'flex' }}
@@ -162,9 +192,9 @@ function NavBar() {
                   spacing="1px"
                   ml="2"
                 >
-                  <Text fontSize="sm">Manea Ciprian</Text>
+                  <Text fontSize="sm">{userInfo?.name}</Text>
                   <Text fontSize="xs" color="gray.600">
-                    User
+                    {userInfo?.role ? 'Contributor' : 'User'}
                   </Text>
                 </VStack>
                 <Box display={{ base: 'none', md: 'flex' }}>
@@ -176,9 +206,21 @@ function NavBar() {
               bg={useColorModeValue('white', 'gray.900')}
               borderColor={useColorModeValue('gray.200', 'gray.700')}
             >
-              <MenuItem>Profile</MenuItem>
+              <MenuItem
+                as="a"
+                href="#"
+                onClick={() => window.history.pushState({}, '', '/profile')}
+              >
+                Profile
+              </MenuItem>
               <MenuDivider />
-              <MenuItem>Sign out</MenuItem>
+              <MenuItem
+                as="a"
+                href="#"
+                onClick={() => window.history.pushState({}, '', '/login')}
+              >
+                Sign out
+              </MenuItem>
             </MenuList>
           </Menu>
         </Flex>

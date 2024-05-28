@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+// import convertBase64 from '../../components/Utils';
 
 import {
   Button,
@@ -14,21 +15,20 @@ import {
   Input,
 } from '@chakra-ui/react';
 
-const convertBase64 = (file) => {
+const convertBase64 = file => {
   return new Promise((resolve, reject) => {
     const fileReader = new FileReader();
-    fileReader.readAsDataURL(file)
+    fileReader.readAsDataURL(file);
     fileReader.onload = () => {
       resolve(fileReader.result);
-    }
-    fileReader.onerror = (error) => {
+    };
+    fileReader.onerror = error => {
       reject(error);
-    }
-  })
-}
+    };
+  });
+};
+
 function CarDetailsModal({ setIsOpenEdit, selectedCar, deleteCar, updateCar }) {
-
-
   const initialRef = React.useRef();
   const finalRef = React.useRef();
 
@@ -38,25 +38,24 @@ function CarDetailsModal({ setIsOpenEdit, selectedCar, deleteCar, updateCar }) {
   //todo: when image display will be added to modal, show the current image that the car has
   const [carImage, setCarImage] = useState(selectedCar.image);
 
-
-
-  const handleFileRead = async (event) => {
+  const handleFileRead = async event => {
     const file = event.target.files[0];
     if (file) {
       const base64 = await convertBase64(file);
-      const base64Data = base64.split(",")[1];
+      const base64Data = base64.split(',')[1];
       setCarImage(base64Data);
     }
   };
 
   return (
     <>
-
       <Modal
         initialFocusRef={initialRef}
         finalFocusRef={finalRef}
         isOpen={true}
-        onClose={() => {setIsOpenEdit(false)}}
+        onClose={() => {
+          setIsOpenEdit(false);
+        }}
       >
         <ModalOverlay />
         <ModalContent>
@@ -66,27 +65,27 @@ function CarDetailsModal({ setIsOpenEdit, selectedCar, deleteCar, updateCar }) {
             <FormControl>
               <FormLabel>Car Name</FormLabel>
               <Input
-                placeholder='Car Name'
+                placeholder="Car Name"
                 value={carName}
-                onChange={(event) => setCarName(event.target.value)}
+                onChange={event => setCarName(event.target.value)}
               />
             </FormControl>
 
             <FormControl mt={4}>
               <FormLabel>Car Plate</FormLabel>
               <Input
-                placeholder='Car Plate'
+                placeholder="Car Plate"
                 value={carPlate}
-                onChange={(event) => setCarPlate(event.target.value)}
+                onChange={event => setCarPlate(event.target.value)}
               />
             </FormControl>
 
             <FormControl mt={4}>
               <FormLabel>Car Plug</FormLabel>
               <Input
-                placeholder='Car plug'
+                placeholder="Car plug"
                 value={carPlug}
-                onChange={(event) => setCarPlug(event.target.value)}
+                onChange={event => setCarPlug(event.target.value)}
               />
             </FormControl>
 
@@ -95,7 +94,7 @@ function CarDetailsModal({ setIsOpenEdit, selectedCar, deleteCar, updateCar }) {
               <input
                 type="file"
                 accept=".jpeg, .png, .jpg"
-                placeholder='Car plug'
+                placeholder="Car plug"
                 onChange={handleFileRead}
               />
             </FormControl>
@@ -103,25 +102,22 @@ function CarDetailsModal({ setIsOpenEdit, selectedCar, deleteCar, updateCar }) {
 
           <ModalFooter>
             <Button
-              colorScheme='blue'
+              colorScheme="blue"
               mr={3}
               onClick={() => {
-                updateCar(
-                  selectedCar.id,
-                  carName,
-                  carPlate,
-                  carPlug,
-                  carImage,
-                );
+                updateCar(selectedCar.id, carName, carPlate, carPlug, carImage);
               }}
             >
               Update
             </Button>
             <Button
-              colorScheme='teal'
+              colorScheme="teal"
               onClick={() => {
-                deleteCar(selectedCar.id)}
-            }>Delete</Button>
+                deleteCar(selectedCar.id);
+              }}
+            >
+              Delete
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

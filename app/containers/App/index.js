@@ -19,6 +19,7 @@ import RegistereContainer from 'containers/RegisterContainer/Loadable';
 import FavouriteStationsContainer from 'containers/FavouriteStationsContainer/Loadable';
 import ActiveBookingsContainer from 'containers/ActiveBookingsContainer/Loadable';
 import BookingHistoryContainer from 'containers/BookingHistoryContainer/Loadable';
+import ProfileContainer from 'containers/ProfileContainer/Loadable';
 import NavBar from 'components/NavBar';
 
 const AppWrapper = styled.div`
@@ -60,6 +61,7 @@ export default function App() {
           path="/favourites"
           component={FavouriteStationsContainer}
         />
+        <Route exact path="/profile" component={ProfileContainer} />
         <Route path="" component={NotFoundPage} />
       </Switch>
     </AppWrapper>

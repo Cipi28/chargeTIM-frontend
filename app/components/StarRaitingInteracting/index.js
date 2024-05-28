@@ -2,7 +2,7 @@ import { Flex, Text } from '@chakra-ui/react';
 import { FaStar } from 'react-icons/fa';
 import React, { useEffect } from 'react';
 
-const StarRatingDisplay = ({ ratingSize, starSize, onStarClick }) => {
+const StarRatingInteracting = ({ ratingSize, starSize, onStarClick }) => {
   const [rating, setRating] = React.useState(0);
   const [hoverRating, setHoverRating] = React.useState(0);
 
@@ -95,4 +95,4 @@ const StarRatingDisplay = ({ ratingSize, starSize, onStarClick }) => {
   );
 };
 
-export default StarRatingDisplay;
+export default StarRatingInteracting;
