@@ -9,7 +9,6 @@ import {
   Stack,
   List,
   ListItem,
-  ListIcon,
   Button,
   useColorModeValue,
   Flex,
@@ -19,7 +18,6 @@ import { PiChargingStationFill, PiPlugChargingFill } from 'react-icons/pi';
 import { FaCalendarAlt } from 'react-icons/fa';
 import { MdOutlineAccessTimeFilled } from 'react-icons/md';
 import { formatConnectorType } from '../Utils';
-import { BOOKING_STATUS_BOOKED } from '../../containers/ActiveBookingsContainer/constants';
 import moment from 'moment';
 import { BOOKING_STATUS_ENDED } from '../../containers/BookingHistoryContainer/constants';
 

@@ -17,8 +17,6 @@ import {
   Heading,
   Text,
 } from '@chakra-ui/react';
-import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
-import StarOutlinedIcon from '@mui/icons-material/StarOutlined';
 import { store } from '../../store';
 import * as MapContainerActionCreators from './actions';
 import GlobalAPI from '../../components/Utils/GlobalAPI';
@@ -173,7 +171,7 @@ export function MapContainer(props) {
           {/* Content for the first div */}
         </div>
       )}
-      <div style={{ height: '80vh', width: '100%', marginTop: '60px' }}>
+      <div style={{ height: '91vh', width: '100%' }}>
         <APIProvider apiKey="AIzaSyBfvGY364KnQcQCaKGVGtRJHRIELiZfC7o">
           <Map
             defaultCenter={position}

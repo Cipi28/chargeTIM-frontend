@@ -7,6 +7,7 @@ import favouriteStationsContainer from './containers/FavouriteStationsContainer/
 import mapContainer from './containers/MapContainer/saga';
 import activeBookingsContainer from './containers/ActiveBookingsContainer/saga';
 import bookingHistoryContainer from './containers/BookingHistoryContainer/saga';
+import profileContainer from './containers/ProfileContainer/saga';
 
 const sagas = [
   /* GENERATOR: Compile all of your sagas */
@@ -17,6 +18,7 @@ const sagas = [
   mapContainer,
   activeBookingsContainer,
   bookingHistoryContainer,
+  profileContainer,
 ];
 
 export default sagas;

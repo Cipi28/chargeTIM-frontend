@@ -17,6 +17,7 @@ import {
 } from '@chakra-ui/react';
 import { MdRateReview } from 'react-icons/md';
 import StarRatingDisplay from '../StarRaitingInteracting';
+import StarRatingInteracting from '../StarRaitingInteracting';
 
 function ReviewModal({ booking, setIsOpen, saveReview, updateBooking }) {
   const initialRef = React.useRef();
@@ -52,7 +53,7 @@ function ReviewModal({ booking, setIsOpen, saveReview, updateBooking }) {
               <Text fontSize={'md'} mb={3}>
                 Rate this station:
               </Text>
-              <StarRatingDisplay
+              <StarRatingInteracting
                 starSize={30}
                 ratingSize={'md'}
                 onStarClick={onStarClick}

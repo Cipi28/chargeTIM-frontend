@@ -7,6 +7,7 @@ import { initialState as favouriteStationsContainer } from './containers/Favouri
 import { initialState as mapContainer } from './containers/MapContainer/reducer';
 import { initialState as activeBookingsContainer } from './containers/ActiveBookingsContainer/reducer';
 import { initialState as bookingHistoryContainer } from './containers/BookingHistoryContainer/reducer';
+import { initialState as profileContainer } from './containers/ProfileContainer/reducer';
 
 export default {
   global,
@@ -17,4 +18,5 @@ export default {
   mapContainer,
   activeBookingsContainer,
   bookingHistoryContainer,
+  profileContainer,
 };
