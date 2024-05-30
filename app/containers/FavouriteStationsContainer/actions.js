@@ -21,6 +21,17 @@ export const getUserCarsAction = createAction(T.GET_USER_CARS);
 export const getUserCarsSuccessAction = createAction(T.GET_USER_CARS_SUCCESS);
 export const getUserCarsFailureAction = createAction(T.GET_USER_CARS_FAILURE);
 
+export const addStation = createAction(T.ADD_STATION);
+export const addStationSuccess = createAction(T.ADD_STATION_SUCCESS);
+export const addStationFailure = createAction(T.ADD_STATION_FAILURE);
+
+export const getUserStations = createAction(T.GET_USER_STATIONS);
+export const getUserStationsSuccess = createAction(T.GET_USER_STATIONS_SUCCESS);
+export const getUserStationsFailure = createAction(T.GET_USER_STATIONS_FAILURE);
+
+export const deleteStation = createAction(T.DELETE_STATION);
+export const deleteStationSuccess = createAction(T.DELETE_STATION_SUCCESS);
+export const deleteStationFailure = createAction(T.DELETE_STATION_FAILURE);
 export default {
   getFavouriteStations,
   getFavouriteStationsSuccess,
@@ -34,4 +45,13 @@ export default {
   getUserCarsAction,
   getUserCarsSuccessAction,
   getUserCarsFailureAction,
+  addStation,
+  addStationSuccess,
+  addStationFailure,
+  getUserStations,
+  getUserStationsSuccess,
+  getUserStationsFailure,
+  deleteStation,
+  deleteStationSuccess,
+  deleteStationFailure,
 };

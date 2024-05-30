@@ -179,11 +179,13 @@ export function MapContainer(props) {
             mapId="264135071e31772e"
           >
             <AdvancedMarker
+              key={'userLocation'}
               position={position}
               onClick={() => setIsOpenUserLocation(true)}
             />
             {isOpenUserLocation && (
               <InfoWindow
+                key={'userLocation'}
                 position={position}
                 onCloseClick={() => setIsOpenUserLocation(false)}
               >
@@ -215,6 +217,7 @@ export function MapContainer(props) {
                     }}
                   >
                     <img
+                      key={index}
                       src="https://cdn-icons-png.flaticon.com/256/12338/12338156.png"
                       width={50}
                       height={50}
@@ -256,43 +259,45 @@ export function MapContainer(props) {
                             colSpan={1}
                             // bg='papayawhip'
                           >
-                            <div align="right">
-                              {/* <StarIcon sx={{color: "#ff8833"}} fontSize="large"/> */}
-                              {favoriteStations.includes(station.id) ? (
-                                <FavoriteIcon
-                                  sx={{ color: '#E1306C' }}
-                                  fontSize="large"
-                                  lable="remove from favourites"
-                                  onClick={() => {
-                                    actions.deleteFavouriteStation({
-                                      userId: currentUser.id,
-                                      stationId: station.id,
-                                    });
-                                    setFavoriteStations(
-                                      favoriteStations.filter(
-                                        item => item !== station.id,
-                                      ),
-                                    );
-                                  }}
-                                />
-                              ) : (
-                                <FavoriteBorderIcon
-                                  sx={{ color: '#E1306C' }}
-                                  fontSize="large"
-                                  lable="add to favourites"
-                                  onClick={() => {
-                                    actions.addStationToFavourites({
-                                      userId: currentUser.id,
-                                      stationId: station.id,
-                                    });
-                                    setFavoriteStations([
-                                      ...favoriteStations,
-                                      station.id,
-                                    ]);
-                                  }}
-                                />
-                              )}
-                            </div>
+                            {!currentUser?.role && (
+                              <div align="right">
+                                {/* <StarIcon sx={{color: "#ff8833"}} fontSize="large"/> */}
+                                {favoriteStations.includes(station.id) ? (
+                                  <FavoriteIcon
+                                    sx={{ color: '#E1306C' }}
+                                    fontSize="large"
+                                    lable="remove from favourites"
+                                    onClick={() => {
+                                      actions.deleteFavouriteStation({
+                                        userId: currentUser.id,
+                                        stationId: station.id,
+                                      });
+                                      setFavoriteStations(
+                                        favoriteStations.filter(
+                                          item => item !== station.id,
+                                        ),
+                                      );
+                                    }}
+                                  />
+                                ) : (
+                                  <FavoriteBorderIcon
+                                    sx={{ color: '#E1306C' }}
+                                    fontSize="large"
+                                    lable="add to favourites"
+                                    onClick={() => {
+                                      actions.addStationToFavourites({
+                                        userId: currentUser.id,
+                                        stationId: station.id,
+                                      });
+                                      setFavoriteStations([
+                                        ...favoriteStations,
+                                        station.id,
+                                      ]);
+                                    }}
+                                  />
+                                )}
+                              </div>
+                            )}
                           </GridItem>
                           <GridItem
                             colSpan={3}
@@ -322,19 +327,21 @@ export function MapContainer(props) {
                               >
                                 Details
                               </Button>
-                              <Button
-                                ml={3}
-                                bg={useColorModeValue('#151f21', 'gray.900')}
-                                color="white"
-                                rounded="md"
-                                onClick={() => handleBookButton()}
-                                _hover={{
-                                  transform: 'translateY(-2px)',
-                                  boxShadow: 'lg',
-                                }}
-                              >
-                                Book now
-                              </Button>
+                              {!currentUser?.role && (
+                                <Button
+                                  ml={3}
+                                  bg={useColorModeValue('#151f21', 'gray.900')}
+                                  color="white"
+                                  rounded="md"
+                                  onClick={() => handleBookButton()}
+                                  _hover={{
+                                    transform: 'translateY(-2px)',
+                                    boxShadow: 'lg',
+                                  }}
+                                >
+                                  Book now
+                                </Button>
+                              )}
                             </div>
                           </GridItem>
                         </Grid>
@@ -354,6 +361,7 @@ export function MapContainer(props) {
           plugs={currentPlugs}
           reviews={currentReviews}
           handleBookButton={handleBookButton}
+          role={currentUser?.role}
         />
       )}
       {openBookingModal && (

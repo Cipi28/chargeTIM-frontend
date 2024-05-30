@@ -6,7 +6,7 @@
  * contain code that should be seen on all pages. (e.g. navigation bar)
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 import { Switch, Route } from 'react-router-dom';
@@ -21,6 +21,7 @@ import ActiveBookingsContainer from 'containers/ActiveBookingsContainer/Loadable
 import BookingHistoryContainer from 'containers/BookingHistoryContainer/Loadable';
 import ProfileContainer from 'containers/ProfileContainer/Loadable';
 import NavBar from 'components/NavBar';
+import store from '../../store';
 
 const AppWrapper = styled.div`
   //max-width: calc(768px + 16px * 2);
@@ -32,6 +33,17 @@ const AppWrapper = styled.div`
 `;
 
 export default function App() {
+  const [userInfo, setUserInfo] = useState(null);
+
+  useEffect(() => {
+    const {
+      global: { user },
+    } = store.getState();
+    if (user && user.user) {
+      setUserInfo(user.user);
+    }
+  }, []);
+
   return (
     <AppWrapper>
       <Helmet
@@ -58,7 +70,7 @@ export default function App() {
         />
         <Route
           exact
-          path="/favourites"
+          path={userInfo?.role ? '/my-stations' : '/favourites'}
           component={FavouriteStationsContainer}
         />
         <Route exact path="/profile" component={ProfileContainer} />

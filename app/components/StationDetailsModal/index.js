@@ -33,12 +33,24 @@ import StarRatingDisplay from '../StarRatingDisplay';
 import moment from 'moment';
 import { formatConnectorType } from '../Utils';
 
+function base64toFile(base64String, filename, contentType) {
+  const byteCharacters = atob(base64String); // Decode base64 string
+  const byteNumbers = new Array(byteCharacters.length);
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+  const byteArray = new Uint8Array(byteNumbers);
+  const file = new File([byteArray], filename, { type: contentType });
+  return URL.createObjectURL(file);
+}
+
 function StationDetailsModal({
   setOpenStationDetailsModal,
   station,
   plugs,
   reviews,
   handleBookButton,
+  role,
 }) {
   const initialRef = React.useRef();
   const finalRef = React.useRef();
@@ -161,7 +173,13 @@ function StationDetailsModal({
             boxShadow={'2xl'}
           >
             <Image
-              src={station.image ?? defaultImage}
+              src={
+                station.image
+                  ? !station.is_public
+                    ? base64toFile(station.image, 'image', 'jpeg')
+                    : station.image
+                  : defaultImage
+              }
               rounded={'lg'}
               alt="Staion photo"
               width="100%"
@@ -170,20 +188,22 @@ function StationDetailsModal({
             />
           </Box>
           <Flex mt={7}>
-            <Button
-              ml={3}
-              mt={2}
-              bg={useColorModeValue('#151f21', 'gray.900')}
-              color="white"
-              rounded="md"
-              onClick={() => handleBookButton()}
-              _hover={{
-                transform: 'translateY(-2px)',
-                boxShadow: 'lg',
-              }}
-            >
-              Book now
-            </Button>
+            {!role && (
+              <Button
+                ml={3}
+                mt={2}
+                bg={useColorModeValue('#151f21', 'gray.900')}
+                color="white"
+                rounded="md"
+                onClick={() => handleBookButton()}
+                _hover={{
+                  transform: 'translateY(-2px)',
+                  boxShadow: 'lg',
+                }}
+              >
+                Book now
+              </Button>
+            )}
             <Box ml="auto" mr={2}>
               <StarRatingDisplay
                 rating={station.rating}
@@ -201,9 +221,9 @@ function StationDetailsModal({
             borderTop="1px solid"
             borderBottom="1px solid"
             borderColor="gray.200"
-            // py={4}
+            mb={5}
           >
-            <Flex alignItems="center" mb={5}>
+            <Flex alignItems="center" mb={5} mt={5}>
               <IoLocationOutline size={30} />
               <Text fontSize={'md'} ml={6}>
                 {station.adress}

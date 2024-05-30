@@ -28,6 +28,10 @@ const favouriteStationsContainerReducer = handleActions(
       ...state,
       userCars: action.payload,
     }),
+    [T.GET_USER_STATIONS_SUCCESS]: (state, action) => ({
+      ...state,
+      favouriteStations: action.payload,
+    }),
   },
   initialState,
 );

@@ -67,6 +67,7 @@
   "dependencies": {
     "@babel/polyfill": "7.4.3",
     "@babel/preset-es2015": "^7.0.0-beta.53",
+    "@chakra-ui/anatomy": "^2.2.2",
     "@chakra-ui/babel-plugin": "^1.0.8",
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.4",
