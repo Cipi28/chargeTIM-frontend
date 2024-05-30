@@ -52,8 +52,6 @@ export function HomepageContainer(props) {
     };
   }, []);
 
-  console.log('carItemssss', props, stations);
-
   useEffect(() => {
     setCarItems(props.userCars);
     setStations(props.allStations);

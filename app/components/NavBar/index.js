@@ -54,6 +54,17 @@ function NavBar() {
     { name: 'Profile', icon: FiUser, href: '/profile' },
     { name: 'Log Out', icon: FiLogOut, href: '/login' },
   ];
+
+  const ContributorLinkItems = [
+    { name: 'Dashboard', icon: FiHome, href: '/' },
+    { name: 'My Stations', icon: FiHeart, href: '/my-stations' },
+    { name: 'Map', icon: FiCompass, href: '/map' },
+    { name: 'Bookings  Requests', icon: FiBookOpen, href: '/bookings' },
+    { name: 'Booking History', icon: FiActivity, href: '/order-history' },
+    { name: 'Profile', icon: FiUser, href: '/profile' },
+    { name: 'Log Out', icon: FiLogOut, href: '/login' },
+  ];
+
   const [userInfo, setUserInfo] = useState(null);
   const defaultImage =
     'https://t3.ftcdn.net/jpg/05/70/71/06/360_F_570710660_Jana1ujcJyQTiT2rIzvfmyXzXamVcby8.jpg';
@@ -69,35 +80,41 @@ function NavBar() {
     }
   }, []);
 
-  const SidebarContent = ({ onClose, ...rest }) => (
-    <Box
-      transition="3s ease"
-      bg={useColorModeValue('white', 'gray.900')}
-      borderRight="1px"
-      borderRightColor={useColorModeValue('gray.200', 'gray.700')}
-      w={{ base: 'full', md: 60 }}
-      pos="fixed"
-      h="full"
-      {...rest}
-    >
-      <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-        <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-          ChargeTIM
-        </Text>
-        <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
-      </Flex>
-      {LinkItems.map(link => (
-        <NavItem
-          mt={4}
-          key={link.name}
-          icon={link.icon}
-          onClick={() => window.history.pushState({}, '', link.href)}
-        >
-          {link.name}
-        </NavItem>
-      ))}
-    </Box>
-  );
+  const SidebarContent = ({ onClose, ...rest }) => {
+    const NavbarItems = userInfo?.role ? ContributorLinkItems : LinkItems;
+    return (
+      <Box
+        transition="3s ease"
+        bg={useColorModeValue('white', 'gray.900')}
+        borderRight="1px"
+        borderRightColor={useColorModeValue('gray.200', 'gray.700')}
+        w={{ base: 'full', md: 60 }}
+        pos="fixed"
+        h="full"
+        {...rest}
+      >
+        <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
+          <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
+            ChargeTIM
+          </Text>
+          <CloseButton
+            display={{ base: 'flex', md: 'none' }}
+            onClick={onClose}
+          />
+        </Flex>
+        {NavbarItems.map(link => (
+          <NavItem
+            mt={4}
+            key={link.name}
+            icon={link.icon}
+            onClick={() => window.history.pushState({}, '', link.href)}
+          >
+            {link.name}
+          </NavItem>
+        ))}
+      </Box>
+    );
+  };
 
   const NavItem = ({ icon, children, ...rest }) => (
     <Box

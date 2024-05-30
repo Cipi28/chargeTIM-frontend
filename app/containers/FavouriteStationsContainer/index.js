@@ -3,14 +3,15 @@ import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
 import * as FavouriteStationsContainerActionCreators from './actions';
 import './index.css';
-import { Icon, Input, useDisclosure } from '@chakra-ui/react';
-import { FiSearch } from 'react-icons/fi';
+import { Button, Flex, Icon, Input, useDisclosure } from '@chakra-ui/react';
+import { FiPlus, FiSearch } from 'react-icons/fi';
 import { store } from '../../store';
 import StationCard from '../../components/StationCard';
 import { selectFavouriteStations } from './selectors';
 import StationDetailsModal from '../../components/StationDetailsModal';
 import * as S from './selectors';
 import BookingDetailsModal from '../../components/BookingDetailsModal';
+import AddStationModal from '../../components/AddStationModal';
 
 export function FavouriteStationsContainer(props) {
   const { actions } = props;
@@ -24,6 +25,7 @@ export function FavouriteStationsContainer(props) {
   const [currentReviews, setCurrentReviews] = useState([]);
   const [currentCars, setCurrentCars] = useState([]);
   const [openBookingModal, setOpenBookingModal] = useState(false);
+  const [isAddStationModalOpen, setIsAddStationModalOpen] = useState(false);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -33,7 +35,11 @@ export function FavouriteStationsContainer(props) {
     } = store.getState();
     if (user && user.user) {
       setUserInfo(user.user);
-      actions.getFavouriteStations({ userId: user.user.id });
+      if (user.user.role) {
+        actions.getUserStations({ userId: user.user.id });
+      } else {
+        actions.getFavouriteStations({ userId: user.user.id });
+      }
     }
 
     const handleResize = () => {
@@ -76,6 +82,60 @@ export function FavouriteStationsContainer(props) {
     setOpenBookingModal(true);
   };
 
+  const handleOpenAddStationModal = () => {
+    setIsAddStationModalOpen(true);
+  };
+
+  const deleteStation = stationId => {
+    actions.deleteStation({ id: stationId });
+    setStations(stations.filter(station => station.id !== stationId));
+  };
+
+  const addStation = (
+    name,
+    websiteLink,
+    price,
+    address,
+    phoneNumber,
+    image,
+    selectedDays,
+  ) => {
+    actions.addStation({
+      name,
+      price,
+      address,
+      phoneNumber,
+      image,
+      selectedDays,
+      website_URL: websiteLink,
+      maps_URL: null,
+      is_public: false,
+      latitude: 45.7698818,
+      longitude: 21.2220122,
+      public_id: null,
+      open_periods: null,
+      user_id: userInfo.id,
+    });
+
+    const newStation = {
+      name,
+      price,
+      address,
+      phoneNumber,
+      image,
+      selectedDays,
+      website_URL: websiteLink,
+      maps_URL: null,
+      is_public: false,
+      latitude: 45.7698818,
+      longitude: 21.2220122,
+      public_id: null,
+      open_periods: null,
+      user_id: userInfo.id,
+    };
+    setStations([...stations, newStation]);
+  };
+
   return (
     <div style={{ display: 'flex', justifyContent: 'center' }}>
       {' '}
@@ -115,6 +175,37 @@ export function FavouriteStationsContainer(props) {
                 );
               }}
             />
+            {userInfo?.role && (
+              <Flex justifyContent="center" alignItems="center" ml={20}>
+                <Button
+                  fontSize="sm"
+                  rounded="full"
+                  bg="blue.400"
+                  color="white"
+                  boxShadow="0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
+                  _hover={{
+                    bg: 'blue.500',
+                  }}
+                  _focus={{
+                    bg: 'blue.500',
+                  }}
+                  onClick={() => {
+                    handleOpenAddStationModal();
+                  }}
+                >
+                  Register Station
+                  <Icon
+                    ml="2"
+                    title="filterSurveyTags"
+                    fontSize="20"
+                    _groupHover={{
+                      color: 'white',
+                    }}
+                    as={FiPlus}
+                  />
+                </Button>
+              </Flex>
+            )}
           </div>
           {stations.map((station, index) => (
             <React.Fragment key={index}>
@@ -127,6 +218,8 @@ export function FavouriteStationsContainer(props) {
                   name={station.name}
                   openStationDetails={openStationDetails}
                   handleBookButton={handleBookButton}
+                  role={userInfo.role}
+                  deleteStation={deleteStation}
                 />
               </div>
             </React.Fragment>
@@ -140,6 +233,7 @@ export function FavouriteStationsContainer(props) {
           plugs={currentPlugs}
           reviews={currentReviews}
           handleBookButton={handleBookButton}
+          role={userInfo.role}
         />
       )}
       {openBookingModal && (
@@ -151,6 +245,12 @@ export function FavouriteStationsContainer(props) {
           saveBookingAction={actions.saveBookingAction}
           selectedStation={selectedStation}
           userId={userInfo.id}
+        />
+      )}
+      {isAddStationModalOpen && (
+        <AddStationModal
+          addStation={addStation}
+          setIsAddStationModalOpen={setIsAddStationModalOpen}
         />
       )}
     </div>

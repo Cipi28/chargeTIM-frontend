@@ -13,6 +13,17 @@ import {
   Button,
 } from '@chakra-ui/react';
 
+function base64toFile(base64String, filename, contentType) {
+  const byteCharacters = atob(base64String); // Decode base64 string
+  const byteNumbers = new Array(byteCharacters.length);
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+  const byteArray = new Uint8Array(byteNumbers);
+  const file = new File([byteArray], filename, { type: contentType });
+  return URL.createObjectURL(file);
+}
+
 export default function StationCard({
   index,
   id,
@@ -21,6 +32,8 @@ export default function StationCard({
   image,
   openStationDetails,
   handleBookButton,
+  role,
+  deleteStation,
 }) {
   const defaultImage =
     'https://static.vecteezy.com/system/resources/previews/006/683/801/non_2x/electric-vehicle-sport-car-charging-parking-at-the-charger-station-with-a-plug-in-cable-charging-in-the-top-side-of-car-to-battery-isolated-flat-illustration-on-white-background-vector.jpg';
@@ -66,7 +79,13 @@ export default function StationCard({
             height={230}
             width={282}
             objectFit={'cover'}
-            src={image ? image : defaultImage}
+            src={
+              image
+                ? role
+                  ? base64toFile(image, 'image', 'jpeg')
+                  : image
+                : defaultImage
+            }
             alt="#"
           />
         </Box>
@@ -103,13 +122,15 @@ export default function StationCard({
               bg={useColorModeValue('#151f21', 'gray.900')}
               color={'white'}
               rounded={'md'}
-              onClick={() => handleBookButton()}
+              onClick={() => {
+                role ? deleteStation(id) : handleBookButton();
+              }}
               _hover={{
                 transform: 'translateY(-2px)',
                 boxShadow: 'lg',
               }}
             >
-              Book now
+              {role ? 'Delete' : 'Book now'}
             </Button>
           </div>
         </Stack>

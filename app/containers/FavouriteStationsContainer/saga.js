@@ -1,7 +1,7 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import * as T from './constants';
 import * as A from './actions';
-import { get } from '../../api';
+import { get, post, del } from '../../api';
 
 function* getFavouriteStations(action) {
   try {
@@ -53,11 +53,52 @@ function* getUserCars(action) {
   }
 }
 
+function* addStation(action) {
+  try {
+    const station = yield call(post, `/stations`, { ...action.payload });
+
+    if (station.data && cars.data.length > 0) {
+      yield put(A.addStationSuccess(station.data));
+    }
+  } catch (e) {
+    yield put(A.addStationFailure(e.message));
+  }
+}
+
+function* getUserStations(action) {
+  try {
+    const { userId } = action.payload;
+    const stations = yield call(get, `/stations/user/${userId}`);
+
+    if (stations) {
+      yield put(A.getUserStationsSuccess(stations.data));
+    }
+  } catch (e) {
+    yield put(A.getUserStationsFailure(e.message));
+  }
+}
+
+function* deleteStation(action) {
+  try {
+    const { id } = action.payload;
+    const stations = yield call(del, `/stations/${id}`);
+
+    if (stations) {
+      yield put(A.deleteStationSuccess(stations.data));
+    }
+  } catch (e) {
+    yield put(A.deleteStationFailure(e.message));
+  }
+}
+
 function* favouriteStationsContainerSaga() {
   yield takeLatest(T.GET_FAVOURITE_STATIONS, getFavouriteStations);
   yield takeLatest(T.GET_PLUGS, getPlugs);
   yield takeLatest(T.GET_REVIEWS, getReviews);
   yield takeLatest(T.GET_USER_CARS, getUserCars);
+  yield takeLatest(T.ADD_STATION, addStation);
+  yield takeLatest(T.GET_USER_STATIONS, getUserStations);
+  yield takeLatest(T.DELETE_STATION, deleteStation);
 }
 
 export default favouriteStationsContainerSaga;
