@@ -28,3 +28,7 @@ export const updateBookingActionSuccess = createAction(
 export const updateBookingActionFailure = createAction(
   T.UPDATE_BOOKING_FAILURE,
 );
+
+export const rateUserAction = createAction(T.RATE_USER);
+export const rateUserActionSuccess = createAction(T.RATE_USER_SUCCESS);
+export const rateUserActionFailure = createAction(T.RATE_USER_FAILURE);

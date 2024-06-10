@@ -22,8 +22,20 @@ export const UPDATE_BOOKING_SUCCESS =
 export const UPDATE_BOOKING_FAILURE =
   'BOOKINGHISTORYCONTAINER/UPDATE_BOOKING_FAILURE';
 
-export const BOOKING_STATUS_BOOKED = 0;
+export const RATE_USER = 'BOOKINGHISTORYCONTAINER/RATE_USER';
+export const RATE_USER_SUCCESS = 'BOOKINGHISTORYCONTAINER/RATE_USER_SUCCESS';
+export const RATE_USER_FAILURE = 'BOOKINGHISTORYCONTAINER/RATE_USER_FAILURE';
+
+export const BOOKING_STATUS_ACTIVE = 0;
 export const BOOKING_STATUS_STARTED = 1;
 export const BOOKING_STATUS_ENDED = 2;
 export const BOOKING_STATUS_PENDING = 3;
 export const BOOKING_STATUS_REJECTED = 4;
+
+export const BOOKING_STATUS = {
+  0: 'Active Booking',
+  1: 'Started Booking',
+  2: 'Ended Booking',
+  3: 'Pending Request',
+  4: 'Rejected Request',
+};

@@ -7,3 +7,8 @@ export const selectBookings = createSelector(
   selectBookingHistoryContainer(),
   bookingHistoryContainer => bookingHistoryContainer?.bookings,
 );
+
+export const selectRatedSuccessful = createSelector(
+  selectBookingHistoryContainer(),
+  bookingHistoryContainer => bookingHistoryContainer?.ratedSuccessful,
+);
