@@ -19,7 +19,7 @@ import { PiChargingStationFill, PiPlugChargingFill } from 'react-icons/pi';
 import { FaCalendarAlt } from 'react-icons/fa';
 import { MdOutlineAccessTimeFilled } from 'react-icons/md';
 import { formatConnectorType } from '../Utils';
-import { BOOKING_STATUS_BOOKED } from '../../containers/ActiveBookingsContainer/constants';
+import { BOOKING_STATUS_ACTIVE } from '../../containers/ActiveBookingsContainer/constants';
 import moment from 'moment';
 
 function calculateDuration(date1, date2) {
@@ -63,18 +63,18 @@ export default function ActiveBookingCard({ booking, status, deleteBooking }) {
             fontSize={'sm'}
             fontWeight={500}
             bg={
-              status === BOOKING_STATUS_BOOKED
+              status === BOOKING_STATUS_ACTIVE
                 ? useColorModeValue('green.50', 'green.900')
                 : useColorModeValue('yellow.50', 'yellow.900')
             }
             p={2}
             px={3}
             color={
-              status === BOOKING_STATUS_BOOKED ? 'green.500' : 'yellow.500'
+              status === BOOKING_STATUS_ACTIVE ? 'green.500' : 'yellow.500'
             }
             rounded={'full'}
           >
-            {status === BOOKING_STATUS_BOOKED ? 'Ready to start' : 'Pending'}
+            {status === BOOKING_STATUS_ACTIVE ? 'Ready to start' : 'Pending'}
           </Text>
         </Stack>
 
@@ -147,7 +147,7 @@ export default function ActiveBookingCard({ booking, status, deleteBooking }) {
             </ListItem>
           </List>
           <Flex w="full" justifyContent="space-between">
-            {status === BOOKING_STATUS_BOOKED && (
+            {status === BOOKING_STATUS_ACTIVE && (
               <Button
                 mt={10}
                 w="47%"
@@ -167,22 +167,22 @@ export default function ActiveBookingCard({ booking, status, deleteBooking }) {
             )}
             <Button
               mt={10}
-              w={status === BOOKING_STATUS_BOOKED ? '47%' : 'full'}
-              bg={status === BOOKING_STATUS_BOOKED ? 'green.400' : 'yellow.400'}
+              w={status === BOOKING_STATUS_ACTIVE ? '47%' : 'full'}
+              bg={status === BOOKING_STATUS_ACTIVE ? 'green.400' : 'yellow.400'}
               color={'white'}
               rounded={'xl'}
               boxShadow={
-                status === BOOKING_STATUS_BOOKED
+                status === BOOKING_STATUS_ACTIVE
                   ? '0 5px 20px 0px rgba(72, 187, 120, 0.43)'
                   : '0 5px 20px 0px rgba(204, 153, 0, 0.43)'
               }
               _hover={{
                 bg:
-                  status === BOOKING_STATUS_BOOKED ? 'green.500' : 'yellow.500',
+                  status === BOOKING_STATUS_ACTIVE ? 'green.500' : 'yellow.500',
               }}
               _focus={{
                 bg:
-                  status === BOOKING_STATUS_BOOKED ? 'green.500' : 'yellow.500',
+                  status === BOOKING_STATUS_ACTIVE ? 'green.500' : 'yellow.500',
               }}
               onClick={() => {
                 deleteBooking(booking.id);

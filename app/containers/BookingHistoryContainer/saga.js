@@ -7,7 +7,11 @@ import { post, get, del, patch } from '../../api';
 function* getUserBookings(action) {
   try {
     const { userId, statuses } = action.payload;
-    const bookings = yield call(post, `/bookings/${userId}`, { statuses });
+    const role = action.payload.role ? action.payload.role : 0;
+    const bookings = yield call(post, `/bookings/${userId}`, {
+      statuses,
+      role,
+    });
     if (bookings) {
       yield put(A.getUserBookingsSuccessAction(bookings.data));
     }
@@ -52,11 +56,28 @@ function* updateBooking(action) {
   }
 }
 
+function* saveUserRating(action) {
+  const { userId, rating, role, bookingId } = action.payload;
+  try {
+    const booking = yield call(post, `/users/rateUser/${userId}`, {
+      rating,
+      role,
+      bookingId,
+    });
+    if (booking) {
+      yield put(A.rateUserActionSuccess(booking.data));
+    }
+  } catch (e) {
+    yield put(A.rateUserActionFailure(e.message));
+  }
+}
+
 function* bookingHistoryContainerSaga() {
   yield takeLatest(T.GET_USER_BOOKINGS, getUserBookings);
   yield takeLatest(T.DELETE_BOOKING, deleteBooking);
   yield takeLatest(T.SAVE_REVIEW, saveReview);
   yield takeLatest(T.UPDATE_BOOKING, updateBooking);
+  yield takeLatest(T.RATE_USER, saveUserRating);
 }
 
 export default bookingHistoryContainerSaga;
