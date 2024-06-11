@@ -27,7 +27,7 @@ function* signIn(action) {
     // window.history.pushState({}, '', '/');
     window.location.href = '/'; //todo: try to redirect using store
   } catch (e) {
-    // yield put(A.signInActionFailure(e.message));
+    yield put(A.signInActionFailure(e.response));
   }
 }
 

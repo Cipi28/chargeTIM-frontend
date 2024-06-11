@@ -11,3 +11,8 @@ export const selectError = createSelector(
   selectLoginContainer(),
   loginContainer => loginContainer.error,
 );
+
+export const selectErrorMessages = createSelector(
+  selectLoginContainer(),
+  loginContainer => loginContainer.errorMessages,
+);
