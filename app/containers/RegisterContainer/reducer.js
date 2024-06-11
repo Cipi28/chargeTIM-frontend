@@ -4,18 +4,17 @@ import * as T from './constants';
 export const initialState = {
   isLoading: false,
   error: null,
+  errorMessages: {},
 };
 
 const registerContainerReducer = handleActions(
   {
     [T.REGISTER]: state => ({ ...state, isLoading: true }),
-    // [T.REGISTER_SUCCESS]: state => {
-    //   const attempts = 0;
-    //   return { ...state, attempts, isLoading: false };
-    // },
+    [T.REGISTER_FAILURE]: (state, { payload }) => {
+      return { ...state, errorMessages: payload };
+    },
   },
   initialState,
 );
-
 
 export default registerContainerReducer;
