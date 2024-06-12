@@ -26,8 +26,12 @@ function* addCar(action) {
       plug_type,
       image,
     });
+
+    if (car) {
+      yield put(A.addCarSuccess(car.data));
+    }
   } catch (e) {
-    yield put(A.getUserCarsFailure(e.message));
+    yield put(A.addCarFailure(e.response));
   }
 }
 
@@ -36,7 +40,7 @@ function* deleteCar(action) {
     const { id } = action.payload;
     const car = yield call(del, `/cars/delete/${id}`);
   } catch (e) {
-    yield put(A.getUserCarsFailure(e.message));
+    yield put(A.deleteCarFailure(e.message));
   }
 }
 
@@ -49,8 +53,11 @@ function* updateCar(action) {
       plug_type,
       image,
     });
+    if (car) {
+      yield put(A.updateCarSuccess(car.data));
+    }
   } catch (e) {
-    yield put(A.getUserCarsFailure(e.message));
+    yield put(A.updateCarFailure(e.response));
   }
 }
 

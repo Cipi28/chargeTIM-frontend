@@ -11,6 +11,7 @@ import {
   Flex,
   useDisclosure,
   Heading,
+  Box,
 } from '@chakra-ui/react';
 import { FiSearch, FiPlus } from 'react-icons/fi';
 import * as S from './selectors';
@@ -19,6 +20,17 @@ import AddCarModal from '../../components/AddCarModal';
 import CarDetailsModal from '../../components/CarDetailsModal';
 import { isEmpty } from 'lodash';
 import BookingDetailsModal from '../../components/BookingDetailsModal';
+
+function base64toFile(base64String, filename, contentType) {
+  const byteCharacters = atob(base64String); // Decode base64 string
+  const byteNumbers = new Array(byteCharacters.length);
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+  const byteArray = new Uint8Array(byteNumbers);
+  const file = new File([byteArray], filename, { type: contentType });
+  return URL.createObjectURL(file);
+}
 
 export function HomepageContainer(props) {
   const { actions } = props;
@@ -30,6 +42,7 @@ export function HomepageContainer(props) {
   const [selectedCar, setSelectedCar] = useState(null);
   const [openBookingModal, setOpenBookingModal] = useState(false);
   const [stations, setStations] = useState([]);
+  const [updateErrorMessagesState, setUpdateErrorMessagesState] = useState({});
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -57,16 +70,13 @@ export function HomepageContainer(props) {
     setStations(props.allStations);
   }, [props.userCars, props.allStations]);
 
-  function base64toFile(base64String, filename, contentType) {
-    const byteCharacters = atob(base64String); // Decode base64 string
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    const file = new File([byteArray], filename, { type: contentType });
-    return URL.createObjectURL(file);
-  }
+  useEffect(() => {
+    setUpdateErrorMessagesState(props.updateErrorMessages);
+  }, [props.updateErrorMessages]);
+
+  const deleteErrors = () => {
+    setUpdateErrorMessagesState({});
+  };
 
   const addCar = (name, plate, plug_type, image) => {
     actions.addCar({ userId: userInfo.id, name, plate, plug_type, image });
@@ -88,7 +98,6 @@ export function HomepageContainer(props) {
   const updateCar = (id, name, plate, plug_type, image) => {
     actions.updateCar({ id, name, plate, plug_type, image });
     actions.getUserCars({ userId: userInfo.id });
-    setIsOpenEdit(false);
   };
 
   const handleBookButton = carIndex => {
@@ -98,45 +107,38 @@ export function HomepageContainer(props) {
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center' }}>
-      {' '}
-      {/* Added justifyContent: 'center' */}
-      {showFirstDiv && (
-        <div style={{ width: '240px', flexShrink: 0 }}>
-          {' '}
-          {/* Added flexShrink: 0 */}
-          {/* Content for the first div */}
-        </div>
-      )}
-      <div className="car-list-container">
-        <div className="car-list">
-          <div className="input-wrapper">
-            {' '}
-            {/* Added wrapper div for Input */}
-            <Icon
-              mr="4"
-              mt="1"
-              fontSize="30"
-              _groupHover={{
-                color: 'white',
-              }}
-              as={FiSearch}
-            />
-            <Input
-              className="search-bar"
-              placeholder="Search Car"
-              value={searchField}
-              onChange={event => {
-                const searchTerm = event.target.value.toLowerCase();
-                setSearchField(event.target.value);
-                setCarItems(
-                  props.userCars.filter(carItem =>
-                    carItem.name.toLowerCase().includes(searchTerm),
-                  ),
-                );
-              }}
-            />
-            <Flex justifyContent="center" alignItems="center" ml={20}>
+      {showFirstDiv && <div style={{ width: '240px', flexShrink: 0 }} />}
+      <div style={{ width: '100%' }}>
+        <Box mt={4} ml={7} mr={7}>
+          <Flex justify="center" align="center" mt={10}>
+            <Box mb={10}>
+              <Icon
+                mr="4"
+                mt="1"
+                fontSize="30"
+                _groupHover={{
+                  color: 'white',
+                }}
+                as={FiSearch}
+              />
+              <Input
+                width={'30rem'}
+                className="search-bar"
+                placeholder="Search Car"
+                value={searchField}
+                onChange={event => {
+                  const searchTerm = event.target.value.toLowerCase();
+                  setSearchField(event.target.value);
+                  setCarItems(
+                    props.userCars.filter(carItem =>
+                      carItem.name.toLowerCase().includes(searchTerm),
+                    ),
+                  );
+                }}
+              />
               <Button
+                ml={8}
+                mb={2}
                 fontSize="sm"
                 rounded="full"
                 bg="blue.400"
@@ -161,42 +163,48 @@ export function HomepageContainer(props) {
                   as={FiPlus}
                 />
               </Button>
-            </Flex>
-          </div>
-          {carItems.map((car, index) => (
-            <React.Fragment key={index}>
-              <div className="car-card">
-                <CarCard
-                  index={index}
-                  plate={car.plate}
-                  plugType={car.plug_type}
-                  image={base64toFile(car.image, 'carImage', 'jpeg')}
-                  name={car.name}
-                  openCarDetails={openCarDetails}
-                  handleBookButton={handleBookButton}
-                />
-              </div>
-            </React.Fragment>
-          ))}
+            </Box>
+          </Flex>
+          <Flex alignItems="center" wrap="wrap">
+            {carItems.map((car, index) => (
+              <Box p={3} mx={4} mb={12} key={index}>
+                <div className="car-card">
+                  <CarCard
+                    index={index}
+                    plate={car.plate}
+                    plugType={car.plug_type}
+                    image={car.image}
+                    name={car.name}
+                    openCarDetails={openCarDetails}
+                    handleBookButton={handleBookButton}
+                  />
+                </div>
+              </Box>
+            ))}
+          </Flex>
           {isEmpty(carItems) && (
             <div>
               <Heading
-                fontSize={'3xl'}
+                mt={12}
+                fontSize={'4xl'}
                 fontFamily={'body'}
                 fontWeight={500}
                 align="center"
+                textAlign={'center'}
               >
-                No cars added yet
+                No cars added yet!
               </Heading>
             </div>
           )}
-        </div>
+        </Box>
       </div>
       <AddCarModal
         isOpen={isOpen}
         onOpen={onOpen}
         onClose={onClose}
         addCar={addCar}
+        errors={props.errorMessages}
+        successAddCar={props.successAddCar}
       />
       {isOpenEdit && selectedCar && (
         <CarDetailsModal
@@ -204,6 +212,9 @@ export function HomepageContainer(props) {
           selectedCar={selectedCar}
           deleteCar={deleteCar}
           updateCar={updateCar}
+          errors={updateErrorMessagesState}
+          successUpdateCar={props.successUpdateCar}
+          deleteErrors={deleteErrors}
         />
       )}
       {openBookingModal && (
@@ -211,8 +222,6 @@ export function HomepageContainer(props) {
           setOpenBookingModal={setOpenBookingModal}
           cars={carItems}
           stations={stations}
-          // plugs={currentPlugs}
-          // saveBookingAction={actions.saveBookingAction}
           selectedCar={selectedCar}
           userId={userInfo.id}
         />
@@ -225,7 +234,10 @@ const mapStateToProps = state => ({
   isLoading: false,
   userCars: S.selectUserCars(state),
   allStations: S.selectAllStations(state),
-  // errorLoading: selectError(state),
+  errorMessages: S.selectErrorMessages(state),
+  successAddCar: S.selectSuccessAddCar(state),
+  updateErrorMessages: S.selectUpdateErrorMessages(state),
+  successUpdateCar: S.selectSuccessUpdateCar(state),
 });
 
 const mapDispatchToProps = dispatch => ({

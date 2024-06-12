@@ -31,7 +31,7 @@ import { TbRecharging } from 'react-icons/tb';
 import { isEmpty } from 'lodash';
 import StarRatingDisplay from '../StarRatingDisplay';
 import moment from 'moment';
-import { formatConnectorType } from '../Utils';
+import { BOOKING_TYPES } from '../../containers/HomepageContainer/constants';
 
 function base64toFile(base64String, filename, contentType) {
   const byteCharacters = atob(base64String); // Decode base64 string
@@ -272,7 +272,7 @@ function StationDetailsModal({
                 <Flex alignItems="center" mb={5}>
                   <TbRecharging size={30} />
                   <Text fontSize={'md'} ml={4}>
-                    {formatConnectorType(plug.type)}
+                    {BOOKING_TYPES[plug.type]}
                   </Text>
                   <Text color={'gray.500'} fontSize={'sm'} ml={4}>
                     {plug.kw_power} kW

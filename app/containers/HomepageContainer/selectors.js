@@ -11,3 +11,23 @@ export const selectAllStations = createSelector(
   selectHomepageContainer(),
   homepageContainer => homepageContainer.allStations,
 );
+
+export const selectErrorMessages = createSelector(
+  selectHomepageContainer(),
+  homepageContainer => homepageContainer.errorMessages,
+);
+
+export const selectSuccessAddCar = createSelector(
+  selectHomepageContainer(),
+  homepageContainer => homepageContainer.successAddCar,
+);
+
+export const selectUpdateErrorMessages = createSelector(
+  selectHomepageContainer(),
+  homepageContainer => homepageContainer.updateErrorMessages,
+);
+
+export const selectSuccessUpdateCar = createSelector(
+  selectHomepageContainer(),
+  homepageContainer => homepageContainer.successUpdateCar,
+);
