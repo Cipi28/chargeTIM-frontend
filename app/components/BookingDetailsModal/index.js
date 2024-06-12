@@ -21,7 +21,7 @@ import { PiChargingStationFill } from 'react-icons/pi';
 import { PiPlugChargingFill } from 'react-icons/pi';
 import { VscDebugStart } from 'react-icons/vsc';
 import { FaStop } from 'react-icons/fa';
-import { formatConnectorType } from '../Utils';
+import { BOOKING_TYPES } from '../../containers/HomepageContainer/constants';
 
 function BookingDetailsModal({
   setOpenBookingModal,
@@ -122,7 +122,7 @@ function BookingDetailsModal({
               {plugs &&
                 plugs.map(plug => (
                   <option value={plug.id}>
-                    {formatConnectorType(plug.type)} - {plug.kw_power} kW
+                    {BOOKING_TYPES[plug.type]} - {plug.kw_power} kW
                   </option>
                 ))}
             </Select>

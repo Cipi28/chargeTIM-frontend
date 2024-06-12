@@ -12,6 +12,18 @@ import {
   Image,
   Button,
 } from '@chakra-ui/react';
+import { BOOKING_TYPES } from '../../containers/HomepageContainer/constants';
+
+function base64toFile(base64String, filename, contentType) {
+  const byteCharacters = atob(base64String); // Decode base64 string
+  const byteNumbers = new Array(byteCharacters.length);
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+  const byteArray = new Uint8Array(byteNumbers);
+  const file = new File([byteArray], filename, { type: contentType });
+  return URL.createObjectURL(file);
+}
 
 export default function CarCard({
   index,
@@ -22,6 +34,9 @@ export default function CarCard({
   openCarDetails,
   handleBookButton,
 }) {
+  const defaultImage =
+    'https://png.pngtree.com/png-clipart/20230914/original/pngtree-electric-car-clipart-electric-car-charged-in-the-city-flat-vector-png-image_11092300.png';
+  
   return (
     <Center py={12}>
       <Box
@@ -48,7 +63,9 @@ export default function CarCard({
             pos: 'absolute',
             top: 5,
             left: 0,
-            backgroundImage: `url(${image})`,
+            backgroundImage: `url(${
+              image ? base64toFile(image, 'image', 'jpeg') : defaultImage
+            })`,
             filter: 'blur(15px)',
             zIndex: -1,
           }}
@@ -63,13 +80,13 @@ export default function CarCard({
             height={230}
             width={282}
             objectFit={'cover'}
-            src={image}
+            src={image ? base64toFile(image, 'image', 'jpeg') : defaultImage}
             alt="#"
           />
         </Box>
         <Stack pt={7} align={'center'}>
           <Text color={'gray.500'} fontSize={'sm'} textTransform={'uppercase'}>
-            Plug Type: {plugType}
+            Plug Type: {BOOKING_TYPES[plugType]}
           </Text>
           <Text color={'gray.500'} fontSize={'md'} textTransform={'uppercase'}>
             Plate: {plate}

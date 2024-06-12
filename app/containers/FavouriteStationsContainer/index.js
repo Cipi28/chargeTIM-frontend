@@ -3,7 +3,15 @@ import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
 import * as FavouriteStationsContainerActionCreators from './actions';
 import './index.css';
-import { Button, Flex, Icon, Input, useDisclosure } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Icon,
+  Input,
+  useDisclosure,
+} from '@chakra-ui/react';
 import { FiPlus, FiSearch } from 'react-icons/fi';
 import { store } from '../../store';
 import StationCard from '../../components/StationCard';
@@ -12,6 +20,7 @@ import StationDetailsModal from '../../components/StationDetailsModal';
 import * as S from './selectors';
 import BookingDetailsModal from '../../components/BookingDetailsModal';
 import AddStationModal from '../../components/AddStationModal';
+import { isEmpty } from 'lodash';
 
 export function FavouriteStationsContainer(props) {
   const { actions } = props;
@@ -94,36 +103,53 @@ export function FavouriteStationsContainer(props) {
   const addStation = (
     name,
     websiteLink,
-    price,
     address,
     phoneNumber,
+    openingHours,
+    closingHours,
+    latitude,
+    longitude,
+    kwPower,
+    costPerKw,
+    plug,
     image,
-    selectedDays,
   ) => {
+    const stationPlug = {
+      kwPower,
+      costPerKw,
+      plugType: plug,
+      status: 1,
+    };
     actions.addStation({
       name,
-      price,
       address,
       phoneNumber,
       image,
-      selectedDays,
       website_URL: websiteLink,
       maps_URL: null,
       is_public: false,
-      latitude: 45.7698818,
-      longitude: 21.2220122,
+      latitude: latitude,
+      longitude: longitude,
       public_id: null,
-      open_periods: null,
+      open_periods: JSON.stringify([
+        {
+          open: {
+            hour: openingHours,
+          },
+          close: {
+            hour: closingHours,
+          },
+        },
+      ]),
       user_id: userInfo.id,
+      stationPlug,
     });
 
     const newStation = {
       name,
-      price,
       address,
       phoneNumber,
       image,
-      selectedDays,
       website_URL: websiteLink,
       maps_URL: null,
       is_public: false,
@@ -134,97 +160,108 @@ export function FavouriteStationsContainer(props) {
       user_id: userInfo.id,
     };
     setStations([...stations, newStation]);
+    actions.getUserStations({ userId: userInfo.id });
   };
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center' }}>
-      {' '}
-      {/* Added justifyContent: 'center' */}
-      {showFirstDiv && (
-        <div style={{ width: '240px', flexShrink: 0 }}>
-          {' '}
-          {/* Added flexShrink: 0 */}
-          {/* Content for the first div */}
-        </div>
-      )}
-      <div className="car-list-container">
-        <div className="car-list">
-          <div className="input-wrapper">
-            {' '}
-            {/* Added wrapper div for Input */}
-            <Icon
-              mr="4"
-              mt="1"
-              fontSize="30"
-              _groupHover={{
-                color: 'white',
-              }}
-              as={FiSearch}
-            />
-            <Input
-              className="search-bar"
-              placeholder="Search Car"
-              value={searchField}
-              onChange={event => {
-                const searchTerm = event.target.value.toLowerCase();
-                setSearchField(event.target.value);
-                setStations(
-                  props.favouriteStations.filter(carItem =>
-                    carItem.name.toLowerCase().includes(searchTerm),
-                  ),
-                );
-              }}
-            />
-            {userInfo?.role && (
-              <Flex justifyContent="center" alignItems="center" ml={20}>
-                <Button
-                  fontSize="sm"
-                  rounded="full"
-                  bg="blue.400"
-                  color="white"
-                  boxShadow="0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
-                  _hover={{
-                    bg: 'blue.500',
+      {showFirstDiv && <div style={{ width: '240px', flexShrink: 0 }} />}
+      <div style={{ width: '100%' }}>
+        <Box mt={4} ml={7} mr={7}>
+          <Flex justify="center" align="center" mt={10}>
+            <Box mb={10}>
+              <Icon
+                mr="4"
+                mt="1"
+                fontSize="30"
+                _groupHover={{
+                  color: 'white',
+                }}
+                as={FiSearch}
+              />
+              <Input
+                width={'30rem'}
+                className="search-bar"
+                placeholder="Search Station"
+                value={searchField}
+                onChange={event => {
+                  const searchTerm = event.target.value.toLowerCase();
+                  setSearchField(event.target.value);
+                  setStations(
+                    props.favouriteStations.filter(carItem =>
+                      carItem.name.toLowerCase().includes(searchTerm),
+                    ),
+                  );
+                }}
+              />
+              <Button
+                ml={8}
+                mb={2}
+                hidden={!userInfo?.role}
+                fontSize="sm"
+                rounded="full"
+                bg="blue.400"
+                color="white"
+                boxShadow="0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
+                _hover={{
+                  bg: 'blue.500',
+                }}
+                _focus={{
+                  bg: 'blue.500',
+                }}
+                onClick={() => {
+                  handleOpenAddStationModal();
+                }}
+              >
+                Register Station
+                <Icon
+                  ml="2"
+                  title="filterSurveyTags"
+                  fontSize="20"
+                  _groupHover={{
+                    color: 'white',
                   }}
-                  _focus={{
-                    bg: 'blue.500',
-                  }}
-                  onClick={() => {
-                    handleOpenAddStationModal();
-                  }}
-                >
-                  Register Station
-                  <Icon
-                    ml="2"
-                    title="filterSurveyTags"
-                    fontSize="20"
-                    _groupHover={{
-                      color: 'white',
-                    }}
-                    as={FiPlus}
-                  />
-                </Button>
-              </Flex>
-            )}
-          </div>
-          {stations.map((station, index) => (
-            <React.Fragment key={index}>
-              <div className="car-card">
-                <StationCard
-                  index={index}
-                  id={station.id}
-                  adress={station.adress}
-                  image={station.image}
-                  name={station.name}
-                  openStationDetails={openStationDetails}
-                  handleBookButton={handleBookButton}
-                  role={userInfo.role}
-                  deleteStation={deleteStation}
+                  as={FiPlus}
                 />
-              </div>
-            </React.Fragment>
-          ))}
-        </div>
+              </Button>
+            </Box>
+          </Flex>
+          <Flex alignItems="center" wrap="wrap">
+            {stations.map((station, index) => (
+              <Box p={3} mx={4} mb={12} key={index}>
+                <div className="car-card">
+                  <StationCard
+                    index={index}
+                    id={station.id}
+                    adress={station.adress}
+                    image={station.image}
+                    name={station.name}
+                    openStationDetails={openStationDetails}
+                    handleBookButton={handleBookButton}
+                    role={userInfo.role}
+                    deleteStation={deleteStation}
+                  />
+                </div>
+              </Box>
+            ))}
+          </Flex>
+          {isEmpty(stations) && (
+            <div>
+              <Heading
+                mt={12}
+                fontSize={'4xl'}
+                fontFamily={'body'}
+                fontWeight={500}
+                align="center"
+                textAlign={'center'}
+              >
+                {userInfo?.role
+                  ? 'No stations added yet!'
+                  : 'Go to map and add your favourite stations!'}
+              </Heading>
+            </div>
+          )}
+        </Box>
       </div>
       {openStationDetailsModal && selectedStation && (
         <StationDetailsModal
