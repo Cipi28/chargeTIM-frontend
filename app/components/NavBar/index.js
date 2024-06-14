@@ -84,13 +84,14 @@ function NavBar() {
     const NavbarItems = userInfo?.role ? ContributorLinkItems : LinkItems;
     return (
       <Box
+        zIndex={2}
         transition="3s ease"
-        bg={useColorModeValue('white', 'gray.900')}
+        bg={useColorModeValue('gray.100', 'gray.900')}
         borderRight="1px"
         borderRightColor={useColorModeValue('gray.200', 'gray.700')}
         w={{ base: 'full', md: 60 }}
         pos="fixed"
-        h="full"
+        h="100vh"
         {...rest}
       >
         <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
@@ -131,7 +132,7 @@ function NavBar() {
         role="group"
         cursor="pointer"
         _hover={{
-          bg: 'cyan.400',
+          bg: 'green.400',
           color: 'white',
         }}
         {...rest}
@@ -153,6 +154,11 @@ function NavBar() {
 
   const MobileNav = ({ onOpen, ...rest }) => (
     <Flex
+      zIndex={0}
+      // position="fixed" // Make the navbar fixed
+      // top={0} // Position it at the top
+      // left={0} // Ensure it spans the entire width
+      // right={0} // Ensure it spans the entire width
       ml={{ base: 0, md: 60 }}
       px={{ base: 4, md: 4 }}
       height="20"
@@ -181,12 +187,6 @@ function NavBar() {
       </Text>
 
       <HStack spacing={{ base: '0', md: '6' }}>
-        <IconButton
-          size="lg"
-          variant="ghost"
-          aria-label="open menu"
-          icon={<FiBell />}
-        />
         <Flex alignItems="center">
           <Menu>
             <MenuButton
@@ -248,12 +248,13 @@ function NavBar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <Box bg={useColorModeValue('gray.100', 'gray.900')}>
+    <Box bg={useColorModeValue('gray.100', 'gray.900')} zIndex={10}>
       <SidebarContent
         onClose={() => onClose}
         display={{ base: 'none', md: 'block' }}
       />
       <Drawer
+        zIndex={10}
         isOpen={isOpen}
         placement="left"
         onClose={onClose}
@@ -265,11 +266,7 @@ function NavBar() {
           <SidebarContent onClose={onClose} />
         </DrawerContent>
       </Drawer>
-      {/* mobilenav */}
-      <MobileNav onOpen={onOpen} />
-      {/* <Box ml={{ base: 0, md: 60 }} p="4"> */}
-      {/*  /!* Content *!/ */}
-      {/* </Box> */}
+      <MobileNav zIndex={10} onOpen={onOpen} />
     </Box>
   );
 }

@@ -63,10 +63,10 @@ function RateModal({ booking, setIsOpen, rateUser }) {
 
           <ModalFooter justifyContent="center">
             <Button
+              rounded={'xl'}
               ml={3}
               bg={useColorModeValue('#151f21', 'gray.900')}
               color="white"
-              rounded="md"
               onClick={() => {
                 rateUser(ratingValue, booking.user_info.id, booking.id);
                 setIsOpen(false);

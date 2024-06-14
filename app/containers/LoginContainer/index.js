@@ -79,6 +79,7 @@ export function LoginContainer(props) {
         bgSize: 'cover',
         bgPosition: 'center',
         bgRepeat: 'no-repeat',
+        bgAttachment: 'fixed',
         opacity: 0.5,
       }}
     >

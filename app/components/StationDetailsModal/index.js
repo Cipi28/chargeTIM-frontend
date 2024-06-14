@@ -9,19 +9,18 @@ import {
   Avatar,
   Box,
   Button,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
   Flex,
   HStack,
   Image,
   Link,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Text,
-  useColorModeValue,
 } from '@chakra-ui/react';
 import { FaMapMarkedAlt, FaPhoneAlt } from 'react-icons/fa';
 import { IoGlobeOutline, IoLocationOutline } from 'react-icons/io5';
@@ -52,6 +51,9 @@ function StationDetailsModal({
   handleBookButton,
   role,
 }) {
+  const actualPeriods = station.open_periods
+    ? JSON.parse(station.open_periods)
+    : null;
   const initialRef = React.useRef();
   const finalRef = React.useRef();
   const defaultImage =
@@ -72,75 +74,16 @@ function StationDetailsModal({
       closeHourMoment, // close
     );
   };
-
-  const returnOpenPeriods = open_periods => {
-    //todo: handle render Open Periods for every case
-    if (open_periods.length === 1) {
-      return (
-        <Flex alignItems="center">
-          <LuClock4 size={30} />
-          <Accordion defaultIndex={[1]} allowMultiple>
-            <AccordionItem>
-              <AccordionButton>
-                <Flex as="span" flex="1" mt={4} mb={4}>
-                  <Text fontSize={'md'}>
-                    {isStationOpen(open_periods[0])
-                      ? 'Deschis Acum'
-                      : 'Inchis Acum'}
-                  </Text>
-                </Flex>
-                <AccordionIcon />
-              </AccordionButton>
-              <AccordionPanel pb={4}>
-                <Text fontSize={'md'}>
-                  Luni :{' '}
-                  {`${open_periods[0].open.hour}:${
-                    open_periods[0].open.minute
-                  }`}{' '}
-                  -{' '}
-                  {`${open_periods[0].close.hour}:${
-                    open_periods[0].close.minute
-                  }`}
-                </Text>
-              </AccordionPanel>
-            </AccordionItem>
-          </Accordion>
-        </Flex>
-      );
-    } else if (open_periods.length === 5) {
-      return (
-        <Flex alignItems="center" mt={5} mb={5}>
-          <LuClock4 size={30} />
-          <Text fontSize={'md'} ml={6}>
-            {/*add correct data*/}
-            Deschis non-stop
-          </Text>
-        </Flex>
-      );
-    } else if (open_periods.length === 7) {
-      return (
-        <Flex alignItems="center" mt={5} mb={5}>
-          <LuClock4 size={30} />
-          <Text fontSize={'md'} ml={6}>
-            {/*add correct data*/}
-            Deschis non-stop
-          </Text>
-        </Flex>
-      );
+  const addZero = number => {
+    if (number < 10) {
+      return `0${number}`;
     }
-    return (
-      <Flex alignItems="center" mt={5} mb={5}>
-        <LuClock4 size={30} />
-        <Text fontSize={'md'} ml={6}>
-          {/*add correct data*/}
-          Deschis non-stop
-        </Text>
-      </Flex>
-    );
+    return number;
   };
 
   return (
-    <Modal
+    <Drawer
+      size={'lg'}
       initialFocusRef={initialRef}
       finalFocusRef={finalRef}
       isOpen={true}
@@ -150,22 +93,14 @@ function StationDetailsModal({
       motionPreset="slideInBottom"
       blockScrollOnMount={false}
     >
-      <ModalOverlay />
-      <ModalContent
-        position="fixed"
-        top="0"
-        right="0"
-        height="100vh"
-        marginRight="0"
-        transform="translateY(0%)"
-        transition="transform 0.3s ease-out"
-      >
-        <ModalHeader>{station.name}</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody pb={6} overflowY="auto">
+      <DrawerOverlay />
+      <DrawerContent>
+        <DrawerHeader>{station.name}</DrawerHeader>
+        <DrawerCloseButton />
+        <DrawerBody pb={6} overflowY="auto">
           <Box
-            width="400px"
-            height="200px"
+            width="607px"
+            height="280px"
             overflow="hidden"
             overflowY="auto"
             rounded={'lg'}
@@ -192,9 +127,9 @@ function StationDetailsModal({
               <Button
                 ml={3}
                 mt={2}
-                bg={useColorModeValue('#151f21', 'gray.900')}
-                color="white"
-                rounded="md"
+                rounded={'xl'}
+                width="150px"
+                colorScheme="green"
                 onClick={() => handleBookButton()}
                 _hover={{
                   transform: 'translateY(-2px)',
@@ -210,7 +145,7 @@ function StationDetailsModal({
                 ratingSize={'xl'}
                 starSize={25}
               />
-              <Text fontSize={'md'}>
+              <Text fontSize={'lg'} mt={2}>
                 {station.rating_count}{' '}
                 {station.rating_count === 1 ? 'Rating' : 'Ratings'}
               </Text>
@@ -225,20 +160,42 @@ function StationDetailsModal({
           >
             <Flex alignItems="center" mb={5} mt={5}>
               <IoLocationOutline size={30} />
-              <Text fontSize={'md'} ml={6}>
+              <Text fontSize={'lg'} ml={6}>
                 {station.adress}
               </Text>
             </Flex>
             {station.phone && (
               <Flex alignItems="center" mt={5} mb={5}>
                 <FaPhoneAlt size={30} />
-                <Text fontSize={'md'} ml={6}>
+                <Text fontSize={'lg'} ml={6}>
                   {station.phone}
                 </Text>
               </Flex>
             )}
-            {station.open_periods &&
-              returnOpenPeriods(JSON.parse(station.open_periods))}
+            {station.open_periods && (
+              <Flex alignItems="center" mt={5} mb={5}>
+                <LuClock4 size={30} />
+                <Text fontSize={'lg'} ml={6}>
+                  Open Hours:
+                </Text>
+                {station.is_public ? (
+                  <Text fontSize={'md'} ml="auto" mr={2}>
+                    {`${addZero(actualPeriods[0].open.hour)}:${addZero(
+                      actualPeriods[0].open.minute,
+                    )}`}
+                    -
+                    {`${addZero(actualPeriods[0].close.hour)}:${addZero(
+                      actualPeriods[0].close.minute,
+                    )}`}
+                  </Text>
+                ) : (
+                  <Text fontSize={'md'} ml="auto" mr={2}>
+                    {`${addZero(actualPeriods[0].open.hour)}`}-
+                    {`${addZero(actualPeriods[0].close.hour)}`}
+                  </Text>
+                )}
+              </Flex>
+            )}
             {station.website_URL && (
               <Flex alignItems="center" mt={5} mb={5}>
                 <IoGlobeOutline size={30} />
@@ -252,7 +209,7 @@ function StationDetailsModal({
             {station.maps_URL && (
               <Flex alignItems="center" mt={5} mb={5}>
                 <FaMapMarkedAlt size={30} />
-                <Text fontSize={'md'} ml={6}>
+                <Text fontSize={'lg'} ml={6}>
                   <Link href={station.maps_URL} isExternal>
                     See on maps
                   </Link>
@@ -261,7 +218,7 @@ function StationDetailsModal({
             )}
             <Flex alignItems="center" mt={5} mb={5}>
               <IoMdPerson size={30} />
-              <Text fontSize={'md'} ml={6}>
+              <Text fontSize={'lg'} ml={6}>
                 {station.is_public ? 'Public Station' : 'Private Station'}
               </Text>
             </Flex>
@@ -271,7 +228,7 @@ function StationDetailsModal({
               {plugs.map((plug, index) => (
                 <Flex alignItems="center" mb={5}>
                   <TbRecharging size={30} />
-                  <Text fontSize={'md'} ml={4}>
+                  <Text fontSize={'lg'} ml={4}>
                     {BOOKING_TYPES[plug.type]}
                   </Text>
                   <Text color={'gray.500'} fontSize={'sm'} ml={4}>
@@ -311,7 +268,18 @@ function StationDetailsModal({
                       >
                         <Flex alignItems="center" mb={5}>
                           <HStack>
-                            <Avatar size="md" src={review.reviewer_photo} />
+                            <Avatar
+                              size="md"
+                              src={
+                                review.is_public_reviewer
+                                  ? review.reviewer_photo
+                                  : base64toFile(
+                                      review.reviewer_photo,
+                                      'image',
+                                      'jpeg',
+                                    )
+                              }
+                            />
                             <Text fontSize="sm">{review.reviewer_name}</Text>
                           </HStack>
                           <Box ml="auto" mr={2}>
@@ -332,11 +300,11 @@ function StationDetailsModal({
               </Accordion>
             </Box>
           )}
-        </ModalBody>
+        </DrawerBody>
 
-        <ModalFooter>{/*<Box mb={10} />*/}</ModalFooter>
-      </ModalContent>
-    </Modal>
+        <DrawerFooter />
+      </DrawerContent>
+    </Drawer>
   );
 }
 

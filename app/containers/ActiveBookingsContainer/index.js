@@ -22,7 +22,11 @@ import {
   AlertTitle,
 } from '@chakra-ui/react';
 import ActiveBookingCard from '../../components/ActiveBookingCard';
-import { BOOKING_STATUS_ACTIVE, BOOKING_STATUS_PENDING } from './constants';
+import {
+  BOOKING_STATUS_ACTIVE,
+  BOOKING_STATUS_PENDING,
+  BOOKING_STATUS_STARTED,
+} from './constants';
 import {
   selectAcceptedSuccessful,
   selectBookings,
@@ -35,6 +39,7 @@ export function ActiveBookingsContainer(props) {
   const { actions } = props;
   const [showFirstDiv, setShowFirstDiv] = useState(window.innerWidth >= 768);
   const [userInfo, setUserInfo] = useState(null);
+  const [startedBookings, setStartedBookings] = useState([]);
   const [activeBookings, setActiveBookings] = useState([]);
   const [pendingBookings, setPendingBookings] = useState([]);
   const [isOpenAcceptAlert, setIsOpenAcceptAlert] = useState(false);
@@ -55,7 +60,11 @@ export function ActiveBookingsContainer(props) {
       } else {
         actions.getUserBookingsAction({
           userId: user.user.id,
-          statuses: [BOOKING_STATUS_ACTIVE, BOOKING_STATUS_PENDING],
+          statuses: [
+            BOOKING_STATUS_ACTIVE,
+            BOOKING_STATUS_PENDING,
+            BOOKING_STATUS_STARTED,
+          ],
         });
       }
     }
@@ -73,6 +82,7 @@ export function ActiveBookingsContainer(props) {
   useEffect(() => {
     setActiveBookings(props.bookings[BOOKING_STATUS_ACTIVE]);
     setPendingBookings(props.bookings[BOOKING_STATUS_PENDING]);
+    setStartedBookings(props.bookings[BOOKING_STATUS_STARTED]);
   }, [props.bookings]);
 
   useEffect(() => {
@@ -98,6 +108,11 @@ export function ActiveBookingsContainer(props) {
     actions.updateBookingStatusAction({ id: booking.id, status });
     setPendingBookings(pendingBookings.filter(el => el.id !== booking.id));
   };
+
+  const activeUserBookings =
+    !isEmpty(startedBookings) && !isEmpty(activeBookings)
+      ? startedBookings.concat(activeBookings)
+      : [];
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -152,7 +167,6 @@ export function ActiveBookingsContainer(props) {
               <Box borderRadius="lg" overflow="hidden">
                 <Flex alignItems="center" wrap="wrap">
                   {!isEmpty(pendingBookings) &&
-                    // make custom component for contributor bookings
                     pendingBookings.map((booking, index) => (
                       <Box p={3} width="400px" mx={10} mb={12} key={index}>
                         <ContributorBookingCard
@@ -188,11 +202,11 @@ export function ActiveBookingsContainer(props) {
                   <Box borderRadius="lg" overflow="hidden">
                     <Flex alignItems="center" wrap="wrap">
                       {!isEmpty(activeBookings) &&
-                        activeBookings.map((booking, index) => (
+                        activeUserBookings.map((booking, index) => (
                           <Box p={3} width="400px" mx={10} mb={12} key={index}>
                             <ActiveBookingCard
                               booking={booking}
-                              status={BOOKING_STATUS_ACTIVE}
+                              status={booking.status}
                               deleteBooking={deleteActiveBooking}
                             />
                           </Box>

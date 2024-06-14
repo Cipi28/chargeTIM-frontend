@@ -173,7 +173,6 @@ function AddCarModal({ isOpen, onClose, addCar, errors, successAddCar }) {
                 <Select
                   value={selectedPug}
                   onChange={event => {
-                    console.log(event);
                     setSelectedPlug(event.target.value);
                   }}
                 >

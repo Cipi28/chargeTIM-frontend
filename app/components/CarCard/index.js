@@ -36,7 +36,7 @@ export default function CarCard({
 }) {
   const defaultImage =
     'https://png.pngtree.com/png-clipart/20230914/original/pngtree-electric-car-clipart-electric-car-charged-in-the-city-flat-vector-png-image_11092300.png';
-  
+
   return (
     <Center py={12}>
       <Box
@@ -100,7 +100,8 @@ export default function CarCard({
               mr={3}
               bg={useColorModeValue('#FFFFFF', 'gray.900')}
               variant="outline"
-              rounded={'md'}
+              rounded={'xl'}
+              width="120px"
               _hover={{
                 transform: 'translateY(-2px)',
                 boxShadow: 'lg',
@@ -115,9 +116,9 @@ export default function CarCard({
               // w={'full'}
               mt={4}
               ml={3}
-              bg={useColorModeValue('#151f21', 'gray.900')}
-              color={'white'}
-              rounded={'md'}
+              rounded={'xl'}
+              width="120px"
+              colorScheme="green"
               onClick={() => {
                 handleBookButton(index);
               }}

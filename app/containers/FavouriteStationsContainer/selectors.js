@@ -23,3 +23,29 @@ export const selectUserCars = createSelector(
   selectFavouriteStationsContainer(),
   favouriteStationsContainer => favouriteStationsContainer?.userCars,
 );
+
+export const selectPlugsByCarType = createSelector(
+  selectFavouriteStationsContainer(),
+  favouriteStationsContainer => favouriteStationsContainer?.plugsByCarType,
+);
+
+export const selectPlugsRetrieved = createSelector(
+  selectFavouriteStationsContainer(),
+  favouriteStationsContainer => favouriteStationsContainer?.plugsRetrieved,
+);
+
+export const selectConflictBookings = createSelector(
+  selectFavouriteStationsContainer(),
+  favouriteStationsContainer => favouriteStationsContainer?.conflictBookings,
+);
+
+export const selectIsCurrentBookingVerified = createSelector(
+  selectFavouriteStationsContainer(),
+  favouriteStationsContainer =>
+    favouriteStationsContainer?.isCurrentBookingVerified,
+);
+
+export const selectIsBookingSaved = createSelector(
+  selectFavouriteStationsContainer(),
+  favouriteStationsContainer => favouriteStationsContainer?.isBookingSaved,
+);

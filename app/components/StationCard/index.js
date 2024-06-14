@@ -30,6 +30,7 @@ export default function StationCard({
   name,
   adress,
   image,
+  isStationPublic,
   openStationDetails,
   handleBookButton,
   role,
@@ -64,7 +65,13 @@ export default function StationCard({
             pos: 'absolute',
             top: 5,
             left: 0,
-            backgroundImage: `url(${defaultImage})`,
+            backgroundImage: `url(${
+              image
+                ? !isStationPublic
+                  ? base64toFile(image, 'image', 'jpeg')
+                  : image
+                : defaultImage
+            })`,
             filter: 'blur(15px)',
             zIndex: -1,
           }}
@@ -81,7 +88,7 @@ export default function StationCard({
             objectFit={'cover'}
             src={
               image
-                ? role
+                ? !isStationPublic
                   ? base64toFile(image, 'image', 'jpeg')
                   : image
                 : defaultImage
@@ -107,7 +114,8 @@ export default function StationCard({
               mr={3}
               bg={useColorModeValue('#FFFFFF', 'gray.900')}
               variant="outline"
-              rounded={'md'}
+              rounded={'xl'}
+              width="120px"
               _hover={{
                 transform: 'translateY(-2px)',
                 boxShadow: 'lg',
@@ -119,11 +127,11 @@ export default function StationCard({
             <Button
               mt={4}
               ml={3}
-              bg={useColorModeValue('#151f21', 'gray.900')}
-              color={'white'}
-              rounded={'md'}
+              rounded={'xl'}
+              width="120px"
+              colorScheme="green"
               onClick={() => {
-                role ? deleteStation(id) : handleBookButton();
+                role ? deleteStation(id) : handleBookButton(id);
               }}
               _hover={{
                 transform: 'translateY(-2px)',

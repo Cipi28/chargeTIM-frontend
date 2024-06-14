@@ -142,12 +142,35 @@ export function ProfileContainer(props) {
     }
   };
 
-  console.log('RENDDDD', props);
-
   return (
     <div style={{ display: 'flex', justifyContent: 'center' }}>
-      {' '}
-      {/* Added justifyContent: 'center' */}
+      {/*<Box*/}
+      {/*  minH={'100vh'}*/}
+      {/*  align={'center'}*/}
+      {/*  justify={'center'}*/}
+      {/*  // bg={useColorModeValue('gray.50', 'gray.800')}*/}
+      {/*  backgroundSize="cover"*/}
+      {/*  backgroundPosition="center"*/}
+      {/*  backgroundRepeat="no-repeat"*/}
+      {/*  _before={{*/}
+      {/*    paddingLeft: '240px',*/}
+      {/*    content: '""',*/}
+      {/*    position: 'absolute',*/}
+      {/*    top: 0,*/}
+      {/*    right: '10%', // Adjust this value to set the left margin*/}
+      {/*    width: '90%', // Adjust this value to account for the left margin*/}
+      {/*    height: '100%',*/}
+      {/*    bgImage:*/}
+      {/*      'https://evocharge.com/wp-content/uploads/2021/02/GettyImages-1184969192-1.jpg',*/}
+      {/*    bgSize: 'cover',*/}
+      {/*    bgPosition: 'center',*/}
+      {/*    bgRepeat: 'no-repeat',*/}
+      {/*    bgAttachment: 'fixed',*/}
+      {/*    opacity: 0.2,*/}
+      {/*    zIndex: -999,*/}
+      {/*  }}*/}
+      {/*  zIndex={-99999}*/}
+      {/*>*/} {/* Added justifyContent: 'center' */}
       {showFirstDiv && (
         <div style={{ width: '240px', flexShrink: 0 }}>
           {' '}
@@ -158,16 +181,13 @@ export function ProfileContainer(props) {
       <div>
         <Box
           mt={'2rem'}
-          // border="6px"
-          // border="5px solid"
-          // borderBottom="1px solid"
-          // borderColor="gray.200"
           boxShadow={'2xl'}
           width={'45rem'}
-          height={'100vh'}
+          height={'84vh'}
+          zIndex={1}
         >
-          <Box display="flex" justifyContent="center">
-            <Box>
+          <Box display="flex" justifyContent="center" zIndex={1}>
+            <Box zIndex={1}>
               <Image
                 mt={'2rem'}
                 borderRadius="full"
@@ -210,7 +230,7 @@ export function ProfileContainer(props) {
                   Name
                 </Text>
                 <Input
-                  placeholder="Basic usage"
+                  placeholder="Name"
                   isDisabled={!isEditEnabled}
                   variant="flushed"
                   value={name}
@@ -224,7 +244,7 @@ export function ProfileContainer(props) {
                   Email
                 </Text>
                 <Input
-                  placeholder="Basic usage"
+                  placeholder="Email"
                   isDisabled={!isEditEnabled}
                   variant="flushed"
                   value={email}
@@ -239,7 +259,7 @@ export function ProfileContainer(props) {
                 Adress
               </Text>
               <Input
-                placeholder="Basic usage"
+                placeholder="Ender your address"
                 isDisabled={!isEditEnabled}
                 variant="flushed"
                 value={address}
@@ -355,6 +375,7 @@ export function ProfileContainer(props) {
           </Box>
         </Box>
       </div>
+      {/*</Box>*/}
     </div>
   );
 }

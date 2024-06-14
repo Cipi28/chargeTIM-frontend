@@ -91,6 +91,77 @@ function* deleteStation(action) {
   }
 }
 
+function* saveBooking({ payload }) {
+  try {
+    const {
+      carId,
+      stationId,
+      plugId,
+      startDate,
+      endDate,
+      userId,
+      status,
+    } = payload;
+    const booking = yield call(post, `/bookings`, {
+      carId,
+      stationId,
+      plugId,
+      startDate,
+      endDate,
+      userId,
+      status,
+    });
+
+    if (booking) {
+      yield put(A.saveBookingSuccessAction(booking.data));
+    }
+  } catch (e) {
+    yield put(A.saveBookingFailureAction(e.message));
+  }
+}
+
+function* verifyBooking({ payload }) {
+  try {
+    const {
+      carId,
+      stationId,
+      plugId,
+      startDate,
+      endDate,
+      userId,
+      status,
+    } = payload;
+    const conflictBookings = yield call(post, `/bookings/verify/`, {
+      carId,
+      stationId,
+      plugId,
+      startDate,
+      endDate,
+      userId,
+      status,
+    });
+
+    if (conflictBookings) {
+      yield put(A.verifyBookingSuccessAction(conflictBookings.data));
+    }
+  } catch (e) {
+    yield put(A.verifyBookingFailureAction(e.message));
+  }
+}
+
+function* getPlugsByCarType(action) {
+  try {
+    const { stationId, carPlugType } = action.payload;
+    const plugs = yield call(get, `/plugs/${stationId}/${carPlugType}`);
+
+    if (plugs.data) {
+      yield put(A.getPlugsAfterCarTypeSuccessAction(plugs.data));
+    }
+  } catch (e) {
+    yield put(A.getPlugsAfterCarTypeFailureAction(e.message));
+  }
+}
+
 function* favouriteStationsContainerSaga() {
   yield takeLatest(T.GET_FAVOURITE_STATIONS, getFavouriteStations);
   yield takeLatest(T.GET_PLUGS, getPlugs);
@@ -99,6 +170,10 @@ function* favouriteStationsContainerSaga() {
   yield takeLatest(T.ADD_STATION, addStation);
   yield takeLatest(T.GET_USER_STATIONS, getUserStations);
   yield takeLatest(T.DELETE_STATION, deleteStation);
+  yield takeLatest(T.SAVE_BOOKING, saveBooking);
+  yield takeLatest(T.VERIFY_BOOKING, verifyBooking);
+  yield takeLatest(T.GET_PLUGS_AFTER_CAR_TYPE, getPlugsByCarType);
+  yield takeLatest(T.GET_PLUGS_AFTER_CAR_TYPE_QUIET, getPlugsByCarType);
 }
 
 export default favouriteStationsContainerSaga;

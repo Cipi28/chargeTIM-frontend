@@ -35,6 +35,21 @@ export function FavouriteStationsContainer(props) {
   const [currentCars, setCurrentCars] = useState([]);
   const [openBookingModal, setOpenBookingModal] = useState(false);
   const [isAddStationModalOpen, setIsAddStationModalOpen] = useState(false);
+  const [conflictBookings, setConflictBookings] = useState([]);
+  const [bookingVerified, setBookingVerified] = useState(false);
+  const [bookingSaved, setBookingSaved] = useState(false);
+
+  useEffect(() => {
+    setConflictBookings(props.conflictBookings);
+  }, [props.conflictBookings]);
+
+  useEffect(() => {
+    setBookingVerified(props.isCurrentBookingVerified);
+  }, [props.isCurrentBookingVerified]);
+
+  useEffect(() => {
+    setBookingSaved(props.isBookingSaved);
+  }, [props.isBookingSaved]);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -72,6 +87,22 @@ export function FavouriteStationsContainer(props) {
     props.userCars,
   ]);
 
+  const onChangeCar = (carId, stationId) => {
+    const car = props.userCars.find(car => car.id === parseInt(carId));
+    actions.getPlugsAfterCarTypeQuietAction({
+      stationId: selectedStation.id,
+      carPlugType: car.plug_type,
+    });
+  };
+
+  const onChangeStation = (carId, stationId) => {
+    const car = props.userCars.find(car => car.id === parseInt(carId));
+    actions.getPlugsAfterCarTypeQuietAction({
+      stationId: stationId,
+      carPlugType: car.plug_type,
+    });
+  };
+
   const openStationDetails = index => {
     actions.getPlugsAction({ stationId: stations[index].id });
     actions.getReviewsAction({ stationId: stations[index].id });
@@ -79,17 +110,23 @@ export function FavouriteStationsContainer(props) {
     setSelectedStation(stations[index]);
   };
 
-  const handleBookButton = () => {
+  const handleBookButton = id => {
+    setSelectedStation(stations.find(station => station.id === id));
+
     actions.getUserCarsAction({
       userId: userInfo.id,
     });
-    actions.getPlugsAction({
-      stationId: selectedStation.id,
-    });
-    actions.getPlugsAction({ stationId: selectedStation.id });
-    setSelectedStation(selectedStation);
-    setOpenBookingModal(true);
   };
+
+  useEffect(() => {
+    if (!isEmpty(props.userCars) && !isEmpty(selectedStation)) {
+      actions.getPlugsAfterCarTypeAction({
+        stationId: selectedStation.id,
+        carPlugType: props.userCars[0]?.plug_type,
+      });
+      setOpenBookingModal(true);
+    }
+  }, [props.userCars]);
 
   const handleOpenAddStationModal = () => {
     setIsAddStationModalOpen(true);
@@ -167,100 +204,128 @@ export function FavouriteStationsContainer(props) {
     <div style={{ display: 'flex', justifyContent: 'center' }}>
       {showFirstDiv && <div style={{ width: '240px', flexShrink: 0 }} />}
       <div style={{ width: '100%' }}>
-        <Box mt={4} ml={7} mr={7}>
-          <Flex justify="center" align="center" mt={10}>
-            <Box mb={10}>
-              <Icon
-                mr="4"
-                mt="1"
-                fontSize="30"
-                _groupHover={{
-                  color: 'white',
-                }}
-                as={FiSearch}
-              />
-              <Input
-                width={'30rem'}
-                className="search-bar"
-                placeholder="Search Station"
-                value={searchField}
-                onChange={event => {
-                  const searchTerm = event.target.value.toLowerCase();
-                  setSearchField(event.target.value);
-                  setStations(
-                    props.favouriteStations.filter(carItem =>
-                      carItem.name.toLowerCase().includes(searchTerm),
-                    ),
-                  );
-                }}
-              />
-              <Button
-                ml={8}
-                mb={2}
-                hidden={!userInfo?.role}
-                fontSize="sm"
-                rounded="full"
-                bg="blue.400"
-                color="white"
-                boxShadow="0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
-                _hover={{
-                  bg: 'blue.500',
-                }}
-                _focus={{
-                  bg: 'blue.500',
-                }}
-                onClick={() => {
-                  handleOpenAddStationModal();
-                }}
-              >
-                Register Station
+        <Box
+          minH={'100vh'}
+          align={'center'}
+          justify={'center'}
+          backgroundSize="cover"
+          backgroundPosition="center"
+          backgroundRepeat="no-repeat"
+          _before={{
+            paddingLeft: '240px',
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            right: '10%', // Adjust this value to set the left margin
+            width: '90%', // Adjust this value to account for the left margin
+            height: '100%',
+            bgImage:
+              'https://evocharge.com/wp-content/uploads/2021/02/GettyImages-1184969192-1.jpg',
+            bgSize: 'cover',
+            bgPosition: 'center',
+            bgRepeat: 'no-repeat',
+            bgAttachment: 'fixed',
+            opacity: 0.2,
+            zIndex: -999,
+          }}
+          zIndex={-999}
+        >
+          <Box mt={4} ml={7} mr={7}>
+            <Flex justify="center" align="center" mt={10}>
+              <Box mb={10}>
                 <Icon
-                  ml="2"
-                  title="filterSurveyTags"
-                  fontSize="20"
+                  mr="4"
+                  mt="1"
+                  fontSize="30"
                   _groupHover={{
                     color: 'white',
                   }}
-                  as={FiPlus}
+                  as={FiSearch}
                 />
-              </Button>
-            </Box>
-          </Flex>
-          <Flex alignItems="center" wrap="wrap">
-            {stations.map((station, index) => (
-              <Box p={3} mx={4} mb={12} key={index}>
-                <div className="car-card">
-                  <StationCard
-                    index={index}
-                    id={station.id}
-                    adress={station.adress}
-                    image={station.image}
-                    name={station.name}
-                    openStationDetails={openStationDetails}
-                    handleBookButton={handleBookButton}
-                    role={userInfo.role}
-                    deleteStation={deleteStation}
+                <Input
+                  width={'30rem'}
+                  className="search-bar"
+                  placeholder="Search Station"
+                  value={searchField}
+                  onChange={event => {
+                    const searchTerm = event.target.value.toLowerCase();
+                    setSearchField(event.target.value);
+                    setStations(
+                      props.favouriteStations.filter(carItem =>
+                        carItem.name.toLowerCase().includes(searchTerm),
+                      ),
+                    );
+                  }}
+                />
+                <Button
+                  ml={8}
+                  mb={2}
+                  hidden={!userInfo?.role}
+                  fontSize="sm"
+                  rounded="full"
+                  bg="blue.400"
+                  color="white"
+                  boxShadow="0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
+                  _hover={{
+                    bg: 'blue.500',
+                  }}
+                  _focus={{
+                    bg: 'blue.500',
+                  }}
+                  onClick={() => {
+                    handleOpenAddStationModal();
+                  }}
+                >
+                  Register Station
+                  <Icon
+                    ml="2"
+                    title="filterSurveyTags"
+                    fontSize="20"
+                    _groupHover={{
+                      color: 'white',
+                    }}
+                    as={FiPlus}
                   />
-                </div>
+                </Button>
               </Box>
-            ))}
-          </Flex>
-          {isEmpty(stations) && (
-            <div>
-              <Heading
-                mt={12}
-                fontSize={'4xl'}
-                fontFamily={'body'}
-                fontWeight={500}
-                align="center"
-                textAlign={'center'}
-              >
-                {userInfo?.role
-                  ? 'No stations added yet!'
-                  : 'Go to map and add your favourite stations!'}
-              </Heading>
-            </div>
-          )}
+            </Flex>
+            <Flex alignItems="center" wrap="wrap">
+              {stations.map((station, index) => (
+                <Box p={3} mx={3} mb={12} key={index}>
+                  <div className="car-card">
+                    <StationCard
+                      index={index}
+                      id={station.id}
+                      adress={station.adress}
+                      image={station.image}
+                      name={station.name}
+                      isStationPublic={station.is_public}
+                      openStationDetails={openStationDetails}
+                      handleBookButton={handleBookButton}
+                      role={userInfo.role}
+                      deleteStation={deleteStation}
+                    />
+                  </div>
+                </Box>
+              ))}
+            </Flex>
+            {isEmpty(stations) && (
+              <div>
+                <Heading
+                  mt={12}
+                  fontSize={'4xl'}
+                  fontFamily={'body'}
+                  fontWeight={500}
+                  align="center"
+                  textAlign={'center'}
+                >
+                  {userInfo?.role
+                    ? 'No stations added yet!'
+                    : 'Go to map and add your favourite stations!'}
+                </Heading>
+              </div>
+            )}
+          </Box>
         </Box>
       </div>
       {openStationDetailsModal && selectedStation && (
@@ -273,15 +338,24 @@ export function FavouriteStationsContainer(props) {
           role={userInfo.role}
         />
       )}
-      {openBookingModal && (
+      {openBookingModal && props.plugsRetrieved && (
         <BookingDetailsModal
           setOpenBookingModal={setOpenBookingModal}
           cars={currentCars}
           stations={stations}
-          plugs={currentPlugs}
+          plugs={props.plugsByCarType}
           saveBookingAction={actions.saveBookingAction}
+          verifyBookingAction={actions.verifyBookingAction}
           selectedStation={selectedStation}
           userId={userInfo.id}
+          onChangeCar={onChangeCar}
+          onChangeStation={onChangeStation}
+          conflictBookings={conflictBookings}
+          isCurrentBookingVerified={bookingVerified}
+          isBookingSaved={bookingSaved}
+          setConflictBookings={setConflictBookings}
+          setBookingVerified={setBookingVerified}
+          setBookingSaved={setBookingSaved}
         />
       )}
       {isAddStationModalOpen && (
@@ -300,6 +374,11 @@ const mapStateToProps = state => ({
   selectedPlugs: S.selectSelectedPlugs(state),
   selectedReviews: S.selectSelectedReviews(state),
   userCars: S.selectUserCars(state),
+  plugsByCarType: S.selectPlugsByCarType(state),
+  plugsRetrieved: S.selectPlugsRetrieved(state),
+  conflictBookings: S.selectConflictBookings(state),
+  isCurrentBookingVerified: S.selectIsCurrentBookingVerified(state),
+  isBookingSaved: S.selectIsBookingSaved(state),
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -50,6 +50,28 @@ export const saveBookingAction = createAction(T.SAVE_BOOKING);
 export const saveBookingSuccessAction = createAction(T.SAVE_BOOKING_SUCCESS);
 export const saveBookingFailureAction = createAction(T.SAVE_BOOKING_FAILURE);
 
+export const verifyBookingAction = createAction(T.VERIFY_BOOKING);
+export const verifyBookingSuccessAction = createAction(
+  T.VERIFY_BOOKING_SUCCESS,
+);
+export const verifyBookingFailureAction = createAction(
+  T.VERIFY_BOOKING_FAILURE,
+);
+
+export const getPlugsAfterCarTypeAction = createAction(
+  T.GET_PLUGS_AFTER_CAR_TYPE,
+);
+export const getPlugsAfterCarTypeSuccessAction = createAction(
+  T.GET_PLUGS_AFTER_CAR_TYPE_SUCCESS,
+);
+export const getPlugsAfterCarTypeFailureAction = createAction(
+  T.GET_PLUGS_AFTER_CAR_TYPE_FAILURE,
+);
+
+export const getPlugsAfterCarTypeQuietAction = createAction(
+  T.GET_PLUGS_AFTER_CAR_TYPE_QUIET,
+);
+
 export default {
   getUserFavouriteStationsIndex,
   getUserFavouriteStationsIndexSuccess,
@@ -78,4 +100,11 @@ export default {
   saveBookingAction,
   saveBookingSuccessAction,
   saveBookingFailureAction,
+  getPlugsAfterCarTypeAction,
+  getPlugsAfterCarTypeSuccessAction,
+  getPlugsAfterCarTypeFailureAction,
+  getPlugsAfterCarTypeQuietAction,
+  verifyBookingAction,
+  verifyBookingSuccessAction,
+  verifyBookingFailureAction,
 };

@@ -74,10 +74,10 @@ function ReviewModal({ booking, setIsOpen, saveReview, updateBooking }) {
 
           <ModalFooter justifyContent="center">
             <Button
+              rounded={'xl'}
               ml={3}
               bg={useColorModeValue('#151f21', 'gray.900')}
               color="white"
-              rounded="md"
               onClick={() => {
                 saveReview({
                   rating: ratingValue,

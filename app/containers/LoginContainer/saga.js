@@ -24,8 +24,11 @@ function* signIn(action) {
       }),
     );
 
-    // window.history.pushState({}, '', '/');
-    window.location.href = '/'; //todo: try to redirect using store
+    if (user.role) {
+      window.location.href = '/my-stations';
+    } else {
+      window.location.href = '/';
+    }
   } catch (e) {
     yield put(A.signInActionFailure(e.response));
   }
