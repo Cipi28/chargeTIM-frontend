@@ -25,3 +25,28 @@ export const selectUserCars = createSelector(
   selectMapContainer(),
   mapContainer => mapContainer?.userCars,
 );
+
+export const selectPlugsByCarType = createSelector(
+  selectMapContainer(),
+  mapContainer => mapContainer?.plugsByCarType,
+);
+
+export const selectPlugsRetrieved = createSelector(
+  selectMapContainer(),
+  mapContainer => mapContainer?.plugsRetrieved,
+);
+
+export const selectConflictBookings = createSelector(
+  selectMapContainer(),
+  mapContainer => mapContainer?.conflictBookings,
+);
+
+export const selectIsCurrentBookingVerified = createSelector(
+  selectMapContainer(),
+  mapContainer => mapContainer?.isCurrentBookingVerified,
+);
+
+export const selectIsBookingSaved = createSelector(
+  selectMapContainer(),
+  mapContainer => mapContainer?.isBookingSaved,
+);

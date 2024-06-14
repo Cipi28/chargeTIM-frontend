@@ -121,7 +121,7 @@ function* saveBooking({ payload }) {
       userId,
       status,
     } = payload;
-    const cars = yield call(post, `/bookings`, {
+    const booking = yield call(post, `/bookings`, {
       carId,
       stationId,
       plugId,
@@ -131,11 +131,53 @@ function* saveBooking({ payload }) {
       status,
     });
 
-    if (cars.data && cars.data.length > 0) {
-      yield put(A.saveBookingSuccessAction(cars.data));
+    if (booking) {
+      yield put(A.saveBookingSuccessAction(booking.data));
     }
   } catch (e) {
-    yield put(A.saveBookingfailureAction(e.message));
+    yield put(A.saveBookingFailureAction(e.message));
+  }
+}
+
+function* verifyBooking({ payload }) {
+  try {
+    const {
+      carId,
+      stationId,
+      plugId,
+      startDate,
+      endDate,
+      userId,
+      status,
+    } = payload;
+    const conflictBookings = yield call(post, `/bookings/verify/`, {
+      carId,
+      stationId,
+      plugId,
+      startDate,
+      endDate,
+      userId,
+      status,
+    });
+
+    if (conflictBookings) {
+      yield put(A.verifyBookingSuccessAction(conflictBookings.data));
+    }
+  } catch (e) {
+    yield put(A.verifyBookingFailureAction(e.message));
+  }
+}
+
+function* getPlugsByCarType(action) {
+  try {
+    const { stationId, carPlugType } = action.payload;
+    const plugs = yield call(get, `/plugs/${stationId}/${carPlugType}`);
+
+    if (plugs.data) {
+      yield put(A.getPlugsAfterCarTypeSuccessAction(plugs.data));
+    }
+  } catch (e) {
+    yield put(A.getPlugsAfterCarTypeFailureAction(e.message));
   }
 }
 
@@ -149,6 +191,9 @@ function* mapContainerSaga() {
   yield takeLatest(T.GET_REVIEWS, getReviews);
   yield takeLatest(T.GET_USER_CARS, getUserCars);
   yield takeLatest(T.SAVE_BOOKING, saveBooking);
+  yield takeLatest(T.VERIFY_BOOKING, verifyBooking);
+  yield takeLatest(T.GET_PLUGS_AFTER_CAR_TYPE, getPlugsByCarType);
+  yield takeLatest(T.GET_PLUGS_AFTER_CAR_TYPE_QUIET, getPlugsByCarType);
 }
 
 export default mapContainerSaga;

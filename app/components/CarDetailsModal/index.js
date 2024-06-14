@@ -77,14 +77,12 @@ function CarDetailsModal({
     'https://png.pngtree.com/png-clipart/20230914/original/pngtree-electric-car-clipart-electric-car-charged-in-the-city-flat-vector-png-image_11092300.png';
 
   useEffect(() => {
-    console.log('asdasd', nameMessages, !isEmpty(nameMessages), errors);
     setErrorMessages(!isEmpty(errors?.error) ? errors?.error : []);
     setPlateMessages(!isEmpty(errors?.plate) ? errors?.plate : []);
     setNameMessages(!isEmpty(errors?.name) ? errors?.name : []);
   }, [errors]);
 
   useEffect(() => {
-    console.log('successUpdateCar', successUpdateCar);
     if (successUpdateCar) {
       setIsOpenEdit(false);
     }
@@ -283,7 +281,7 @@ function CarDetailsModal({
                       }
                     }}
                   >
-                    Update
+                    Save
                   </Button>
                   <Button
                     ml={3}

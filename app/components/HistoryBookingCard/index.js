@@ -17,9 +17,9 @@ import { FaCarSide } from 'react-icons/fa';
 import { PiChargingStationFill, PiPlugChargingFill } from 'react-icons/pi';
 import { FaCalendarAlt } from 'react-icons/fa';
 import { MdOutlineAccessTimeFilled } from 'react-icons/md';
-import { formatConnectorType } from '../Utils';
 import moment from 'moment';
 import { BOOKING_STATUS_ENDED } from '../../containers/BookingHistoryContainer/constants';
+import { BOOKING_TYPES } from '../../containers/HomepageContainer/constants';
 
 function calculateDuration(date1, date2) {
   // Parse the dates using moment
@@ -118,7 +118,7 @@ export default function HistoryBookingCard({
                   Plug:
                 </Text>
                 <Text fontSize={'md'} mt={3} ml="auto" mr={5}>
-                  {formatConnectorType(booking.plug_type)}
+                  {BOOKING_TYPES[booking.plug_type]}
                 </Text>
               </Flex>
             </ListItem>

@@ -18,9 +18,12 @@ import { FaCarSide } from 'react-icons/fa';
 import { PiChargingStationFill, PiPlugChargingFill } from 'react-icons/pi';
 import { FaCalendarAlt } from 'react-icons/fa';
 import { MdOutlineAccessTimeFilled } from 'react-icons/md';
-import { formatConnectorType } from '../Utils';
-import { BOOKING_STATUS_ACTIVE } from '../../containers/ActiveBookingsContainer/constants';
+import {
+  BOOKING_STATUS_ACTIVE,
+  BOOKING_STATUS_STARTED,
+} from '../../containers/ActiveBookingsContainer/constants';
 import moment from 'moment';
+import { BOOKING_TYPES } from '../../containers/HomepageContainer/constants';
 
 function calculateDuration(date1, date2) {
   // Parse the dates using moment
@@ -63,18 +66,26 @@ export default function ActiveBookingCard({ booking, status, deleteBooking }) {
             fontSize={'sm'}
             fontWeight={500}
             bg={
-              status === BOOKING_STATUS_ACTIVE
+              status === BOOKING_STATUS_ACTIVE ||
+              status === BOOKING_STATUS_STARTED
                 ? useColorModeValue('green.50', 'green.900')
                 : useColorModeValue('yellow.50', 'yellow.900')
             }
             p={2}
             px={3}
             color={
-              status === BOOKING_STATUS_ACTIVE ? 'green.500' : 'yellow.500'
+              status === BOOKING_STATUS_ACTIVE ||
+              status === BOOKING_STATUS_STARTED
+                ? 'green.500'
+                : 'yellow.500'
             }
             rounded={'full'}
           >
-            {status === BOOKING_STATUS_ACTIVE ? 'Ready to start' : 'Pending'}
+            {status === BOOKING_STATUS_ACTIVE
+              ? 'Ready to start'
+              : status === BOOKING_STATUS_STARTED
+              ? 'Booking Started'
+              : 'Pending'}
           </Text>
         </Stack>
 
@@ -115,7 +126,7 @@ export default function ActiveBookingCard({ booking, status, deleteBooking }) {
                   Plug:
                 </Text>
                 <Text fontSize={'md'} mt={3} ml="auto" mr={5}>
-                  {formatConnectorType(booking.plug_type)}
+                  {BOOKING_TYPES[booking.plug_type]}
                 </Text>
               </Flex>
             </ListItem>
@@ -147,42 +158,36 @@ export default function ActiveBookingCard({ booking, status, deleteBooking }) {
             </ListItem>
           </List>
           <Flex w="full" justifyContent="space-between">
-            {status === BOOKING_STATUS_ACTIVE && (
-              <Button
-                mt={10}
-                w="47%"
-                bg={'green.400'}
-                color={'white'}
-                rounded={'xl'}
-                boxShadow={'0 5px 20px 0px rgb(72 187 120 / 43%)'}
-                _hover={{
-                  bg: 'green.500',
-                }}
-                _focus={{
-                  bg: 'green.500',
-                }}
-              >
-                Start
-              </Button>
-            )}
             <Button
               mt={10}
-              w={status === BOOKING_STATUS_ACTIVE ? '47%' : 'full'}
-              bg={status === BOOKING_STATUS_ACTIVE ? 'green.400' : 'yellow.400'}
+              w={'full'}
+              bg={
+                status === BOOKING_STATUS_ACTIVE ||
+                status === BOOKING_STATUS_STARTED
+                  ? 'green.400'
+                  : 'yellow.400'
+              }
               color={'white'}
               rounded={'xl'}
               boxShadow={
-                status === BOOKING_STATUS_ACTIVE
+                status === BOOKING_STATUS_ACTIVE ||
+                status === BOOKING_STATUS_STARTED
                   ? '0 5px 20px 0px rgba(72, 187, 120, 0.43)'
                   : '0 5px 20px 0px rgba(204, 153, 0, 0.43)'
               }
               _hover={{
                 bg:
-                  status === BOOKING_STATUS_ACTIVE ? 'green.500' : 'yellow.500',
+                  status === BOOKING_STATUS_ACTIVE ||
+                  status === BOOKING_STATUS_STARTED
+                    ? 'green.500'
+                    : 'yellow.500',
               }}
               _focus={{
                 bg:
-                  status === BOOKING_STATUS_ACTIVE ? 'green.500' : 'yellow.500',
+                  status === BOOKING_STATUS_ACTIVE ||
+                  status === BOOKING_STATUS_STARTED
+                    ? 'green.500'
+                    : 'yellow.500',
               }}
               onClick={() => {
                 deleteBooking(booking.id);

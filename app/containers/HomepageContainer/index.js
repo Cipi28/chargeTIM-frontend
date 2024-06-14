@@ -109,93 +109,121 @@ export function HomepageContainer(props) {
     <div style={{ display: 'flex', justifyContent: 'center' }}>
       {showFirstDiv && <div style={{ width: '240px', flexShrink: 0 }} />}
       <div style={{ width: '100%' }}>
-        <Box mt={4} ml={7} mr={7}>
-          <Flex justify="center" align="center" mt={10}>
-            <Box mb={10}>
-              <Icon
-                mr="4"
-                mt="1"
-                fontSize="30"
-                _groupHover={{
-                  color: 'white',
-                }}
-                as={FiSearch}
-              />
-              <Input
-                width={'30rem'}
-                className="search-bar"
-                placeholder="Search Car"
-                value={searchField}
-                onChange={event => {
-                  const searchTerm = event.target.value.toLowerCase();
-                  setSearchField(event.target.value);
-                  setCarItems(
-                    props.userCars.filter(carItem =>
-                      carItem.name.toLowerCase().includes(searchTerm),
-                    ),
-                  );
-                }}
-              />
-              <Button
-                ml={8}
-                mb={2}
-                fontSize="sm"
-                rounded="full"
-                bg="blue.400"
-                color="white"
-                boxShadow="0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
-                _hover={{
-                  bg: 'blue.500',
-                }}
-                _focus={{
-                  bg: 'blue.500',
-                }}
-                onClick={onOpen}
-              >
-                Add Car
+        <Box
+          minH={'100vh'}
+          align={'center'}
+          justify={'center'}
+          backgroundSize="cover"
+          backgroundPosition="center"
+          backgroundRepeat="no-repeat"
+          _before={{
+            paddingLeft: '240px',
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: '10%', // Adjust this value to set the left margin
+            width: '90%', // Adjust this value to account for the left margin
+            height: '100%',
+            bgImage:
+              'https://static.vecteezy.com/system/resources/previews/012/848/255/non_2x/electric-vehicle-icon-set-of-ev-illustration-such-as-electric-car-bus-motorcycle-and-other-vector.jpg',
+            bgSize: '90%',
+            bgPosition: 'calc(50% + 120px) calc(50% - 30px)',
+            bgRepeat: 'no-repeat',
+            bgAttachment: 'fixed',
+            opacity: 0.3,
+            zIndex: -999,
+          }}
+          zIndex={-999}
+        >
+          <Box mt={4} ml={7} mr={7} zIndex={1}>
+            <Flex justify="center" align="center" mt={10}>
+              <Box mb={10}>
                 <Icon
-                  ml="2"
-                  title="filterSurveyTags"
-                  fontSize="20"
+                  mr="4"
+                  mt="1"
+                  fontSize="30"
                   _groupHover={{
                     color: 'white',
                   }}
-                  as={FiPlus}
+                  as={FiSearch}
                 />
-              </Button>
-            </Box>
-          </Flex>
-          <Flex alignItems="center" wrap="wrap">
-            {carItems.map((car, index) => (
-              <Box p={3} mx={4} mb={12} key={index}>
-                <div className="car-card">
-                  <CarCard
-                    index={index}
-                    plate={car.plate}
-                    plugType={car.plug_type}
-                    image={car.image}
-                    name={car.name}
-                    openCarDetails={openCarDetails}
-                    handleBookButton={handleBookButton}
+                <Input
+                  variant="filled"
+                  width={'30rem'}
+                  className="search-bar"
+                  placeholder="Search Car"
+                  value={searchField}
+                  onChange={event => {
+                    const searchTerm = event.target.value.toLowerCase();
+                    setSearchField(event.target.value);
+                    setCarItems(
+                      props.userCars.filter(carItem =>
+                        carItem.name.toLowerCase().includes(searchTerm),
+                      ),
+                    );
+                  }}
+                />
+                <Button
+                  ml={8}
+                  mb={2}
+                  fontSize="sm"
+                  rounded="full"
+                  bg="blue.400"
+                  color="white"
+                  boxShadow="0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
+                  _hover={{
+                    bg: 'blue.500',
+                  }}
+                  _focus={{
+                    bg: 'blue.500',
+                  }}
+                  onClick={onOpen}
+                >
+                  Add Car
+                  <Icon
+                    ml="2"
+                    title="filterSurveyTags"
+                    fontSize="20"
+                    _groupHover={{
+                      color: 'white',
+                    }}
+                    as={FiPlus}
                   />
-                </div>
+                </Button>
               </Box>
-            ))}
-          </Flex>
-          {isEmpty(carItems) && (
-            <div>
-              <Heading
-                mt={12}
-                fontSize={'4xl'}
-                fontFamily={'body'}
-                fontWeight={500}
-                align="center"
-                textAlign={'center'}
-              >
-                No cars added yet!
-              </Heading>
-            </div>
-          )}
+            </Flex>
+            <Flex alignItems="center" wrap="wrap">
+              {carItems.map((car, index) => (
+                <Box p={3} mx={3} mb={12} key={index}>
+                  <div className="car-card">
+                    <CarCard
+                      index={index}
+                      plate={car.plate}
+                      plugType={car.plug_type}
+                      image={car.image}
+                      name={car.name}
+                      openCarDetails={openCarDetails}
+                      handleBookButton={handleBookButton}
+                    />
+                  </div>
+                </Box>
+              ))}
+            </Flex>
+            {isEmpty(carItems) && (
+              <div>
+                <Heading
+                  mt={12}
+                  fontSize={'4xl'}
+                  fontFamily={'body'}
+                  fontWeight={500}
+                  align="center"
+                  textAlign={'center'}
+                >
+                  No cars added yet!
+                </Heading>
+              </div>
+            )}
+          </Box>
         </Box>
       </div>
       <AddCarModal

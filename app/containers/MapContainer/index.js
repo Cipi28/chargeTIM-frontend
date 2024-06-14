@@ -16,6 +16,8 @@ import {
   useColorModeValue,
   Heading,
   Text,
+  Box,
+  Link,
 } from '@chakra-ui/react';
 import { store } from '../../store';
 import * as MapContainerActionCreators from './actions';
@@ -25,6 +27,8 @@ import StationDetailsModal from '../../components/StationDetailsModal';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import BookingDetailsModal from '../../components/BookingDetailsModal';
+import useGeolocation from '../../components/useGeolocation';
+import { isEmpty, isEqual } from 'lodash';
 
 export function MapContainer(props) {
   const [showFirstDiv, setShowFirstDiv] = useState(window.innerWidth >= 768);
@@ -39,6 +43,31 @@ export function MapContainer(props) {
   const [currentPlugs, setCurrentPlugs] = useState([]);
   const [currentReviews, setCurrentReviews] = useState([]);
   const [openBookingModal, setOpenBookingModal] = useState(false);
+  const [userLocation, setUserLocation] = useState(null);
+  const [conflictBookings, setConflictBookings] = useState([]);
+  const [bookingVerified, setBookingVerified] = useState(false);
+  const [bookingSaved, setBookingSaved] = useState(false);
+
+  useEffect(() => {
+    setConflictBookings(props.conflictBookings);
+  }, [props.conflictBookings]);
+
+  useEffect(() => {
+    setBookingVerified(props.isCurrentBookingVerified);
+  }, [props.isCurrentBookingVerified]);
+
+  useEffect(() => {
+    setBookingSaved(props.isBookingSaved);
+  }, [props.isBookingSaved]);
+
+  const location = useGeolocation();
+
+  useEffect(() => {
+    setUserLocation(location);
+    if (location && location.coordinates) {
+      GetNearByPlaces();
+    }
+  }, [location]);
 
   const { actions } = props;
 
@@ -46,8 +75,6 @@ export function MapContainer(props) {
     const {
       global: { user },
     } = store.getState();
-
-    GetNearByPlaces();
 
     if (user && user.user) {
       setCurrentUser(user.user);
@@ -64,7 +91,9 @@ export function MapContainer(props) {
   }, []);
 
   useEffect(() => {
-    setStationsInfo(props.stations);
+    if (!isEqual(props.stations, stationsInfo) && stationsInfo !== []) {
+      setStationsInfo(props.stations);
+    }
     setFavoriteStations(props.favouriteStations);
     setCurrentPlugs(props.selectedPlugs);
     setCurrentReviews(props.selectedReviews);
@@ -82,10 +111,10 @@ export function MapContainer(props) {
       locationRestriction: {
         circle: {
           center: {
-            latitude: position.lat,
-            longitude: position.lng,
+            latitude: location.coordinates.lat,
+            longitude: location.coordinates.lng,
           },
-          radius: 4000.0,
+          radius: 7000.0,
         },
       },
     };
@@ -155,11 +184,36 @@ export function MapContainer(props) {
   const splitStringByComma = inputString =>
     inputString.split(',').map(element => element.trim());
 
+  useEffect(() => {
+    if (!isEmpty(props.userCars) && !isEmpty(selectedStation)) {
+      actions.getPlugsAfterCarTypeAction({
+        stationId: selectedStation.id,
+        carPlugType: props.userCars[0]?.plug_type,
+      });
+      setOpenBookingModal(true);
+    }
+  }, [props.userCars]);
+
   const handleBookButton = station => {
     actions.getUserCarsAction({
       userId: currentUser.id,
     });
-    setOpenBookingModal(true);
+  };
+
+  const onChangeCar = (carId, stationId) => {
+    const car = props.userCars.find(car => car.id === parseInt(carId));
+    actions.getPlugsAfterCarTypeQuietAction({
+      stationId: selectedStation.id,
+      carPlugType: car.plug_type,
+    });
+  };
+
+  const onChangeStation = (carId, stationId) => {
+    const car = props.userCars.find(car => car.id === parseInt(carId));
+    actions.getPlugsAfterCarTypeQuietAction({
+      stationId: stationId,
+      carPlugType: car.plug_type,
+    });
   };
 
   return (
@@ -172,187 +226,208 @@ export function MapContainer(props) {
         </div>
       )}
       <div style={{ height: '91vh', width: '100%' }}>
-        <APIProvider apiKey="AIzaSyBfvGY364KnQcQCaKGVGtRJHRIELiZfC7o">
-          <Map
-            defaultCenter={position}
-            defaultZoom={13}
-            mapId="264135071e31772e"
+        {location && location.loaded && (
+          <APIProvider
+            apiKey="AIzaSyBfvGY364KnQcQCaKGVGtRJHRIELiZfC7o"
+            key={'map'}
           >
-            <AdvancedMarker
-              key={'userLocation'}
-              position={position}
-              onClick={() => setIsOpenUserLocation(true)}
-            />
-            {isOpenUserLocation && (
-              <InfoWindow
-                key={'userLocation'}
-                position={position}
-                onCloseClick={() => setIsOpenUserLocation(false)}
-              >
-                <div>
-                  <h1>InfoWindow</h1>
-                </div>
-              </InfoWindow>
-            )}
-            {stationsInfo.map((station, index) => {
-              const position = {
-                lat: station.latitude,
-                lng: station.longitude,
-              };
+            <Map
+              key={'map'}
+              defaultCenter={location?.coordinates}
+              defaultZoom={13}
+              mapId="264135071e31772e"
+            >
+              {location && location.loaded && location.coordinates && (
+                <AdvancedMarker
+                  key={'userLocation'}
+                  position={location.coordinates}
+                  onClick={() => setIsOpenUserLocation(true)}
+                />
+              )}
+              {isOpenUserLocation && (
+                <InfoWindow
+                  key={'userLocation'}
+                  position={location.coordinates}
+                  onCloseClick={() => setIsOpenUserLocation(false)}
+                >
+                  <Box p={2}>
+                    <Text fontSize="md" fontWeight="bold" mb={5}>
+                      This is your location
+                    </Text>
+                    <Link
+                      href={`https://www.google.com/maps?q=${
+                        location.coordinates.lat
+                      },${location.coordinates.lng}`}
+                      isExternal
+                      color="blue.500"
+                    >
+                      Vizualizați în Google Maps
+                    </Link>
+                  </Box>
+                </InfoWindow>
+              )}
 
-              const adressLines = splitStringByComma(station.adress);
-              return (
-                <>
-                  <AdvancedMarker
-                    key={index}
-                    position={position}
-                    title={station.name}
-                    lable={station.name}
-                    onClick={() => {
-                      actions.getPlugsAction({
-                        stationId: station.id,
-                      });
-                      setSelectedStation(station);
-                      setActiveMarkerStation(index);
-                    }}
-                  >
-                    <img
-                      key={index}
-                      src="https://cdn-icons-png.flaticon.com/256/12338/12338156.png"
-                      width={50}
-                      height={50}
-                    />
-                  </AdvancedMarker>
-                  {activeMarkerStation === index && (
-                    <InfoWindow
+              {stationsInfo.map((station, index) => {
+                const position = {
+                  lat: station.latitude,
+                  lng: station.longitude,
+                };
+
+                const adressLines = splitStringByComma(station.adress);
+                return (
+                  <>
+                    <AdvancedMarker
                       key={index}
                       position={position}
-                      onCloseClick={() => setActiveMarkerStation(null)}
+                      title={station.name}
+                      lable={station.name}
+                      onClick={() => {
+                        actions.getPlugsAction({
+                          stationId: station.id,
+                        });
+                        setSelectedStation(station);
+                        setActiveMarkerStation(index);
+                      }}
                     >
-                      <div>
-                        <Grid
-                          key={index}
-                          h="200px"
-                          templateRows="repeat(1, 1fr)"
-                          templateColumns="repeat(3, 1fr)"
-                          gap={4}
-                        >
-                          <GridItem
-                            colSpan={2}
-                            // bg='papayawhip'
+                      <img
+                        key={index}
+                        src="https://cdn-icons-png.flaticon.com/256/12338/12338156.png"
+                        width={50}
+                        height={50}
+                      />
+                    </AdvancedMarker>
+                    {activeMarkerStation === index && (
+                      <InfoWindow
+                        key={index}
+                        position={position}
+                        onCloseClick={() => setActiveMarkerStation(null)}
+                      >
+                        <div>
+                          <Grid
+                            key={index}
+                            h="200px"
+                            templateRows="repeat(1, 1fr)"
+                            templateColumns="repeat(3, 1fr)"
+                            gap={4}
                           >
-                            <Heading
-                              key={index}
-                              fontSize="md"
-                              fontFamily="body"
-                              fontWeight={500}
+                            <GridItem
+                              colSpan={2}
+                              // bg='papayawhip'
                             >
-                              {station.name}
-                            </Heading>
-                            {adressLines.map((line, index) => (
-                              <Text fontSize="sm" mt={2}>
-                                {line}
-                              </Text>
-                            ))}
-                          </GridItem>
-                          <GridItem
-                            colSpan={1}
-                            // bg='papayawhip'
-                          >
-                            {!currentUser?.role && (
-                              <div align="right">
-                                {/* <StarIcon sx={{color: "#ff8833"}} fontSize="large"/> */}
-                                {favoriteStations.includes(station.id) ? (
-                                  <FavoriteIcon
-                                    sx={{ color: '#E1306C' }}
-                                    fontSize="large"
-                                    lable="remove from favourites"
-                                    onClick={() => {
-                                      actions.deleteFavouriteStation({
-                                        userId: currentUser.id,
-                                        stationId: station.id,
-                                      });
-                                      setFavoriteStations(
-                                        favoriteStations.filter(
-                                          item => item !== station.id,
-                                        ),
-                                      );
-                                    }}
-                                  />
-                                ) : (
-                                  <FavoriteBorderIcon
-                                    sx={{ color: '#E1306C' }}
-                                    fontSize="large"
-                                    lable="add to favourites"
-                                    onClick={() => {
-                                      actions.addStationToFavourites({
-                                        userId: currentUser.id,
-                                        stationId: station.id,
-                                      });
-                                      setFavoriteStations([
-                                        ...favoriteStations,
-                                        station.id,
-                                      ]);
-                                    }}
-                                  />
-                                )}
-                              </div>
-                            )}
-                          </GridItem>
-                          <GridItem
-                            colSpan={3}
-                            rowSpan={0.5}
-                            // bg='tomato'
-                          >
-                            <div align="center">
-                              <Button
-                                mr={3}
-                                bg={useColorModeValue('#FFFFFF', 'gray.900')}
-                                variant="outline"
-                                rounded="md"
-                                _hover={{
-                                  transform: 'translateY(-2px)',
-                                  boxShadow: 'lg',
-                                }}
-                                as="a"
-                                href="#"
-                                onClick={() => {
-                                  setActiveMarkerStation(null);
-                                  actions.getReviewsAction({
-                                    stationId: station.id,
-                                  });
-                                  setOpenStationDetailsModal(true);
-                                  setSelectedStation(station);
-                                }}
+                              <Heading
+                                key={index}
+                                fontSize="md"
+                                fontFamily="body"
+                                fontWeight={500}
                               >
-                                Details
-                              </Button>
+                                {station.name}
+                              </Heading>
+                              {adressLines.map((line, index) => (
+                                <Text fontSize="sm" mt={2}>
+                                  {line}
+                                </Text>
+                              ))}
+                            </GridItem>
+                            <GridItem
+                              colSpan={1}
+                              // bg='papayawhip'
+                            >
                               {!currentUser?.role && (
+                                <div align="right">
+                                  {/* <StarIcon sx={{color: "#ff8833"}} fontSize="large"/> */}
+                                  {favoriteStations.includes(station.id) ? (
+                                    <FavoriteIcon
+                                      sx={{ color: '#E1306C' }}
+                                      fontSize="large"
+                                      lable="remove from favourites"
+                                      onClick={() => {
+                                        actions.deleteFavouriteStation({
+                                          userId: currentUser.id,
+                                          stationId: station.id,
+                                        });
+                                        setFavoriteStations(
+                                          favoriteStations.filter(
+                                            item => item !== station.id,
+                                          ),
+                                        );
+                                      }}
+                                    />
+                                  ) : (
+                                    <FavoriteBorderIcon
+                                      sx={{ color: '#E1306C' }}
+                                      fontSize="large"
+                                      lable="add to favourites"
+                                      onClick={() => {
+                                        actions.addStationToFavourites({
+                                          userId: currentUser.id,
+                                          stationId: station.id,
+                                        });
+                                        setFavoriteStations([
+                                          ...favoriteStations,
+                                          station.id,
+                                        ]);
+                                      }}
+                                    />
+                                  )}
+                                </div>
+                              )}
+                            </GridItem>
+                            <GridItem
+                              colSpan={3}
+                              rowSpan={0.5}
+                              // bg='tomato'
+                            >
+                              <div align="center">
                                 <Button
-                                  ml={3}
-                                  bg={useColorModeValue('#151f21', 'gray.900')}
-                                  color="white"
-                                  rounded="md"
-                                  onClick={() => handleBookButton()}
+                                  mr={3}
+                                  bg={useColorModeValue('#FFFFFF', 'gray.900')}
+                                  variant="outline"
+                                  rounded={'xl'}
+                                  width="150px"
                                   _hover={{
                                     transform: 'translateY(-2px)',
                                     boxShadow: 'lg',
                                   }}
+                                  as="a"
+                                  href="#"
+                                  onClick={() => {
+                                    setActiveMarkerStation(null);
+                                    actions.getReviewsAction({
+                                      stationId: station.id,
+                                    });
+                                    setOpenStationDetailsModal(true);
+                                    setSelectedStation(station);
+                                  }}
                                 >
-                                  Book now
+                                  Details
                                 </Button>
-                              )}
-                            </div>
-                          </GridItem>
-                        </Grid>
-                      </div>
-                    </InfoWindow>
-                  )}
-                </>
-              );
-            })}
-          </Map>
-        </APIProvider>
+                                {!currentUser?.role && (
+                                  <Button
+                                    ml={3}
+                                    rounded={'xl'}
+                                    width="150px"
+                                    colorScheme="green"
+                                    onClick={() => handleBookButton()}
+                                    _hover={{
+                                      transform: 'translateY(-2px)',
+                                      boxShadow: 'lg',
+                                    }}
+                                  >
+                                    Book now
+                                  </Button>
+                                )}
+                              </div>
+                            </GridItem>
+                          </Grid>
+                        </div>
+                      </InfoWindow>
+                    )}
+                  </>
+                );
+              })}
+            </Map>
+          </APIProvider>
+        )}
       </div>
       {openStationDetailsModal && selectedStation && (
         <StationDetailsModal
@@ -364,15 +439,24 @@ export function MapContainer(props) {
           role={currentUser?.role}
         />
       )}
-      {openBookingModal && (
+      {openBookingModal && props.plugsRetrieved && (
         <BookingDetailsModal
           setOpenBookingModal={setOpenBookingModal}
           cars={props.userCars}
           stations={stationsInfo}
-          plugs={currentPlugs}
+          plugs={props.plugsByCarType}
+          verifyBookingAction={actions.verifyBookingAction}
           saveBookingAction={actions.saveBookingAction}
           selectedStation={selectedStation}
           userId={currentUser.id}
+          onChangeCar={onChangeCar}
+          onChangeStation={onChangeStation}
+          conflictBookings={conflictBookings}
+          isCurrentBookingVerified={bookingVerified}
+          isBookingSaved={bookingSaved}
+          setConflictBookings={setConflictBookings}
+          setBookingVerified={setBookingVerified}
+          setBookingSaved={setBookingSaved}
         />
       )}
     </div>
@@ -386,6 +470,11 @@ const mapStateToProps = state => ({
   selectedPlugs: S.selectSelectedPlugs(state),
   selectedReviews: S.selectSelectedReviews(state),
   userCars: S.selectUserCars(state),
+  plugsByCarType: S.selectPlugsByCarType(state),
+  plugsRetrieved: S.selectPlugsRetrieved(state),
+  conflictBookings: S.selectConflictBookings(state),
+  isCurrentBookingVerified: S.selectIsCurrentBookingVerified(state),
+  isBookingSaved: S.selectIsBookingSaved(state),
 });
 
 const mapDispatchToProps = dispatch => ({
