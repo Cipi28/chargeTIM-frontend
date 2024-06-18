@@ -21,6 +21,7 @@ import {
   Image,
   Link,
   Text,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import { FaMapMarkedAlt, FaPhoneAlt } from 'react-icons/fa';
 import { IoGlobeOutline, IoLocationOutline } from 'react-icons/io5';
@@ -57,7 +58,7 @@ function StationDetailsModal({
   const initialRef = React.useRef();
   const finalRef = React.useRef();
   const defaultImage =
-    'https://static.vecteezy.com/system/resources/previews/006/683/801/non_2x/electric-vehicle-sport-car-charging-parking-at-the-charger-station-with-a-plug-in-cable-charging-in-the-top-side-of-car-to-battery-isolated-flat-illustration-on-white-background-vector.jpg';
+    'https://static.vecteezy.com/system/resources/previews/025/733/584/non_2x/electric-car-at-charging-station-abstract-electric-power-charger-ev-clean-energy-alternative-energy-electric-charger-concept-electronic-vehicle-power-dock-illustration-vector.jpg';
 
   const isStationOpen = open_period => {
     const currentHour = moment();
@@ -129,12 +130,12 @@ function StationDetailsModal({
                 mt={2}
                 rounded={'xl'}
                 width="150px"
-                colorScheme="green"
-                onClick={() => handleBookButton()}
+                bg={useColorModeValue('#b2d8d8', 'gray.900')}
                 _hover={{
                   transform: 'translateY(-2px)',
                   boxShadow: 'lg',
                 }}
+                onClick={() => handleBookButton()}
               >
                 Book now
               </Button>

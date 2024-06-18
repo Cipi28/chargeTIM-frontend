@@ -48,6 +48,7 @@ export function BookingHistoryContainer(props) {
   const [endedBookings, setEndedBookings] = useState([]);
   const [rejectedBookings, setRejectedBookings] = useState([]);
   const [activeBookings, setActiveBookings] = useState([]);
+  const [startedBookings, setStartedBookings] = useState([]);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [isRateModalOpen, setIsRateModalOpen] = useState(false);
@@ -97,6 +98,7 @@ export function BookingHistoryContainer(props) {
     setEndedBookings(props.bookings[BOOKING_STATUS_ENDED]);
     setRejectedBookings(props.bookings[BOOKING_STATUS_REJECTED]);
     setActiveBookings(props.bookings[BOOKING_STATUS_ACTIVE]);
+    setStartedBookings(props.bookings[BOOKING_STATUS_STARTED]);
     setIsOpenRatedAlert(props.ratedSuccessful);
   }, [props.bookings]);
 
@@ -277,7 +279,22 @@ export function BookingHistoryContainer(props) {
                   <TabPanel>
                     <Box borderRadius="lg" overflow="hidden">
                       <Flex alignItems="center" wrap="wrap">
-                        {!isEmpty(endedBookings) &&
+                        {!isEmpty(startedBookings) &&
+                          startedBookings.map((booking, index) => (
+                            <Box
+                              p={3}
+                              width="400px"
+                              mx={10}
+                              mb={12}
+                              key={index}
+                            >
+                              <ContributorBookingCard
+                                booking={booking}
+                                status={BOOKING_STATUS_STARTED}
+                              />
+                            </Box>
+                          ))}
+                        {!isEmpty(activeBookings) &&
                           activeBookings.map((booking, index) => (
                             <Box
                               p={3}

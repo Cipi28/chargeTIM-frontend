@@ -155,16 +155,12 @@ export default function HistoryBookingCard({
                 isDisabled={booking.is_reviewed}
                 mt={10}
                 w="full"
-                bg={'green.400'}
-                color={'white'}
+                bg={useColorModeValue('#b2d8d8', 'gray.900')}
                 rounded={'xl'}
-                boxShadow={'0 5px 20px 0px rgb(72 187 120 / 43%)'}
+                boxShadow={'0 5px 10px 0px #4b907d'}
                 onClick={() => openReviewModal(booking)}
                 _hover={{
-                  bg: 'green.500',
-                }}
-                _focus={{
-                  bg: 'green.500',
+                  bg: '#4b907d',
                 }}
               >
                 {booking.is_reviewed ? 'Already reviewed' : 'Leave a review'}

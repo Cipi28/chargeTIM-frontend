@@ -30,8 +30,10 @@ import {
   useColorModeValue,
   useDisclosure,
   VStack,
+  Image,
 } from '@chakra-ui/react';
 import store from '../../store';
+import logo from '../../images/logo4.png';
 
 function base64toFile(base64String, filename, contentType) {
   const byteCharacters = atob(base64String); // Decode base64 string
@@ -87,8 +89,7 @@ function NavBar() {
         boxShadow={'2xl'}
         zIndex={2}
         transition="3s ease"
-        bg={useColorModeValue('gray.100', 'gray.900')}
-        borderRight="1px"
+        bg={useColorModeValue('#b2d8d8', 'gray.900')}
         borderRightColor={useColorModeValue('gray.200', 'gray.700')}
         w={{ base: 'full', md: 60 }}
         pos="fixed"
@@ -96,9 +97,9 @@ function NavBar() {
         {...rest}
       >
         <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-          <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-            ChargeTIM
-          </Text>
+          <Box boxSize="sm" mt="21rem">
+            <Image src={logo} alt="Dan Abramov" />
+          </Box>
           <CloseButton
             display={{ base: 'flex', md: 'none' }}
             onClick={onClose}
@@ -133,7 +134,7 @@ function NavBar() {
         role="group"
         cursor="pointer"
         _hover={{
-          bg: 'green.400',
+          bg: '#317873',
           color: 'white',
         }}
         {...rest}

@@ -20,6 +20,7 @@ import {
   AlertTitle,
   AlertDescription,
   CloseButton,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import { BOOKING_TYPES } from '../../containers/HomepageContainer/constants';
 import { isEmpty } from 'lodash';
@@ -64,7 +65,7 @@ function AddCarModal({ isOpen, onClose, addCar, errors, successAddCar }) {
   const fileInputRef = useRef(null);
 
   const defaultImage =
-    'https://png.pngtree.com/png-clipart/20230914/original/pngtree-electric-car-clipart-electric-car-charged-in-the-city-flat-vector-png-image_11092300.png';
+    'https://media.istockphoto.com/id/1406257864/vector/electric-car-ev-charge-station-vector-concept-electric-vehicle-charger-energy-background.jpg?s=612x612&w=0&k=20&c=bsjslHp7mE8s2l9eel9eG9fZr5epx65h9U6dfyhdSLs=';
 
   const handleFileRead = async event => {
     const file = event.target.files[0];
@@ -214,15 +215,13 @@ function AddCarModal({ isOpen, onClose, addCar, errors, successAddCar }) {
                     <Button
                       mt={7}
                       w="50%"
-                      bg={'green.400'}
+                      bg={useColorModeValue('#317873', 'gray.900')}
                       color={'white'}
                       rounded={'xl'}
-                      boxShadow={'0 5px 20px 0px rgb(72 187 120 / 43%)'}
+                      boxShadow={'lg'}
                       _hover={{
-                        bg: 'green.500',
-                      }}
-                      _focus={{
-                        bg: 'green.500',
+                        transform: 'translateY(-2px)',
+                        boxShadow: 'lg',
                       }}
                       onClick={handleButtonClick}
                     >
@@ -248,7 +247,11 @@ function AddCarModal({ isOpen, onClose, addCar, errors, successAddCar }) {
                 <Box>
                   <Button
                     rounded={'xl'}
-                    colorScheme="blue"
+                    bg={useColorModeValue('#b2d8d8', 'gray.900')}
+                    _hover={{
+                      transform: 'translateY(-2px)',
+                      boxShadow: 'lg',
+                    }}
                     mr={3}
                     width="150px"
                     onClick={() => {
@@ -274,6 +277,12 @@ function AddCarModal({ isOpen, onClose, addCar, errors, successAddCar }) {
                   <Button
                     rounded={'xl'}
                     width="150px"
+                    _hover={{
+                      transform: 'translateY(-2px)',
+                      boxShadow: 'lg',
+                    }}
+                    bg={useColorModeValue('#FFFFFF', 'gray.900')}
+                    variant="outline"
                     onClick={() => {
                       setPlateMessages([]);
                       setNameMessages([]);

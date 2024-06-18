@@ -19,6 +19,7 @@ import {
   AlertTitle,
   AlertDescription,
   CloseButton,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import { FaCarSide } from 'react-icons/fa';
 import { PiChargingStationFill } from 'react-icons/pi';
@@ -361,7 +362,7 @@ function BookingDetailsModal({
                     mr={8}
                     rounded={'xl'}
                     width="150px"
-                    colorScheme="green"
+                    bg={useColorModeValue('#b2d8d8', 'gray.900')}
                     onClick={() => {
                       const date1 = new Date(selectedStartDate);
                       const date2 = new Date(selectedEndDate);
@@ -412,7 +413,8 @@ function BookingDetailsModal({
                   </Button>
                   <Button
                     isDisabled={!allowBooking}
-                    colorScheme="teal"
+                    bg={useColorModeValue('#317873', 'gray.900')}
+                    color={'white'}
                     rounded={'xl'}
                     width="150px"
                     onClick={() => {
