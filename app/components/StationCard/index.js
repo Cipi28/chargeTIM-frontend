@@ -37,7 +37,7 @@ export default function StationCard({
   deleteStation,
 }) {
   const defaultImage =
-    'https://static.vecteezy.com/system/resources/previews/006/683/801/non_2x/electric-vehicle-sport-car-charging-parking-at-the-charger-station-with-a-plug-in-cable-charging-in-the-top-side-of-car-to-battery-isolated-flat-illustration-on-white-background-vector.jpg';
+    'https://static.vecteezy.com/system/resources/previews/025/406/327/original/electric-charging-station-dual-head-electric-vehicle-charging-stations-illustrations-vector.jpg';
 
   return (
     <Center py={12}>

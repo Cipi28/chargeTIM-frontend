@@ -36,7 +36,7 @@ export default function CarCard({
   deleteCar,
 }) {
   const defaultImage =
-    'https://png.pngtree.com/png-clipart/20230914/original/pngtree-electric-car-clipart-electric-car-charged-in-the-city-flat-vector-png-image_11092300.png';
+    'https://media.istockphoto.com/id/1406257864/vector/electric-car-ev-charge-station-vector-concept-electric-vehicle-charger-energy-background.jpg?s=612x612&w=0&k=20&c=bsjslHp7mE8s2l9eel9eG9fZr5epx65h9U6dfyhdSLs=';
 
   return (
     <Center py={12}>
