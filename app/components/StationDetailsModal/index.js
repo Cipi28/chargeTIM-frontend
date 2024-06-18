@@ -21,6 +21,7 @@ import {
   Image,
   Link,
   Text,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import { FaMapMarkedAlt, FaPhoneAlt } from 'react-icons/fa';
 import { IoGlobeOutline, IoLocationOutline } from 'react-icons/io5';
@@ -129,12 +130,12 @@ function StationDetailsModal({
                 mt={2}
                 rounded={'xl'}
                 width="150px"
-                colorScheme="green"
-                onClick={() => handleBookButton()}
+                bg={useColorModeValue('#b2d8d8', 'gray.900')}
                 _hover={{
                   transform: 'translateY(-2px)',
                   boxShadow: 'lg',
                 }}
+                onClick={() => handleBookButton()}
               >
                 Book now
               </Button>

@@ -17,6 +17,7 @@ import {
   AlertTitle,
   AlertDescription,
   CloseButton,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import { store } from '../../store';
 import * as S from './selectors';
@@ -235,15 +236,17 @@ export function ProfileContainer(props) {
                 <Button
                   mt={7}
                   w="full"
-                  bg={'green.400'}
+                  bg={'blue.300'}
                   color={'white'}
                   rounded={'xl'}
-                  boxShadow={'0 5px 20px 0px rgb(72 187 120 / 43%)'}
+                  boxShadow="lg"
                   _hover={{
-                    bg: 'green.500',
+                    transform: 'translateY(-2px)',
+                    boxShadow:
+                      '0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)',
                   }}
                   _focus={{
-                    bg: 'green.500',
+                    bg: 'blue.500',
                   }}
                   onClick={handleButtonClick}
                 >
@@ -308,10 +311,12 @@ export function ProfileContainer(props) {
                 <Button
                   mt={10}
                   w="47%"
-                  bg={'green.400'}
-                  color={'white'}
+                  bg={useColorModeValue('#b2d8d8', 'gray.900')}
+                  _hover={{
+                    transform: 'translateY(-2px)',
+                    boxShadow: 'lg',
+                  }}
                   rounded={'xl'}
-                  boxShadow={'0 5px 20px 0px rgb(72 187 120 / 43%)'}
                   onClick={() => {
                     setIsEditEnabled(!isEditEnabled);
                     if (isEditEnabled && !isNil(props.user)) {
@@ -321,24 +326,19 @@ export function ProfileContainer(props) {
                       setAddress(props.user.address || '');
                     }
                   }}
-                  _hover={{
-                    bg: 'green.500',
-                  }}
-                  _focus={{
-                    bg: 'green.500',
-                  }}
                 >
                   {isEditEnabled ? 'Cancel' : 'Edit'}
                 </Button>
                 <Button
                   mt={10}
                   w={'47%'}
-                  bg={'green.400'}
                   color={'white'}
                   rounded={'xl'}
-                  boxShadow={'0 5px 20px 0px rgba(72, 187, 120, 0.43)'}
-                  _hover={{ bg: 'green.500' }}
-                  _focus={{ bg: 'green.500' }}
+                  bg={useColorModeValue('#317873', 'gray.900')}
+                  _hover={{
+                    transform: 'translateY(-2px)',
+                    boxShadow: 'lg',
+                  }}
                   onClick={() => {
                     setEmailMessages([]);
                     setErrorMessages([]);

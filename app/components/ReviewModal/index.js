@@ -76,8 +76,12 @@ function ReviewModal({ booking, setIsOpen, saveReview, updateBooking }) {
             <Button
               rounded={'xl'}
               ml={3}
-              bg={useColorModeValue('#151f21', 'gray.900')}
-              color="white"
+              width="120px"
+              bg={useColorModeValue('#b2d8d8', 'gray.900')}
+              _hover={{
+                transform: 'translateY(-2px)',
+                boxShadow: 'lg',
+              }}
               onClick={() => {
                 saveReview({
                   rating: ratingValue,
@@ -90,10 +94,6 @@ function ReviewModal({ booking, setIsOpen, saveReview, updateBooking }) {
                 });
                 updateBooking({ ...booking, is_reviewed: true });
                 setIsOpen(false);
-              }}
-              _hover={{
-                transform: 'translateY(-2px)',
-                boxShadow: 'lg',
               }}
             >
               Submit

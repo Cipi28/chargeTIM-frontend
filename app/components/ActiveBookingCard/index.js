@@ -164,29 +164,21 @@ export default function ActiveBookingCard({ booking, status, deleteBooking }) {
               bg={
                 status === BOOKING_STATUS_ACTIVE ||
                 status === BOOKING_STATUS_STARTED
-                  ? 'green.400'
+                  ? '#b2d8d8'
                   : 'yellow.400'
               }
-              color={'white'}
               rounded={'xl'}
               boxShadow={
                 status === BOOKING_STATUS_ACTIVE ||
                 status === BOOKING_STATUS_STARTED
-                  ? '0 5px 20px 0px rgba(72, 187, 120, 0.43)'
-                  : '0 5px 20px 0px rgba(204, 153, 0, 0.43)'
+                  ? '0 5px 10px 0px #4b907d'
+                  : '0 5px 10px 0px rgba(204, 153, 0, 0.43)'
               }
               _hover={{
                 bg:
                   status === BOOKING_STATUS_ACTIVE ||
                   status === BOOKING_STATUS_STARTED
-                    ? 'green.500'
-                    : 'yellow.500',
-              }}
-              _focus={{
-                bg:
-                  status === BOOKING_STATUS_ACTIVE ||
-                  status === BOOKING_STATUS_STARTED
-                    ? 'green.500'
+                    ? '#4b907d'
                     : 'yellow.500',
               }}
               onClick={() => {

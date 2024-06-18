@@ -21,6 +21,7 @@ import {
   AlertTitle,
   AlertDescription,
   CloseButton,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import { BOOKING_TYPES } from '../../containers/HomepageContainer/constants';
 import { isEmpty } from 'lodash';
@@ -224,15 +225,13 @@ function CarDetailsModal({
                     <Button
                       mt={7}
                       w="50%"
-                      bg={'green.400'}
+                      bg={useColorModeValue('#317873', 'gray.900')}
                       color={'white'}
                       rounded={'xl'}
-                      boxShadow={'0 5px 20px 0px rgb(72 187 120 / 43%)'}
+                      boxShadow={'lg'}
                       _hover={{
-                        bg: 'green.500',
-                      }}
-                      _focus={{
-                        bg: 'green.500',
+                        transform: 'translateY(-2px)',
+                        boxShadow: 'lg',
                       }}
                       onClick={handleButtonClick}
                     >
@@ -258,7 +257,11 @@ function CarDetailsModal({
                 <Box>
                   <Button
                     rounded={'xl'}
-                    colorScheme="blue"
+                    bg={useColorModeValue('#b2d8d8', 'gray.900')}
+                    _hover={{
+                      transform: 'translateY(-2px)',
+                      boxShadow: 'lg',
+                    }}
                     width="150px"
                     mr={3}
                     onClick={() => {
@@ -285,14 +288,19 @@ function CarDetailsModal({
                   </Button>
                   <Button
                     ml={3}
-                    colorScheme="teal"
+                    _hover={{
+                      transform: 'translateY(-2px)',
+                      boxShadow: 'lg',
+                    }}
+                    bg={useColorModeValue('#FFFFFF', 'gray.900')}
+                    variant="outline"
                     rounded={'xl'}
                     width="150px"
                     onClick={() => {
-                      deleteCar(selectedCar.id);
+                      setIsOpenEdit(false);
                     }}
                   >
-                    Delete
+                    Cancel
                   </Button>
                 </Box>
               </Flex>

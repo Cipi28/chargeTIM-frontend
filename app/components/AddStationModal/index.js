@@ -15,6 +15,7 @@ import {
   Image,
   Text,
   Select,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import { BOOKING_TYPES } from '../../containers/HomepageContainer/constants';
 
@@ -187,54 +188,54 @@ function AddStationModal({ setIsAddStationModalOpen, addStation }) {
                   />
                 </Box>
               </Flex>
-              <Flex mt={6} align="center" justify="center">
+              <Flex mt={8} align="center" justify="center">
                 <Text fontSize={'xl'}>Plug info</Text>
               </Flex>
-              <Flex justifyContent="space-between" mt={3}>
+              <Flex justifyContent="space-between" mt={1}>
                 <Box width={'44%'}>
-                  <Input
-                    placeholder="Kw_power"
-                    variant="flushed"
-                    value={kwPower}
-                    onChange={e => {
-                      const value = e.target.value;
-                      const digitsOnly = value.replace(/\D/g, '');
-                      setKwPower(digitsOnly);
-                    }}
-                  />
-                </Box>
-                <Box width={'44%'}>
-                  <Input
-                    placeholder="Cost per kw"
-                    variant="flushed"
-                    value={costPerKw}
-                    onChange={e => {
-                      const value = e.target.value;
-                      const digitsOnly = value.replace(/[^\d.]/g, '');
-                      setCostPerKw(digitsOnly);
-                    }}
-                  />
-                </Box>
-              </Flex>
-              <Flex justifyContent="space-between" mt={3}>
-                <Box width={'44%'}>
-                  <Text fontSize={'md'} mb={4} mt={'3rem'} textAlign={'center'}>
-                    Select your plug type:
-                  </Text>
-                  <Select
-                    value={BOOKING_TYPES[plug]}
-                    onChange={event => {
-                      setPlug(event.target.value);
-                    }}
-                  >
-                    {BOOKING_TYPES.map((type, index) => (
-                      <option value={type}>{type}</option>
-                    ))}
-                  </Select>
+                  <Box mb={5} mt={5}>
+                    <Input
+                      placeholder="Kw_power"
+                      variant="flushed"
+                      value={kwPower}
+                      onChange={e => {
+                        const value = e.target.value;
+                        const digitsOnly = value.replace(/\D/g, '');
+                        setKwPower(digitsOnly);
+                      }}
+                    />
+                  </Box>
+                  <Box mb={5}>
+                    <Input
+                      placeholder="Cost per kw"
+                      variant="flushed"
+                      value={costPerKw}
+                      onChange={e => {
+                        const value = e.target.value;
+                        const digitsOnly = value.replace(/[^\d.]/g, '');
+                        setCostPerKw(digitsOnly);
+                      }}
+                    />
+                  </Box>
+                  <Box>
+                    <Text fontSize={'md'} mb={4} textAlign={'center'}>
+                      Select your plug type:
+                    </Text>
+                    <Select
+                      value={BOOKING_TYPES[plug]}
+                      onChange={event => {
+                        setPlug(event.target.value);
+                      }}
+                    >
+                      {BOOKING_TYPES.map((type, index) => (
+                        <option value={type}>{type}</option>
+                      ))}
+                    </Select>
+                  </Box>
                 </Box>
                 <Box ml={5}>
                   <Box
-                    mt={10}
+                    mt={6}
                     width="280px"
                     height="200px"
                     overflow="hidden"
@@ -264,15 +265,12 @@ function AddStationModal({ setIsAddStationModalOpen, addStation }) {
                     <Button
                       mt={7}
                       w="50%"
-                      bg={'green.400'}
+                      bg={useColorModeValue('#317873', 'gray.900')}
                       color={'white'}
                       rounded={'xl'}
-                      boxShadow={'0 5px 20px 0px rgb(72 187 120 / 43%)'}
                       _hover={{
-                        bg: 'green.500',
-                      }}
-                      _focus={{
-                        bg: 'green.500',
+                        transform: 'translateY(-2px)',
+                        boxShadow: 'lg',
                       }}
                       onClick={handleButtonClick}
                     >
@@ -299,8 +297,13 @@ function AddStationModal({ setIsAddStationModalOpen, addStation }) {
                 <Box>
                   <Button
                     rounded={'xl'}
+                    rounded={'xl'}
+                    bg={useColorModeValue('#b2d8d8', 'gray.900')}
+                    _hover={{
+                      transform: 'translateY(-2px)',
+                      boxShadow: 'lg',
+                    }}
                     width="150px"
-                    colorScheme="blue"
                     mr={3}
                     onClick={() => {
                       addStation(
@@ -323,6 +326,12 @@ function AddStationModal({ setIsAddStationModalOpen, addStation }) {
                     Add
                   </Button>
                   <Button
+                    _hover={{
+                      transform: 'translateY(-2px)',
+                      boxShadow: 'lg',
+                    }}
+                    bg={useColorModeValue('#FFFFFF', 'gray.900')}
+                    variant="outline"
                     rounded={'xl'}
                     width="150px"
                     onClick={() => setIsAddStationModalOpen(false)}

@@ -129,13 +129,13 @@ export default function StationCard({
               ml={3}
               rounded={'xl'}
               width="120px"
-              colorScheme="green"
-              onClick={() => {
-                role ? deleteStation(id) : handleBookButton(id);
-              }}
+              bg={useColorModeValue('#b2d8d8', 'gray.900')}
               _hover={{
                 transform: 'translateY(-2px)',
                 boxShadow: 'lg',
+              }}
+              onClick={() => {
+                role ? deleteStation(id) : handleBookButton(id);
               }}
             >
               {role ? 'Delete' : 'Book now'}

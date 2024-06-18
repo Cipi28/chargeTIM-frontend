@@ -65,8 +65,12 @@ function RateModal({ booking, setIsOpen, rateUser, updateBooking }) {
             <Button
               rounded={'xl'}
               ml={3}
-              bg={useColorModeValue('#151f21', 'gray.900')}
-              color="white"
+              width="120px"
+              bg={useColorModeValue('#b2d8d8', 'gray.900')}
+              _hover={{
+                transform: 'translateY(-2px)',
+                boxShadow: 'lg',
+              }}
               onClick={() => {
                 rateUser(ratingValue, booking.user_info.id, booking.id);
                 updateBooking({ ...booking, is_user_rated: true });

@@ -291,7 +291,8 @@ export function MapContainer(props) {
                     >
                       <img
                         key={index}
-                        src="https://cdn-icons-png.flaticon.com/256/12338/12338156.png"
+                        src="https://play-lh.googleusercontent.com/kV8Xljl5eRVBCNkyO_W8riz5Ad4x6OyuYxqP-hQPTmMk_0Fp4P6Qhf59ELkyu1W8Y3c"
+                        // src="https://cdn-icons-png.flaticon.com/256/12338/12338156.png"
                         width={50}
                         height={50}
                       />
@@ -306,14 +307,12 @@ export function MapContainer(props) {
                           <Grid
                             key={index}
                             h="200px"
+                            w="400px"
                             templateRows="repeat(1, 1fr)"
                             templateColumns="repeat(3, 1fr)"
                             gap={4}
                           >
-                            <GridItem
-                              colSpan={2}
-                              // bg='papayawhip'
-                            >
+                            <GridItem colSpan={2}>
                               <Heading
                                 key={index}
                                 fontSize="md"
@@ -328,13 +327,9 @@ export function MapContainer(props) {
                                 </Text>
                               ))}
                             </GridItem>
-                            <GridItem
-                              colSpan={1}
-                              // bg='papayawhip'
-                            >
+                            <GridItem colSpan={1}>
                               {!currentUser?.role && (
                                 <div align="right">
-                                  {/* <StarIcon sx={{color: "#ff8833"}} fontSize="large"/> */}
                                   {favoriteStations.includes(station.id) ? (
                                     <FavoriteIcon
                                       sx={{ color: '#E1306C' }}
@@ -372,14 +367,10 @@ export function MapContainer(props) {
                                 </div>
                               )}
                             </GridItem>
-                            <GridItem
-                              colSpan={3}
-                              rowSpan={0.5}
-                              // bg='tomato'
-                            >
+                            <GridItem colSpan={3}>
                               <div align="center">
                                 <Button
-                                  mr={3}
+                                  mr={currentUser?.role ? '0' : '3'}
                                   bg={useColorModeValue('#FFFFFF', 'gray.900')}
                                   variant="outline"
                                   rounded={'xl'}
@@ -406,7 +397,10 @@ export function MapContainer(props) {
                                     ml={3}
                                     rounded={'xl'}
                                     width="150px"
-                                    colorScheme="green"
+                                    bg={useColorModeValue(
+                                      '#b2d8d8',
+                                      'gray.900',
+                                    )}
                                     onClick={() => handleBookButton()}
                                     _hover={{
                                       transform: 'translateY(-2px)',
@@ -457,7 +451,7 @@ export function MapContainer(props) {
           setConflictBookings={setConflictBookings}
           setBookingVerified={setBookingVerified}
           setBookingSaved={setBookingSaved}
-          userName={userInfo.name}
+          userName={currentUser.name}
         />
       )}
     </div>

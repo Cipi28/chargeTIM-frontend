@@ -27,12 +27,13 @@ function base64toFile(base64String, filename, contentType) {
 
 export default function CarCard({
   index,
+  id,
   plate,
   plugType,
   image,
   name,
   openCarDetails,
-  handleBookButton,
+  deleteCar,
 }) {
   const defaultImage =
     'https://png.pngtree.com/png-clipart/20230914/original/pngtree-electric-car-clipart-electric-car-charged-in-the-city-flat-vector-png-image_11092300.png';
@@ -118,16 +119,16 @@ export default function CarCard({
               ml={3}
               rounded={'xl'}
               width="120px"
-              colorScheme="green"
+              bg={useColorModeValue('#b2d8d8', 'gray.900')}
               onClick={() => {
-                handleBookButton(index);
+                deleteCar(id);
               }}
               _hover={{
                 transform: 'translateY(-2px)',
                 boxShadow: 'lg',
               }}
             >
-              Book now
+              Delete
             </Button>
           </div>
         </Stack>
