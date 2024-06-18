@@ -5,6 +5,8 @@ export const initialState = {
   isLoading: false,
   error: null,
   user: null,
+  errorMessages: {},
+  updateCarSuccess: false,
 };
 
 const profileContainerReducer = handleActions(
@@ -13,6 +15,15 @@ const profileContainerReducer = handleActions(
       ...state,
       user: payload,
     }),
+    [T.UPDATE_USER]: (state, { payload }) => {
+      return { ...state, errorMessages: {}, updateCarSuccess: false };
+    },
+    [T.UPDATE_USER_FAILURE]: (state, { payload }) => {
+      return { ...state, errorMessages: payload };
+    },
+    [T.UPDATE_USER_SUCCESS]: (state, { payload }) => {
+      return { ...state, updateCarSuccess: true };
+    },
   },
   initialState,
 );

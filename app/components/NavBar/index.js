@@ -84,6 +84,7 @@ function NavBar() {
     const NavbarItems = userInfo?.role ? ContributorLinkItems : LinkItems;
     return (
       <Box
+        boxShadow={'2xl'}
         zIndex={2}
         transition="3s ease"
         bg={useColorModeValue('gray.100', 'gray.900')}
@@ -154,6 +155,7 @@ function NavBar() {
 
   const MobileNav = ({ onOpen, ...rest }) => (
     <Flex
+      boxShadow={'xl'}
       zIndex={0}
       // position="fixed" // Make the navbar fixed
       // top={0} // Position it at the top

@@ -457,6 +457,7 @@ export function MapContainer(props) {
           setConflictBookings={setConflictBookings}
           setBookingVerified={setBookingVerified}
           setBookingSaved={setBookingSaved}
+          userName={userInfo.name}
         />
       )}
     </div>

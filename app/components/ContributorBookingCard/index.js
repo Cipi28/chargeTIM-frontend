@@ -26,6 +26,7 @@ import {
 import moment from 'moment';
 import { BOOKING_STATUS } from '../../containers/BookingHistoryContainer/constants';
 import { BOOKING_TYPES } from '../../containers/HomepageContainer/constants';
+import StarRatingDisplay from '../StarRatingDisplay';
 
 function calculateDuration(date1, date2) {
   // Parse the dates using moment
@@ -122,9 +123,13 @@ export default function ContributorBookingCard({
                 <Text fontSize={'md'} mt={3}>
                   User rating:
                 </Text>
-                <Text fontSize={'md'} mt={3} ml="auto" mr={5}>
-                  {booking.user_info.personal_rating}
-                </Text>
+                <Box mt={3} ml="auto" mr={5}>
+                  <StarRatingDisplay
+                    rating={booking.user_info.personal_rating}
+                    starSize={20}
+                    ratingSize={'sm'}
+                  />
+                </Box>
               </Flex>
             </ListItem>
             <ListItem>

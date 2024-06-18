@@ -130,7 +130,7 @@ export function HomepageContainer(props) {
             bgPosition: 'calc(50% + 120px) calc(50% - 30px)',
             bgRepeat: 'no-repeat',
             bgAttachment: 'fixed',
-            opacity: 0.3,
+            opacity: 0.2,
             zIndex: -999,
           }}
           zIndex={-999}
@@ -252,6 +252,7 @@ export function HomepageContainer(props) {
           stations={stations}
           selectedCar={selectedCar}
           userId={userInfo.id}
+          userName={userInfo.name}
         />
       )}
     </div>
