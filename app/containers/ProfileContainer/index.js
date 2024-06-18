@@ -12,10 +12,15 @@ import {
   Flex,
   ListItem,
   List,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  CloseButton,
 } from '@chakra-ui/react';
 import { store } from '../../store';
 import * as S from './selectors';
-import { isNil } from 'lodash';
+import { isEmpty, isNil } from 'lodash';
 import * as T from '../App/constants';
 import { LOCALSTORAGE_KEY } from '../App/constants';
 import { FaCarSide } from 'react-icons/fa';
@@ -79,6 +84,11 @@ export function ProfileContainer(props) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
+  const [errorMessages, setErrorMessages] = useState([]);
+  const [emailMessages, setEmailMessages] = useState([]);
+  const [nameMessages, setNameMessages] = useState([]);
+  const [addressMessages, setAddressMessages] = useState([]);
+  const [hasUpdateSucceed, setHasUpdateSucceed] = useState(false);
 
   const fileInputRef = useRef(null);
   const defaultImage =
@@ -106,14 +116,46 @@ export function ProfileContainer(props) {
   }, []);
 
   useEffect(() => {
+    setErrorMessages(
+      !isEmpty(props.errorMessages?.error) ? props.errorMessages?.error : [],
+    );
+    setEmailMessages(
+      !isEmpty(props.errorMessages?.email) ? props.errorMessages?.email : [],
+    );
+    setAddressMessages(
+      !isEmpty(props.errorMessages?.address)
+        ? props.errorMessages?.address
+        : [],
+    );
+    setNameMessages(
+      !isEmpty(props.errorMessages?.name) ? props.errorMessages?.name : [],
+    );
+  }, [props.errorMessages]);
+
+  useEffect(() => {
     setUserInfo(props.user);
     if (!isNil(props.user)) {
       setImage(props.user.profile_photo);
       setName(props.user.name);
       setEmail(props.user.email);
-      setAddress(props.user.address);
+      setAddress(props.user.address || '');
     }
   }, [props.user]);
+
+  useEffect(() => {
+    setHasUpdateSucceed(props.updateSuccess);
+    if (props.updateSuccess) {
+      setIsEditEnabled(false);
+    }
+  }, [props.updateSuccess]);
+
+  useEffect(() => {
+    setHasUpdateSucceed(false);
+    setEmailMessages([]);
+    setErrorMessages([]);
+    setNameMessages([]);
+    setAddressMessages([]);
+  }, [location]);
 
   const handleFileRead = async event => {
     const file = event.target.files[0];
@@ -144,238 +186,340 @@ export function ProfileContainer(props) {
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center' }}>
-      {/*<Box*/}
-      {/*  minH={'100vh'}*/}
-      {/*  align={'center'}*/}
-      {/*  justify={'center'}*/}
-      {/*  // bg={useColorModeValue('gray.50', 'gray.800')}*/}
-      {/*  backgroundSize="cover"*/}
-      {/*  backgroundPosition="center"*/}
-      {/*  backgroundRepeat="no-repeat"*/}
-      {/*  _before={{*/}
-      {/*    paddingLeft: '240px',*/}
-      {/*    content: '""',*/}
-      {/*    position: 'absolute',*/}
-      {/*    top: 0,*/}
-      {/*    right: '10%', // Adjust this value to set the left margin*/}
-      {/*    width: '90%', // Adjust this value to account for the left margin*/}
-      {/*    height: '100%',*/}
-      {/*    bgImage:*/}
-      {/*      'https://evocharge.com/wp-content/uploads/2021/02/GettyImages-1184969192-1.jpg',*/}
-      {/*    bgSize: 'cover',*/}
-      {/*    bgPosition: 'center',*/}
-      {/*    bgRepeat: 'no-repeat',*/}
-      {/*    bgAttachment: 'fixed',*/}
-      {/*    opacity: 0.2,*/}
-      {/*    zIndex: -999,*/}
-      {/*  }}*/}
-      {/*  zIndex={-99999}*/}
-      {/*>*/} {/* Added justifyContent: 'center' */}
-      {showFirstDiv && (
-        <div style={{ width: '240px', flexShrink: 0 }}>
-          {' '}
-          {/* Added flexShrink: 0 */}
-          {/* Content for the first div */}
-        </div>
-      )}
+      {showFirstDiv && <div style={{ width: '240px', flexShrink: 0 }} />}
       <div>
         <Box
-          mt={'2rem'}
-          boxShadow={'2xl'}
-          width={'45rem'}
-          height={'84vh'}
-          zIndex={1}
+          minH={'100vh'}
+          align={'center'}
+          justify={'center'}
+          backgroundSize="cover"
+          backgroundPosition="center"
+          backgroundRepeat="no-repeat"
+          _before={{
+            paddingLeft: '240px',
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: '10%', // Adjust this value to set the left margin
+            width: '90%', // Adjust this value to account for the left margin
+            height: '100%',
+            bgImage:
+              'https://static.vecteezy.com/system/resources/previews/012/848/255/non_2x/electric-vehicle-icon-set-of-ev-illustration-such-as-electric-car-bus-motorcycle-and-other-vector.jpg',
+            bgSize: '90%',
+            bgPosition: 'calc(50% + 120px) calc(50% - 30px)',
+            bgRepeat: 'no-repeat',
+            bgAttachment: 'fixed',
+            opacity: 0.2,
+            zIndex: -999,
+          }}
+          zIndex={-999}
         >
-          <Box display="flex" justifyContent="center" zIndex={1}>
-            <Box zIndex={1}>
-              <Image
-                mt={'2rem'}
-                borderRadius="full"
-                boxSize="200px"
-                src={
-                  image ? base64toFile(image, 'image', 'jpeg') : defaultImage
-                }
-              />
-              <Button
-                mt={7}
-                w="full"
-                bg={'green.400'}
-                color={'white'}
-                rounded={'xl'}
-                boxShadow={'0 5px 20px 0px rgb(72 187 120 / 43%)'}
-                _hover={{
-                  bg: 'green.500',
-                }}
-                _focus={{
-                  bg: 'green.500',
-                }}
-                onClick={handleButtonClick}
-              >
-                Change Photo
-                <input
-                  style={{ display: 'none' }}
-                  type="file"
-                  accept=".jpeg, .png, .jpg"
-                  placeholder="Car plug"
-                  ref={fileInputRef}
-                  onChange={handleFileRead}
-                />
-              </Button>
-            </Box>
-          </Box>
-          <Box mx={10} my={6}>
-            <Flex justifyContent="space-between">
-              <Box width={'40%'}>
-                <Text fontSize={'md'} mt={3}>
-                  Name
-                </Text>
-                <Input
-                  placeholder="Name"
-                  isDisabled={!isEditEnabled}
-                  variant="flushed"
-                  value={name}
-                  onChange={e => {
-                    setName(e.target.value);
-                  }}
-                />
-              </Box>
-              <Box width={'40%'}>
-                <Text fontSize={'md'} mt={3}>
-                  Email
-                </Text>
-                <Input
-                  placeholder="Email"
-                  isDisabled={!isEditEnabled}
-                  variant="flushed"
-                  value={email}
-                  onChange={e => {
-                    setEmail(e.target.value);
-                  }}
-                />
-              </Box>
-            </Flex>
-            <Box width={'100%'}>
-              <Text fontSize={'md'} mt={3}>
-                Adress
-              </Text>
-              <Input
-                placeholder="Ender your address"
-                isDisabled={!isEditEnabled}
-                variant="flushed"
-                value={address}
-                onChange={e => {
-                  setAddress(e.target.value);
-                }}
-              />
-            </Box>
-            <Flex w="full" justifyContent="space-between">
-              <Button
-                mt={10}
-                w="47%"
-                bg={'green.400'}
-                color={'white'}
-                rounded={'xl'}
-                boxShadow={'0 5px 20px 0px rgb(72 187 120 / 43%)'}
-                onClick={() => {
-                  setIsEditEnabled(!isEditEnabled);
-                  if (isEditEnabled && !isNil(props.user)) {
-                    setImage(props.user.profile_photo);
-                    setName(props.user.name);
-                    setEmail(props.user.email);
-                    setAddress(props.user.address);
+          <Box
+            zIndex={1}
+            mt={'2rem'}
+            boxShadow={'2xl'}
+            width={'45rem'}
+            bg={'white'}
+            pb={'2rem'}
+          >
+            <Box display="flex" justifyContent="center" zIndex={1}>
+              <Box zIndex={1}>
+                <Image
+                  mt={'2rem'}
+                  borderRadius="full"
+                  boxSize="200px"
+                  src={
+                    image ? base64toFile(image, 'image', 'jpeg') : defaultImage
                   }
-                }}
-                _hover={{
-                  bg: 'green.500',
-                }}
-                _focus={{
-                  bg: 'green.500',
-                }}
-              >
-                {isEditEnabled ? 'Cancel' : 'Edit'}
-              </Button>
-              <Button
-                mt={10}
-                w={'47%'}
-                bg={'green.400'}
-                color={'white'}
-                rounded={'xl'}
-                boxShadow={'0 5px 20px 0px rgba(72, 187, 120, 0.43)'}
-                _hover={{ bg: 'green.500' }}
-                _focus={{ bg: 'green.500' }}
-                onClick={() => {
-                  actions.updateUserAction({
-                    ...userInfo,
-                    profile_photo: image,
-                    name,
-                    email,
-                    address,
-                  });
-                  setIsEditEnabled(!isEditEnabled);
-                  updateUserInLocalStorage(
-                    {
+                />
+                <Button
+                  mt={7}
+                  w="full"
+                  bg={'green.400'}
+                  color={'white'}
+                  rounded={'xl'}
+                  boxShadow={'0 5px 20px 0px rgb(72 187 120 / 43%)'}
+                  _hover={{
+                    bg: 'green.500',
+                  }}
+                  _focus={{
+                    bg: 'green.500',
+                  }}
+                  onClick={handleButtonClick}
+                >
+                  Change Photo
+                  <input
+                    style={{ display: 'none' }}
+                    type="file"
+                    accept=".jpeg, .png, .jpg"
+                    placeholder="Car plug"
+                    ref={fileInputRef}
+                    onChange={handleFileRead}
+                  />
+                </Button>
+              </Box>
+            </Box>
+            <Box mx={10} my={6}>
+              <Flex justifyContent="space-between">
+                <Box width={'40%'}>
+                  <Text fontSize={'md'} mt={3}>
+                    Name
+                  </Text>
+                  <Input
+                    placeholder="Name"
+                    isDisabled={!isEditEnabled}
+                    variant="flushed"
+                    value={name}
+                    onChange={e => {
+                      setName(e.target.value);
+                    }}
+                  />
+                </Box>
+                <Box width={'40%'}>
+                  <Text fontSize={'md'} mt={3}>
+                    Email
+                  </Text>
+                  <Input
+                    placeholder="Email"
+                    isDisabled={!isEditEnabled}
+                    variant="flushed"
+                    value={email}
+                    onChange={e => {
+                      setEmail(e.target.value);
+                    }}
+                  />
+                </Box>
+              </Flex>
+              <Box width={'100%'}>
+                <Text fontSize={'md'} mt={3}>
+                  Adress
+                </Text>
+                <Input
+                  placeholder="Ender your address"
+                  isDisabled={!isEditEnabled}
+                  variant="flushed"
+                  value={address}
+                  onChange={e => {
+                    setAddress(e.target.value);
+                  }}
+                />
+              </Box>
+              <Flex w="full" justifyContent="space-between">
+                <Button
+                  mt={10}
+                  w="47%"
+                  bg={'green.400'}
+                  color={'white'}
+                  rounded={'xl'}
+                  boxShadow={'0 5px 20px 0px rgb(72 187 120 / 43%)'}
+                  onClick={() => {
+                    setIsEditEnabled(!isEditEnabled);
+                    if (isEditEnabled && !isNil(props.user)) {
+                      setImage(props.user.profile_photo);
+                      setName(props.user.name);
+                      setEmail(props.user.email);
+                      setAddress(props.user.address || '');
+                    }
+                  }}
+                  _hover={{
+                    bg: 'green.500',
+                  }}
+                  _focus={{
+                    bg: 'green.500',
+                  }}
+                >
+                  {isEditEnabled ? 'Cancel' : 'Edit'}
+                </Button>
+                <Button
+                  mt={10}
+                  w={'47%'}
+                  bg={'green.400'}
+                  color={'white'}
+                  rounded={'xl'}
+                  boxShadow={'0 5px 20px 0px rgba(72, 187, 120, 0.43)'}
+                  _hover={{ bg: 'green.500' }}
+                  _focus={{ bg: 'green.500' }}
+                  onClick={() => {
+                    setEmailMessages([]);
+                    setErrorMessages([]);
+                    setNameMessages([]);
+                    setAddressMessages([]);
+                    actions.updateUserAction({
                       ...userInfo,
                       profile_photo: image,
                       name,
                       email,
                       address,
-                    },
-                    LOCALSTORAGE_KEY,
-                  );
-                }}
-              >
-                Save
-              </Button>
-            </Flex>
-            <List spacing={3} mt={10}>
-              <ListItem>
-                <Flex alignItems="center" mb={2}>
-                  <Box mr={3} mt={3}>
-                    <FaUserLarge size={25} />
+                    });
+                    updateUserInLocalStorage(
+                      {
+                        ...userInfo,
+                        profile_photo: image,
+                        name,
+                        email,
+                        address,
+                      },
+                      LOCALSTORAGE_KEY,
+                    );
+                  }}
+                >
+                  Save
+                </Button>
+              </Flex>
+              <List spacing={3} mt={10}>
+                <ListItem>
+                  <Flex alignItems="center" mb={2}>
+                    <Box mr={3} mt={3}>
+                      <FaUserLarge size={25} />
+                    </Box>
+                    <Text fontSize={'md'} mt={3}>
+                      Role:
+                    </Text>
+                    <Text fontSize={'md'} mt={3} ml="auto" mr={5}>
+                      {userInfo?.role ? 'Contributor' : 'User'}
+                    </Text>
+                  </Flex>
+                </ListItem>
+                <ListItem>
+                  <Flex alignItems="center" mb={2}>
+                    <Box mr={3} mt={3}>
+                      <BsFillBarChartLineFill size={25} />
+                    </Box>
+                    <Text fontSize={'md'} mt={3}>
+                      Personal Rating:
+                    </Text>
+                    <Text fontSize={'md'} mt={3} ml="auto" mr={5}>
+                      <StarRatingDisplay
+                        rating={userInfo?.personal_rating}
+                        starSize={30}
+                        ratingSize={'md'}
+                      />
+                    </Text>
+                  </Flex>
+                </ListItem>
+                <ListItem>
+                  <Flex alignItems="center" mb={2}>
+                    <Box mr={3} mt={3}>
+                      <FaBook size={25} />
+                    </Box>
+                    <Text fontSize={'md'} mt={3}>
+                      Number of Bookings:
+                    </Text>
+                    <Text fontSize={'md'} mt={3} ml="auto" mr={5}>
+                      {userInfo?.bookings_number}
+                    </Text>
+                  </Flex>
+                </ListItem>
+              </List>
+
+              {!isEmpty(nameMessages) && (
+                <Flex justify="center" align="center" mt={7}>
+                  <Box width="100%">
+                    <Alert status="error">
+                      <AlertIcon />
+                      <Box flex="1">
+                        <AlertTitle>Error!</AlertTitle>
+                        <AlertDescription>{nameMessages[0]}</AlertDescription>
+                      </Box>
+                      <CloseButton
+                        alignSelf="flex-start"
+                        position="relative"
+                        right={-1}
+                        top={-1}
+                        onClick={() => setNameMessages([])}
+                      />
+                    </Alert>
                   </Box>
-                  <Text fontSize={'md'} mt={3}>
-                    Role:
-                  </Text>
-                  <Text fontSize={'md'} mt={3} ml="auto" mr={5}>
-                    {userInfo?.role ? 'Contributor' : 'User'}
-                  </Text>
                 </Flex>
-              </ListItem>
-              <ListItem>
-                <Flex alignItems="center" mb={2}>
-                  <Box mr={3} mt={3}>
-                    <BsFillBarChartLineFill size={25} />
+              )}
+              {!isEmpty(emailMessages) && (
+                <Flex justify="center" align="center" mt={7}>
+                  <Box width="100%">
+                    <Alert status="error">
+                      <AlertIcon />
+                      <Box flex="1">
+                        <AlertTitle>Error!</AlertTitle>
+                        <AlertDescription>{emailMessages[0]}</AlertDescription>
+                      </Box>
+                      <CloseButton
+                        alignSelf="flex-start"
+                        position="relative"
+                        right={-1}
+                        top={-1}
+                        onClick={() => setEmailMessages([])}
+                      />
+                    </Alert>
                   </Box>
-                  <Text fontSize={'md'} mt={3}>
-                    Personal Rating:
-                  </Text>
-                  <Text fontSize={'md'} mt={3} ml="auto" mr={5}>
-                    <StarRatingDisplay
-                      rating={userInfo?.personal_rating}
-                      starSize={30}
-                      ratingSize={'md'}
-                    />
-                  </Text>
                 </Flex>
-              </ListItem>
-              <ListItem>
-                <Flex alignItems="center" mb={2}>
-                  <Box mr={3} mt={3}>
-                    <FaBook size={25} />
+              )}
+              {!isEmpty(addressMessages) && (
+                <Flex justify="center" align="center" mt={7}>
+                  <Box width="100%">
+                    <Alert status="error">
+                      <AlertIcon />
+                      <Box flex="1">
+                        <AlertTitle>Error!</AlertTitle>
+                        <AlertDescription>
+                          {addressMessages[0]}
+                        </AlertDescription>
+                      </Box>
+                      <CloseButton
+                        alignSelf="flex-start"
+                        position="relative"
+                        right={-1}
+                        top={-1}
+                        onClick={() => setAddressMessages([])}
+                      />
+                    </Alert>
                   </Box>
-                  <Text fontSize={'md'} mt={3}>
-                    Number of Bookings:
-                  </Text>
-                  <Text fontSize={'md'} mt={3} ml="auto" mr={5}>
-                    {userInfo?.bookings_number}
-                  </Text>
                 </Flex>
-              </ListItem>
-            </List>
+              )}
+              {!isEmpty(errorMessages) && (
+                <Flex justify="center" align="center" mt={7}>
+                  <Box width="100%">
+                    <Alert status="error">
+                      <AlertIcon />
+                      <Box flex="1">
+                        <AlertTitle>Error!</AlertTitle>
+                        <AlertDescription>{errorMessages[0]}</AlertDescription>
+                      </Box>
+                      <CloseButton
+                        alignSelf="flex-start"
+                        position="relative"
+                        right={-1}
+                        top={-1}
+                        onClick={() => setErrorMessages([])}
+                      />
+                    </Alert>
+                  </Box>
+                </Flex>
+              )}
+              {hasUpdateSucceed && (
+                <Flex justify="center" align="center" mt={7}>
+                  <Box width="100%">
+                    <Alert status="success">
+                      <AlertIcon />
+                      <Box flex="1">
+                        <AlertTitle>Success!</AlertTitle>
+                        <AlertDescription>
+                          User has been successful updated!
+                        </AlertDescription>
+                      </Box>
+                      <CloseButton
+                        alignSelf="flex-start"
+                        position="relative"
+                        right={-1}
+                        top={-1}
+                        onClick={() => setHasUpdateSucceed(false)}
+                      />
+                    </Alert>
+                  </Box>
+                </Flex>
+              )}
+            </Box>
           </Box>
         </Box>
       </div>
-      {/*</Box>*/}
     </div>
   );
 }
@@ -383,6 +527,8 @@ export function ProfileContainer(props) {
 const mapStateToProps = state => ({
   isLoading: false,
   user: S.selectUser(state),
+  errorMessages: S.selectErrorMessages(state),
+  updateSuccess: S.selectUpdateSuccess(state),
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -7,6 +7,10 @@ export const initialState = {
   error: null,
   bookings: {},
   ratedSuccessful: false,
+  reviewSuccess: false,
+  reviewError: null,
+  rateSuccess: false,
+  rateError: null,
 };
 
 const bookingHistoryContainerReducer = handleActions(
@@ -31,16 +35,31 @@ const bookingHistoryContainerReducer = handleActions(
         ...state,
         bookings: updatedBookings,
         ratedSuccessful: true,
+        rateSuccess: true,
       };
     },
-    // [T.UPDATE_BOOKING_SUCCESS]: (state, action) => ({
-    //   ...state,
-    //   //return all the current bookings in the bookings initial state + the updated booking coming from the action.payload
-    //   bookings: {
-    //     '2': [...state.bookings[BOOKING_STATUS_ENDED], ...action.payload],
-    //     '4': state.bookings[BOOKING_STATUS_REJECTED],
-    //   },
-    // }),
+    [T.SAVE_REVIEW]: (state, action) => ({
+      ...state,
+      reviewSuccess: false,
+      reviewError: null,
+    }),
+    [T.SAVE_REVIEW_SUCCESS]: (state, action) => ({
+      ...state,
+      reviewSuccess: true,
+    }),
+    [T.SAVE_REVIEW_FAILURE]: (state, action) => ({
+      ...state,
+      reviewError: action.payload,
+    }),
+    [T.RATE_USER]: (state, action) => ({
+      ...state,
+      rateSuccess: false,
+      rateError: null,
+    }),
+    [T.RATE_USER_FAILURE]: (state, action) => ({
+      ...state,
+      rateError: action.payload,
+    }),
   },
   initialState,
 );

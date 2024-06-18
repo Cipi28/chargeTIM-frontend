@@ -216,13 +216,13 @@ export function FavouriteStationsContainer(props) {
             content: '""',
             position: 'absolute',
             top: 0,
-            right: '10%', // Adjust this value to set the left margin
+            left: '10%', // Adjust this value to set the left margin
             width: '90%', // Adjust this value to account for the left margin
             height: '100%',
             bgImage:
-              'https://evocharge.com/wp-content/uploads/2021/02/GettyImages-1184969192-1.jpg',
-            bgSize: 'cover',
-            bgPosition: 'center',
+              'https://static.vecteezy.com/system/resources/previews/012/848/255/non_2x/electric-vehicle-icon-set-of-ev-illustration-such-as-electric-car-bus-motorcycle-and-other-vector.jpg',
+            bgSize: '90%',
+            bgPosition: 'calc(50% + 120px) calc(50% - 30px)',
             bgRepeat: 'no-repeat',
             bgAttachment: 'fixed',
             opacity: 0.2,
@@ -243,6 +243,7 @@ export function FavouriteStationsContainer(props) {
                   as={FiSearch}
                 />
                 <Input
+                  variant="filled"
                   width={'30rem'}
                   className="search-bar"
                   placeholder="Search Station"
@@ -356,6 +357,7 @@ export function FavouriteStationsContainer(props) {
           setConflictBookings={setConflictBookings}
           setBookingVerified={setBookingVerified}
           setBookingSaved={setBookingSaved}
+          userName={userInfo.name}
         />
       )}
       {isAddStationModalOpen && (

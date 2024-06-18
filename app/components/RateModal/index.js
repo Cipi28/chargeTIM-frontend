@@ -16,7 +16,7 @@ import {
 import { MdRateReview } from 'react-icons/md';
 import StarRatingInteracting from '../StarRaitingInteracting';
 
-function RateModal({ booking, setIsOpen, rateUser }) {
+function RateModal({ booking, setIsOpen, rateUser, updateBooking }) {
   const initialRef = React.useRef();
   const finalRef = React.useRef();
 
@@ -69,6 +69,7 @@ function RateModal({ booking, setIsOpen, rateUser }) {
               color="white"
               onClick={() => {
                 rateUser(ratingValue, booking.user_info.id, booking.id);
+                updateBooking({ ...booking, is_user_rated: true });
                 setIsOpen(false);
               }}
               _hover={{

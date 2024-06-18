@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 import {
   Modal,
@@ -27,6 +27,7 @@ import { VscDebugStart } from 'react-icons/vsc';
 import { FaStop } from 'react-icons/fa';
 import { BOOKING_TYPES } from '../../containers/HomepageContainer/constants';
 import { isEmpty, isNil } from 'lodash';
+import emailjs from '@emailjs/browser';
 
 function getFormattedDate() {
   const now = new Date();
@@ -59,6 +60,22 @@ function transformDate(inputDate) {
   return result;
 }
 
+function transformFrontDate(inputDate) {
+  // Split the date and time parts
+  const [datePart, timePart] = inputDate.split('T');
+
+  // Split the date into year, month, and day
+  const [year, month, day] = datePart.split('-');
+
+  // Format the date as MM/DD/YYYY
+  const formattedDate = `${month}/${day}/${year}`;
+
+  // Combine the formatted date with the time part
+  const result = `${formattedDate} ${timePart.slice(0, 5)}`;
+
+  return result;
+}
+
 function BookingDetailsModal({
   setOpenBookingModal,
   cars,
@@ -78,6 +95,7 @@ function BookingDetailsModal({
   setBookingVerified,
   isBookingSaved,
   setBookingSaved,
+  userName,
 }) {
   const initialRef = React.useRef();
   const finalRef = React.useRef();
@@ -108,6 +126,41 @@ function BookingDetailsModal({
     null,
   );
   const [successfulSavedMess, setSuccessfulSavedMess] = useState(null);
+
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => emailjs.init('_oITw2nA-QrpG8wQH'), []);
+
+  const handleSubmit = async (
+    name,
+    toMail,
+    fromName,
+    stationName,
+    startDate,
+    endDate,
+  ) => {
+    const serviceId = 'service_up4yv27';
+    const templateId = 'template_1vgqwuf';
+    try {
+      setLoading(true);
+      await emailjs.send(serviceId, templateId, {
+        name: name,
+        to_email: toMail,
+        to_name: name,
+        from_name: fromName,
+        station_name: stationName,
+        start_date: transformFrontDate(startDate),
+        end_date: transformFrontDate(endDate),
+      });
+      alert(
+        'an email notifying your booking request has been send to the station owner!',
+      );
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (isCurrentBookingVerified) {
@@ -365,6 +418,9 @@ function BookingDetailsModal({
                     onClick={() => {
                       const date1 = new Date(selectedStartDate);
                       const date2 = new Date(selectedEndDate);
+                      const station = stations.find(
+                        station => station.id === selectedStationId,
+                      );
 
                       let dateMessage = null;
                       let plugMessage = null;
@@ -394,6 +450,16 @@ function BookingDetailsModal({
                         setAllowBooking(false);
                         setBookingSaved(false);
 
+                        if (!station.is_public) {
+                          handleSubmit(
+                            station.owner_name,
+                            station.owner_mail,
+                            userName,
+                            station.name,
+                            selectedStartDate,
+                            selectedEndDate,
+                          );
+                        }
                         saveBookingAction({
                           carId: selectedCarId,
                           stationId: selectedStationId,

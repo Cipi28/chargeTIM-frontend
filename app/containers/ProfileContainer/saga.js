@@ -5,7 +5,6 @@ import * as A from './actions';
 import { post, get, del, patch } from '../../api';
 
 function* updateUser(action) {
-  console.log('actionpayload', action.payload);
   try {
     const { id } = action.payload;
     const user = yield call(patch, `/users/${id}`, { ...action.payload });
@@ -13,7 +12,7 @@ function* updateUser(action) {
       yield put(A.updateUserSuccessAction(user.data));
     }
   } catch (e) {
-    yield put(A.updateUserFailureAction(e.message));
+    yield put(A.updateUserFailureAction(e.response));
   }
 }
 
