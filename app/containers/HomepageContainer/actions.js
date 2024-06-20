@@ -25,6 +25,14 @@ export const getStationsAction = createAction(T.GET_STATIONS);
 export const getStationsSuccessAction = createAction(T.GET_STATIONS_SUCCESS);
 export const getStationsFailureAction = createAction(T.GET_STATIONS_FAILURE);
 
+export const getChartsDataAction = createAction(T.GET_CHARTS_DATA);
+export const getChartsDataSuccessAction = createAction(
+  T.GET_CHARTS_DATA_SUCCESS,
+);
+export const getChartsDataFailureAction = createAction(
+  T.GET_CHARTS_DATA_FAILURE,
+);
+
 export default {
   getUserCars,
   getUserCarsSuccess,
@@ -44,4 +52,7 @@ export default {
   getStationsAction,
   getStationsSuccessAction,
   getStationsFailureAction,
+  getChartsDataAction,
+  getChartsDataSuccessAction,
+  getChartsDataFailureAction,
 };

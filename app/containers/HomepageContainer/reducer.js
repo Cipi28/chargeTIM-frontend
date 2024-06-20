@@ -11,6 +11,7 @@ export const initialState = {
   successAddCar: false,
   successUpdateCar: false,
   updateErrorMessages: {},
+  chartsData: null,
 };
 
 const homepageContainerReducer = handleActions(
@@ -52,6 +53,10 @@ const homepageContainerReducer = handleActions(
     [T.GET_STATIONS_SUCCESS]: (state, { payload }) => ({
       ...state,
       allStations: payload,
+    }),
+    [T.GET_CHARTS_DATA_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      chartsData: payload,
     }),
   },
   initialState,

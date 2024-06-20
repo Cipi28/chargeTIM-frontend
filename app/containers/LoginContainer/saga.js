@@ -24,11 +24,7 @@ function* signIn(action) {
       }),
     );
 
-    if (user.role) {
-      window.location.href = '/my-stations';
-    } else {
-      window.location.href = '/';
-    }
+    window.location.href = '/';
   } catch (e) {
     yield put(A.signInActionFailure(e.response));
   }
