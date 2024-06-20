@@ -84,6 +84,18 @@ function* getStations(action) {
   }
 }
 
+function* getChartsData(action) {
+  try {
+    const { userId } = action.payload;
+    const chartsData = yield call(get, `/stations/chartsData/${userId}`);
+    if (chartsData) {
+      yield put(A.getChartsDataSuccessAction(chartsData.data));
+    }
+  } catch (e) {
+    yield put(A.getChartsDataFailureAction(e.message));
+  }
+}
+
 function* homepageContainerSaga() {
   yield takeLatest(T.GET_USER_CARS, getUserCars);
   yield takeLatest(T.ADD_CAR, addCar);
@@ -91,6 +103,7 @@ function* homepageContainerSaga() {
   yield takeLatest(T.UPDATE_CAR, updateCar);
   yield takeLatest(T.GET_PLUGS, getPlugs);
   yield takeLatest(T.GET_STATIONS, getStations);
+  yield takeLatest(T.GET_CHARTS_DATA, getChartsData);
 }
 
 export default homepageContainerSaga;

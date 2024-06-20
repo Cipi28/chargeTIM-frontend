@@ -116,7 +116,7 @@ export function RegisterContainer(props) {
             Create an account
           </Heading>
           <Text fontSize={'lg'} color={'gray.900'} fontWeight={'bold'}>
-            to start using charging station the good way ✌️
+            to start using charging stations the good way ✌️
           </Text>
         </Stack>
         <Box

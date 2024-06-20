@@ -31,3 +31,8 @@ export const selectSuccessUpdateCar = createSelector(
   selectHomepageContainer(),
   homepageContainer => homepageContainer.successUpdateCar,
 );
+
+export const selectChartsData = createSelector(
+  selectHomepageContainer(),
+  homepageContainer => homepageContainer.chartsData,
+);
