@@ -132,6 +132,8 @@ export function LoginContainer(props) {
             </FormControl>
             <Stack spacing={10} pt={2}>
               <Button
+                as="a"
+                href="#"
                 loadingText="Submitting"
                 size="lg"
                 bgGradient="linear(to-r, green.400,blue.400)"

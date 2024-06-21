@@ -452,6 +452,7 @@ export function MapContainer(props) {
           setBookingVerified={setBookingVerified}
           setBookingSaved={setBookingSaved}
           userName={currentUser.name}
+          closeAlertsAction={actions.closeAlertsAction}
         />
       )}
     </div>

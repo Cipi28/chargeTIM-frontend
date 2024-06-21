@@ -38,6 +38,7 @@ export function FavouriteStationsContainer(props) {
   const [conflictBookings, setConflictBookings] = useState([]);
   const [bookingVerified, setBookingVerified] = useState(false);
   const [bookingSaved, setBookingSaved] = useState(false);
+  const [isFavStationEmpty, setIsFavStationEmpty] = useState(false);
 
   useEffect(() => {
     setConflictBookings(props.conflictBookings);
@@ -80,6 +81,10 @@ export function FavouriteStationsContainer(props) {
     setCurrentPlugs(props.selectedPlugs);
     setCurrentReviews(props.selectedReviews);
     setCurrentCars(props.userCars);
+
+    if (isEmpty(props.favouriteStations) && props.areStationReturned) {
+      setIsFavStationEmpty(true);
+    }
   }, [
     props.favouriteStations,
     props.selectedPlugs,
@@ -312,7 +317,7 @@ export function FavouriteStationsContainer(props) {
                 </Box>
               ))}
             </Flex>
-            {isEmpty(stations) && (
+            {isEmpty(stations) && isFavStationEmpty && (
               <div>
                 <Heading
                   mt={12}
@@ -360,12 +365,16 @@ export function FavouriteStationsContainer(props) {
           setBookingVerified={setBookingVerified}
           setBookingSaved={setBookingSaved}
           userName={userInfo.name}
+          closeAlertsAction={actions.closeAlertsAction}
         />
       )}
       {isAddStationModalOpen && (
         <AddStationModal
           addStation={addStation}
           setIsAddStationModalOpen={setIsAddStationModalOpen}
+          errors={props.errorMessages}
+          clearAddStationError={actions.clearAddStationError}
+          addedStationSuccess={props.addedStationSuccess}
         />
       )}
     </div>
@@ -383,6 +392,9 @@ const mapStateToProps = state => ({
   conflictBookings: S.selectConflictBookings(state),
   isCurrentBookingVerified: S.selectIsCurrentBookingVerified(state),
   isBookingSaved: S.selectIsBookingSaved(state),
+  areStationReturned: S.selectAreStationReturned(state),
+  errorMessages: S.selectErrorMessages(state),
+  addedStationSuccess: S.selectAddedStationSuccess(state),
 });
 
 const mapDispatchToProps = dispatch => ({

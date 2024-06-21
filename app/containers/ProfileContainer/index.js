@@ -380,30 +380,34 @@ export function ProfileContainer(props) {
                     </Text>
                   </Flex>
                 </ListItem>
-                <ListItem>
-                  <Flex alignItems="center" mb={2}>
-                    <Box mr={3} mt={3}>
-                      <BsFillBarChartLineFill size={25} />
-                    </Box>
-                    <Text fontSize={'md'} mt={3}>
-                      Personal Rating:
-                    </Text>
-                    <Text fontSize={'md'} mt={3} ml="auto" mr={5}>
-                      <StarRatingDisplay
-                        rating={userInfo?.personal_rating}
-                        starSize={30}
-                        ratingSize={'md'}
-                      />
-                    </Text>
-                  </Flex>
-                </ListItem>
+                {!userInfo?.role && (
+                  <ListItem>
+                    <Flex alignItems="center" mb={2}>
+                      <Box mr={3} mt={3}>
+                        <BsFillBarChartLineFill size={25} />
+                      </Box>
+                      <Text fontSize={'md'} mt={3}>
+                        Personal Rating:
+                      </Text>
+                      <Text fontSize={'md'} mt={3} ml="auto" mr={5}>
+                        <StarRatingDisplay
+                          rating={userInfo?.personal_rating}
+                          starSize={30}
+                          ratingSize={'md'}
+                        />
+                      </Text>
+                    </Flex>
+                  </ListItem>
+                )}
                 <ListItem>
                   <Flex alignItems="center" mb={2}>
                     <Box mr={3} mt={3}>
                       <FaBook size={25} />
                     </Box>
                     <Text fontSize={'md'} mt={3}>
-                      Number of Bookings:
+                      {userInfo?.role
+                        ? 'Number of bookings at your stations:'
+                        : 'Number of bookings:'}
                     </Text>
                     <Text fontSize={'md'} mt={3} ml="auto" mr={5}>
                       {userInfo?.bookings_number}

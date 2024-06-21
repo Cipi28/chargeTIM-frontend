@@ -59,6 +59,10 @@ export const getPlugsAfterCarTypeQuietAction = createAction(
   T.GET_PLUGS_AFTER_CAR_TYPE_QUIET,
 );
 
+export const closeAlertsAction = createAction(T.CLOSE_ALERTS);
+
+export const clearAddStationError = createAction(T.CLEAR_ADD_STATION_ERROR);
+
 export default {
   getFavouriteStations,
   getFavouriteStationsSuccess,
@@ -91,4 +95,6 @@ export default {
   getPlugsAfterCarTypeSuccessAction,
   getPlugsAfterCarTypeFailureAction,
   getPlugsAfterCarTypeQuietAction,
+  closeAlertsAction,
+  clearAddStationError,
 };

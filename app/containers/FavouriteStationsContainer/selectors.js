@@ -1,5 +1,4 @@
 import { createSelector } from 'reselect';
-import { selectMapContainer } from '../MapContainer/selectors';
 
 export const selectFavouriteStationsContainer = () => state =>
   state.favouriteStationsContainer;
@@ -48,4 +47,19 @@ export const selectIsCurrentBookingVerified = createSelector(
 export const selectIsBookingSaved = createSelector(
   selectFavouriteStationsContainer(),
   favouriteStationsContainer => favouriteStationsContainer?.isBookingSaved,
+);
+
+export const selectAreStationReturned = createSelector(
+  selectFavouriteStationsContainer(),
+  favouriteStationsContainer => favouriteStationsContainer?.areStationReturned,
+);
+
+export const selectErrorMessages = createSelector(
+  selectFavouriteStationsContainer(),
+  favouriteStationsContainer => favouriteStationsContainer.errorMessages,
+);
+
+export const selectAddedStationSuccess = createSelector(
+  selectFavouriteStationsContainer(),
+  favouriteStationsContainer => favouriteStationsContainer.addedStationSuccess,
 );

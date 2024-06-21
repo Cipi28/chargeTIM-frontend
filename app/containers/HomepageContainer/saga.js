@@ -9,7 +9,7 @@ function* getUserCars(action) {
     const { userId } = action.payload;
     const cars = yield call(get, `/cars/${userId}`);
 
-    if (cars.data && cars.data.length > 0) {
+    if (cars.data) {
       yield put(A.getUserCarsSuccess(cars.data));
     }
   } catch (e) {

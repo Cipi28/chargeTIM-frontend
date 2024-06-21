@@ -36,3 +36,8 @@ export const selectChartsData = createSelector(
   selectHomepageContainer(),
   homepageContainer => homepageContainer.chartsData,
 );
+
+export const selectCarsReturned = createSelector(
+  selectHomepageContainer(),
+  homepageContainer => homepageContainer.carsReturned,
+);

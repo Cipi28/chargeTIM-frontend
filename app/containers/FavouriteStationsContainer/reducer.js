@@ -14,6 +14,9 @@ export const initialState = {
   conflictBookings: [],
   isCurrentBookingVerified: false,
   isBookingSaved: false,
+  areStationReturned: false,
+  errorMessages: {},
+  addedStationSuccess: false,
 };
 
 const favouriteStationsContainerReducer = handleActions(
@@ -21,6 +24,7 @@ const favouriteStationsContainerReducer = handleActions(
     [T.GET_FAVOURITE_STATIONS_SUCCESS]: (state, action) => ({
       ...state,
       favouriteStations: action.payload,
+      areStationReturned: true,
     }),
     [T.GET_PLUGS_SUCCESS]: (state, action) => ({
       ...state,
@@ -37,6 +41,7 @@ const favouriteStationsContainerReducer = handleActions(
     [T.GET_USER_STATIONS_SUCCESS]: (state, action) => ({
       ...state,
       favouriteStations: action.payload,
+      areStationReturned: true,
     }),
     [T.GET_PLUGS_AFTER_CAR_TYPE]: (state, action) => ({
       ...state,
@@ -67,6 +72,28 @@ const favouriteStationsContainerReducer = handleActions(
     [T.SAVE_BOOKING_SUCCESS]: (state, action) => ({
       ...state,
       isBookingSaved: true,
+    }),
+    [T.CLOSE_ALERTS]: (state, action) => ({
+      ...state,
+      isBookingSaved: false,
+      isCurrentBookingVerified: false,
+    }),
+    [T.ADD_STATION]: (state, { payload }) => ({
+      ...state,
+      addedStationSuccess: false,
+    }),
+    [T.ADD_STATION_FAILURE]: (state, { payload }) => ({
+      ...state,
+      errorMessages: payload,
+    }),
+    [T.ADD_STATION_SUCCESS]: (state, { payload }) => ({
+      ...state,
+      errorMessages: payload,
+      addedStationSuccess: true,
+    }),
+    [T.CLEAR_ADD_STATION_ERROR]: (state, { payload }) => ({
+      ...state,
+      errorMessages: {},
     }),
   },
   initialState,

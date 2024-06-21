@@ -66,6 +66,7 @@ export function ActiveBookingsContainer(props) {
   const [isOpenRejectedAlert, setIsOpenRejectedAlert] = useState(false);
   const [isDeletedSuccess, setIsDeletedSuccess] = useState(false);
   const [isNotCancelledAlert, setIsNotCancelledAlert] = useState(null);
+  // const [isActiveEmpty, setIsActiveEmpty] = useState(false);
 
   useEffect(() => {
     emailjs.init('_oITw2nA-QrpG8wQH');
@@ -107,6 +108,10 @@ export function ActiveBookingsContainer(props) {
 
   useEffect(() => {
     setActiveBookings(props.bookings[BOOKING_STATUS_ACTIVE]);
+    // if (isEmpty(props.bookings[BOOKING_STATUS_ACTIVE])) {
+    //   setIsActiveEmpty(true);
+    // }
+
     setPendingBookings(props.bookings[BOOKING_STATUS_PENDING]);
     setStartedBookings(props.bookings[BOOKING_STATUS_STARTED]);
   }, [props.bookings]);
@@ -429,16 +434,16 @@ export function ActiveBookingsContainer(props) {
                               />
                             </Box>
                           ))}
+                        {/*{isEmpty(activeBookings) && isEmpty(startedBookings) && (*/}
+                        {/*  <Box p={3} width="400px" mx={10} mb={12}>*/}
+                        {/*    <Text fontSize={'xl'}>No active bookings</Text>*/}
+                        {/*  </Box>*/}
+                        {/*)}*/}
                       </Flex>
                     </Box>
                   </TabPanel>
                   <TabPanel>
-                    <Box
-                      // maxW="3xl"
-                      // borderWidth="2px"
-                      borderRadius="lg"
-                      overflow="hidden"
-                    >
+                    <Box borderRadius="lg" overflow="hidden">
                       <Flex alignItems="center" wrap="wrap">
                         {!isEmpty(pendingBookings) &&
                           pendingBookings.map((booking, index) => (
