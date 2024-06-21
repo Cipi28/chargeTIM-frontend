@@ -58,6 +58,7 @@ export function HomepageContainer(props) {
   const [piChartData, setPieChartData] = useState(null);
   const [lineChartData, setLineChartData] = useState(null);
   const [barChartData, setBarChartData] = useState(null);
+  const [isCarListEmpty, setIsCarListEmpty] = useState(false);
 
   const textColor = useColorModeValue('secondaryGray.900', 'white');
 
@@ -121,7 +122,11 @@ export function HomepageContainer(props) {
   useEffect(() => {
     setCarItems(props.userCars);
     setStations(props.allStations);
-  }, [props.userCars, props.allStations]);
+
+    if (props.userCars.length === 0 && props.carsReturned) {
+      setIsCarListEmpty(true);
+    }
+  }, [props.userCars, props.allStations, props.carsReturned]);
 
   useEffect(() => {
     setUpdateErrorMessagesState(props.updateErrorMessages);
@@ -132,6 +137,7 @@ export function HomepageContainer(props) {
   };
 
   const addCar = (name, plate, plug_type, image) => {
+    setIsCarListEmpty(false);
     actions.addCar({ userId: userInfo.id, name, plate, plug_type, image });
     actions.getUserCars({ userId: userInfo.id });
   };
@@ -265,7 +271,7 @@ export function HomepageContainer(props) {
                   </Box>
                 ))}
               </Flex>
-              {isEmpty(carItems) && (
+              {isEmpty(carItems) && isCarListEmpty && (
                 <div>
                   <Heading
                     mt={12}
@@ -562,6 +568,7 @@ const mapStateToProps = state => ({
   updateErrorMessages: S.selectUpdateErrorMessages(state),
   successUpdateCar: S.selectSuccessUpdateCar(state),
   chartsData: S.selectChartsData(state),
+  carsReturned: S.selectCarsReturned(state),
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -3,7 +3,7 @@
 exports[`<App /> should render and match the snapshot 1`] = `
 <ForwardRef>
   <HelmetWrapper
-    defaultTitle="React.js Boilerplate"
+    defaultTitle="ChargeTIM"
     defer={true}
     encodeSpecialCharacters={true}
     titleTemplate="%s - React.js Boilerplate"

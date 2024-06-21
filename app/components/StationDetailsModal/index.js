@@ -135,7 +135,9 @@ function StationDetailsModal({
                   transform: 'translateY(-2px)',
                   boxShadow: 'lg',
                 }}
-                onClick={() => handleBookButton()}
+                onClick={() => {
+                  handleBookButton(station.id);
+                }}
               >
                 Book now
               </Button>

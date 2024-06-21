@@ -60,19 +60,6 @@ function* deleteFavStation(action) {
   }
 }
 
-// function* savePlug(action) {
-//   try {
-//     const plug = action.payload;
-//     console.log('actionpayload', action.payload);
-//     const savedStations = yield call(post, `/plugs/`, { plug });
-//     if (savedStations) {
-//       yield put(A.saveStationsSuccess(savedStations.data));
-//     }
-//   } catch (e) {
-//     yield put(A.saveStationsFailure(e.message));
-//   }
-// }
-
 function* getPlugs(action) {
   try {
     const { stationId } = action.payload;
@@ -186,7 +173,6 @@ function* mapContainerSaga() {
   yield takeLatest(T.GET_FAVOURITE_STATIONS_INDEX, getFavouriteStationsIndex);
   yield takeLatest(T.ADD_STATION_TO_FAVOURITES, addStationToFav);
   yield takeLatest(T.DELETE_FAVOURITE_STATION, deleteFavStation);
-  // yield takeLatest(T.SAVE_PLUG, savePlug);
   yield takeLatest(T.GET_PLUGS, getPlugs);
   yield takeLatest(T.GET_REVIEWS, getReviews);
   yield takeLatest(T.GET_USER_CARS, getUserCars);

@@ -57,11 +57,11 @@ function* addStation(action) {
   try {
     const station = yield call(post, `/stations`, { ...action.payload });
 
-    if (station.data && cars.data.length > 0) {
+    if (station.data) {
       yield put(A.addStationSuccess(station.data));
     }
   } catch (e) {
-    yield put(A.addStationFailure(e.message));
+    yield put(A.addStationFailure(e.response));
   }
 }
 

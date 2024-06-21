@@ -77,6 +77,11 @@ const mapContainerReducer = handleActions(
       ...state,
       isBookingSaved: true,
     }),
+    [T.CLOSE_ALERTS]: (state, action) => ({
+      ...state,
+      isBookingSaved: false,
+      isCurrentBookingVerified: false,
+    }),
   },
   initialState,
 );

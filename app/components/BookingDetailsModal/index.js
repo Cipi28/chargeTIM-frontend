@@ -97,6 +97,7 @@ function BookingDetailsModal({
   isBookingSaved,
   setBookingSaved,
   userName,
+  closeAlertsAction,
 }) {
   const initialRef = React.useRef();
   const finalRef = React.useRef();
@@ -238,6 +239,7 @@ function BookingDetailsModal({
           setSuccessfulValidationMess(null);
           setSuccessfulSavedMess(null);
           setBookingSaved(false);
+          closeAlertsAction();
         }}
       >
         <ModalOverlay />
@@ -370,14 +372,23 @@ function BookingDetailsModal({
                       let dateMessage = null;
                       let plugMessage = null;
 
-                      if (date2 <= date1) {
+                      const diff = Math.abs(date2 - date1);
+                      const minutes = Math.floor(diff / 60000);
+
+                      if (minutes < 60) {
                         dateMessage =
-                          'The stop time must be after the start time!';
+                          'The stop time must be at least 1 hour after the start time!';
                         setDateErrorMessage(dateMessage);
+                        setAllowBooking(false);
+                      } else if (date1 < new Date()) {
+                        dateMessage = 'The start time must be in the future!';
+                        setDateErrorMessage(dateMessage);
+                        setAllowBooking(false);
                       } else {
                         setDateErrorMessage(null);
                       }
 
+                      //end time must be 1 hour after start time
                       if (isNil(selectedPlugId)) {
                         plugMessage = 'A plug must be selected!';
                         setPlugErrorMessage(plugMessage);
@@ -430,6 +441,13 @@ function BookingDetailsModal({
                       if (date2 <= date1) {
                         dateMessage =
                           'The stop time must be after the start time!';
+                        setDateErrorMessage(dateMessage);
+                      } else {
+                        setDateErrorMessage(null);
+                      }
+                      //check that start time is not in the past
+                      if (date1 < new Date()) {
+                        dateMessage = 'The start time must be in the future!';
                         setDateErrorMessage(dateMessage);
                       } else {
                         setDateErrorMessage(null);
