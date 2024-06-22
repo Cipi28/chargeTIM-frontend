@@ -10,11 +10,7 @@ import {
   isNil,
 } from 'lodash';
 import { saveAs } from 'file-saver';
-import {
-  // apiDataValid,
-  // formatError,
-  errorMessages,
-} from 'components/Utils';
+import { errorMessages } from 'components/Utils';
 import { store } from '../store';
 
 /**
@@ -117,15 +113,6 @@ function checkStatus(response) {
 
 // todo: see if this is still needed
 function checkCode(code, response) {
-  if (code) {
-    // if (!apiDataValid(response, code)) {
-    //   const message = formatError(response, code);
-    //   const error = new Error(message.message);
-    //   error.response = response;
-    //   throw error;
-    // }
-  }
-
   return response;
 }
 
@@ -138,7 +125,6 @@ function checkCode(code, response) {
  * @return {object}           The response data
  */
 export function request(url, options) {
-  // todo: see if this is still needed
   const {
     global: { user },
   } = store.getState();
@@ -157,18 +143,6 @@ export function request(url, options) {
 
 export const API_URL = '//localhost:8000/api/v1';
 
-const API_URL_SUBDOM = [
-  API_URL,
-  process.env.API_URL_1,
-  process.env.API_URL_2,
-  process.env.API_URL_3,
-  process.env.API_URL_4,
-  process.env.API_URL_5,
-  process.env.API_URL_6,
-  process.env.API_URL_7,
-  process.env.API_URL_8,
-];
-
 export const defaultHeaders = {
   'Content-Type': 'application/json',
   'X-Requested-With': 'fetch',
@@ -178,11 +152,6 @@ function getUrl(url, options) {
   if (options.fullUrl) {
     return url;
   }
-
-  // if (!isNil(options.index)) {
-  //   return API_URL_SUBDOM[options.index] + url;
-  // }
-
   return API_URL + url;
 }
 

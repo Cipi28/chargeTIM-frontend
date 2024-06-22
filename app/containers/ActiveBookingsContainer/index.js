@@ -66,7 +66,6 @@ export function ActiveBookingsContainer(props) {
   const [isOpenRejectedAlert, setIsOpenRejectedAlert] = useState(false);
   const [isDeletedSuccess, setIsDeletedSuccess] = useState(false);
   const [isNotCancelledAlert, setIsNotCancelledAlert] = useState(null);
-  // const [isActiveEmpty, setIsActiveEmpty] = useState(false);
 
   useEffect(() => {
     emailjs.init('_oITw2nA-QrpG8wQH');
@@ -95,7 +94,6 @@ export function ActiveBookingsContainer(props) {
         });
       }
     }
-    // actions.getStationsAction();
 
     const handleResize = () => {
       setShowFirstDiv(window.innerWidth >= 768);
@@ -108,9 +106,6 @@ export function ActiveBookingsContainer(props) {
 
   useEffect(() => {
     setActiveBookings(props.bookings[BOOKING_STATUS_ACTIVE]);
-    // if (isEmpty(props.bookings[BOOKING_STATUS_ACTIVE])) {
-    //   setIsActiveEmpty(true);
-    // }
 
     setPendingBookings(props.bookings[BOOKING_STATUS_PENDING]);
     setStartedBookings(props.bookings[BOOKING_STATUS_STARTED]);
@@ -180,13 +175,10 @@ export function ActiveBookingsContainer(props) {
     }
   };
 
-  const [loading, setLoading] = useState(false);
-
   const handleSubmit = async (name, toMail, fromName, message) => {
     const serviceId = 'service_up4yv27';
     const templateId = 'template_0pllfii';
     try {
-      setLoading(true);
       await emailjs.send(serviceId, templateId, {
         name: name,
         to_mail: toMail,
@@ -200,7 +192,6 @@ export function ActiveBookingsContainer(props) {
     } catch (error) {
       console.log(error);
     } finally {
-      setLoading(false);
     }
   };
 
@@ -237,15 +228,7 @@ export function ActiveBookingsContainer(props) {
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center' }}>
-      {' '}
-      {/* Added justifyContent: 'center' */}
-      {showFirstDiv && (
-        <div style={{ width: '240px', flexShrink: 0 }}>
-          {' '}
-          {/* Added flexShrink: 0 */}
-          {/* Content for the first div */}
-        </div>
-      )}
+      {showFirstDiv && <div style={{ width: '240px', flexShrink: 0 }} />}
       <div style={{ width: '85%' }}>
         <Box
           minH={'100vh'}
@@ -434,11 +417,6 @@ export function ActiveBookingsContainer(props) {
                               />
                             </Box>
                           ))}
-                        {/*{isEmpty(activeBookings) && isEmpty(startedBookings) && (*/}
-                        {/*  <Box p={3} width="400px" mx={10} mb={12}>*/}
-                        {/*    <Text fontSize={'xl'}>No active bookings</Text>*/}
-                        {/*  </Box>*/}
-                        {/*)}*/}
                       </Flex>
                     </Box>
                   </TabPanel>
@@ -475,7 +453,6 @@ export function ActiveBookingsContainer(props) {
 }
 
 const mapStateToProps = state => ({
-  isLoading: false,
   bookings: selectBookings(state),
   selectAcceptedSuccessful: selectAcceptedSuccessful(state),
   selectRejectedSuccessful: selectRejectedSuccessful(state),

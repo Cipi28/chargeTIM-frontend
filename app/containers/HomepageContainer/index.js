@@ -193,7 +193,7 @@ export function HomepageContainer(props) {
           }}
           zIndex={-999}
         >
-          {!isEmpty(userInfo) && !userInfo.role ? (
+          {!isEmpty(userInfo) && !userInfo.role && (
             <Box mt={4} ml={7} mr={7} zIndex={1}>
               <Flex justify="center" align="center" mt={10}>
                 <Box mb={10}>
@@ -286,7 +286,8 @@ export function HomepageContainer(props) {
                 </div>
               )}
             </Box>
-          ) : (
+          )}
+          {!isEmpty(userInfo) && userInfo.role ? (
             <Box>
               <Flex
                 flexDirection="row"
@@ -524,6 +525,8 @@ export function HomepageContainer(props) {
                 </Box>
               </Flex>
             </Box>
+          ) : (
+            <></>
           )}
         </Box>
       </div>

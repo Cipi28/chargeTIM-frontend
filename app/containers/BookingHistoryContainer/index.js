@@ -83,8 +83,6 @@ export function BookingHistoryContainer(props) {
         });
       }
     }
-    // actions.getStationsAction();
-
     const handleResize = () => {
       setShowFirstDiv(window.innerWidth >= 768);
     };
@@ -161,15 +159,7 @@ export function BookingHistoryContainer(props) {
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center' }}>
-      {' '}
-      {/* Added justifyContent: 'center' */}
-      {showFirstDiv && (
-        <div style={{ width: '240px', flexShrink: 0 }}>
-          {' '}
-          {/* Added flexShrink: 0 */}
-          {/* Content for the first div */}
-        </div>
-      )}
+      {showFirstDiv && <div style={{ width: '240px', flexShrink: 0 }} />}
       <div style={{ width: '85%' }}>
         <Box
           minH={'100vh'}
@@ -357,12 +347,7 @@ export function BookingHistoryContainer(props) {
                     </Box>
                   </TabPanel>
                   <TabPanel>
-                    <Box
-                      // maxW="3xl"
-                      // borderWidth="2px"
-                      borderRadius="lg"
-                      overflow="hidden"
-                    >
+                    <Box borderRadius="lg" overflow="hidden">
                       <Flex alignItems="center" wrap="wrap">
                         {!isEmpty(rejectedBookings) &&
                           rejectedBookings.map((booking, index) => (
@@ -479,12 +464,7 @@ export function BookingHistoryContainer(props) {
                     </Box>
                   </TabPanel>
                   <TabPanel>
-                    <Box
-                      // maxW="3xl"
-                      // borderWidth="2px"
-                      borderRadius="lg"
-                      overflow="hidden"
-                    >
+                    <Box borderRadius="lg" overflow="hidden">
                       <Flex alignItems="center" wrap="wrap">
                         {!isEmpty(rejectedBookings) &&
                           rejectedBookings.map((booking, index) => (
@@ -532,7 +512,6 @@ export function BookingHistoryContainer(props) {
 }
 
 const mapStateToProps = state => ({
-  isLoading: false,
   bookings: selectBookings(state),
   ratedSuccessful: selectRatedSuccessful(state),
   reviewError: selectReviewError(state),

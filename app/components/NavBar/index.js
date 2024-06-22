@@ -158,10 +158,6 @@ function NavBar() {
     <Flex
       boxShadow={'xl'}
       zIndex={0}
-      // position="fixed" // Make the navbar fixed
-      // top={0} // Position it at the top
-      // left={0} // Ensure it spans the entire width
-      // right={0} // Ensure it spans the entire width
       ml={{ base: 0, md: 60 }}
       px={{ base: 4, md: 4 }}
       height="20"

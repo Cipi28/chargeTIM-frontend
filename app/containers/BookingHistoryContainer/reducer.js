@@ -3,7 +3,6 @@ import * as T from './constants';
 import { isEmpty } from 'lodash';
 
 export const initialState = {
-  isLoading: false,
   error: null,
   bookings: {},
   ratedSuccessful: false,

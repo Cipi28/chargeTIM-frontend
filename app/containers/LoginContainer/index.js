@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
 import * as LoginContainerActionCreators from './actions';
-import { userIsNotAuthenticated } from '../../store';
 import { selectIsLoading, selectError, selectErrorMessages } from './selectors';
 import {
   Flex,

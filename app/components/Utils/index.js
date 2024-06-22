@@ -3,40 +3,6 @@ import React from 'react';
 import moment from 'moment';
 import { jwtDecode } from 'jwt-decode';
 
-export const errorMessages = {
-  email: {
-    'validation.unique': 'The email address already exists',
-    'validation.email': 'The email address is incorrect',
-    'validation.required': 'The email field is required',
-  },
-  firstName: {
-    'validation.required': 'The first name field is required',
-  },
-  lastName: {
-    'validation.required': 'The last name field is required',
-  },
-  language: {
-    'validation.required': 'The language field is required',
-    'validation.in': 'The language is incorrect',
-  },
-  gender: {
-    'validation.required': 'The gender field is required',
-    'validation.in': 'The gender is incorrect',
-  },
-  profileId: {
-    'validation.required': 'The profile field is required',
-    'validation.in': 'The profile is incorrect',
-    'validation.integer': 'The profile is incorrect',
-    'validation.exists': 'The profile does not exist',
-  },
-  companyId: {
-    'validation.required': 'The company field is required',
-    'validation.in': 'The company is incorrect',
-    'validation.integer': 'The company id is incorrect',
-    'validation.exists': 'The company does not exist',
-  },
-};
-
 export function decodeJWTToken(token) {
   try {
     return jwtDecode(token);
@@ -46,7 +12,6 @@ export function decodeJWTToken(token) {
   }
 }
 
-// todo: see if this works
 export function validateUserData({ token, lastLogin: lastLoginTimestamp }) {
   const DEFAULT_SESSION_EXPIRATION_TIME_SECS = 1 * 60 * 60; // 1 hour
   const lastLogin = moment(lastLoginTimestamp);
@@ -54,12 +19,10 @@ export function validateUserData({ token, lastLogin: lastLoginTimestamp }) {
     DEFAULT_SESSION_EXPIRATION_TIME_SECS,
     'seconds',
   );
-  // if (!rememberMe) {
   if (expirationTime < moment()) {
     console.warn('Session Expired');
     return false;
   }
-  // }
   if (!token) {
     return false;
   }
@@ -82,22 +45,3 @@ export function validateUserData({ token, lastLogin: lastLoginTimestamp }) {
     expirationDate,
   };
 }
-
-export const formatConnectorType = connectorType => {
-  // Remove the prefix "EV_CONNECTOR_TYPE_" if it exists
-  const prefix = 'EV_CONNECTOR_TYPE_';
-  if (connectorType.startsWith(prefix)) {
-    connectorType = connectorType.slice(prefix.length);
-  }
-
-  // Split the string on underscores, convert to lowercase and capitalize the first letter of each part
-  const formattedName = connectorType
-    .split('_')
-    .map(word => {
-      // Convert to lowercase and capitalize the first letter
-      return word.charAt(0) + word.slice(1).toLowerCase();
-    })
-    .join(' ');
-
-  return formattedName;
-};

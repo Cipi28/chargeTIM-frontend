@@ -31,13 +31,7 @@ const useGeolocation = () => {
       });
     }
 
-    navigator.geolocation.getCurrentPosition(onSuccess, onError); // For first location return
-    // const updateLocation = () => {
-    //   navigator.geolocation.getCurrentPosition(onSuccess, onError);
-    // };
-    //
-    // const intervalId = setInterval(updateLocation, 10000); // Update location every 5 seconds
-    // return () => clearInterval(intervalId); // Cleanup interval on component unmount
+    navigator.geolocation.getCurrentPosition(onSuccess, onError);
   }, []);
 
   return location;

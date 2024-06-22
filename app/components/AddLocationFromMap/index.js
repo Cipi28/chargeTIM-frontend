@@ -12,7 +12,6 @@ import {
   Flex,
   Box,
 } from '@chakra-ui/react';
-import { MdRateReview } from 'react-icons/md';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import { APIProvider, Map, AdvancedMarker } from '@vis.gl/react-google-maps';
 
