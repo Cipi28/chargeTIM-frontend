@@ -22,7 +22,6 @@ class PieChart extends React.Component {
     return (
       <ReactApexChart
         options={this.state.chartOptions}
-        options={this.state.chartOptions}
         series={this.state.chartData}
         type="pie"
         width="100%"

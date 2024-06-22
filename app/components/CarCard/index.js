@@ -114,7 +114,6 @@ export default function CarCard({
               Details
             </Button>
             <Button
-              // w={'full'}
               mt={4}
               ml={3}
               rounded={'xl'}

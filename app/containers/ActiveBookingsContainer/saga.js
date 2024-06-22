@@ -2,7 +2,7 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 
 import * as T from './constants';
 import * as A from './actions';
-import { post, get, del, patch } from '../../api';
+import { post, del, patch } from '../../api';
 
 function* getUserBookings(action) {
   try {

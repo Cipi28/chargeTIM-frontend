@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-// import convertBase64 from '../../components/Utils';
 
 import {
   Button,
@@ -53,7 +52,6 @@ function base64toFile(base64String, filename, contentType) {
 function CarDetailsModal({
   setIsOpenEdit,
   selectedCar,
-  deleteCar,
   updateCar,
   errors,
   successUpdateCar,
@@ -64,7 +62,6 @@ function CarDetailsModal({
 
   const [carName, setCarName] = useState(selectedCar.name);
   const [carPlate, setCarPlate] = useState(selectedCar.plate);
-  const [carPlug, setCarPlug] = useState(selectedCar.plug_type);
   const [selectedPug, setSelectedPlug] = useState(
     BOOKING_TYPES[selectedCar.plug_type],
   );
@@ -110,7 +107,6 @@ function CarDetailsModal({
         finalFocusRef={finalRef}
         isOpen={true}
         onClose={() => {
-          console.log('onClose2');
           setPlateMessages([]);
           setNameMessages([]);
           setErrorMessages([]);

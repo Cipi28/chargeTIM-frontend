@@ -382,7 +382,6 @@ export function FavouriteStationsContainer(props) {
 }
 
 const mapStateToProps = state => ({
-  isLoading: false,
   favouriteStations: selectFavouriteStations(state),
   selectedPlugs: S.selectSelectedPlugs(state),
   selectedReviews: S.selectSelectedReviews(state),

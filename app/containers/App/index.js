@@ -8,7 +8,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
-import styled from 'styled-components';
 import { Switch, Route } from 'react-router-dom';
 
 import LoginContainer from 'containers/LoginContainer/Loadable';
@@ -23,15 +22,6 @@ import ProfileContainer from 'containers/ProfileContainer/Loadable';
 import NavBar from 'components/NavBar';
 import store from '../../store';
 
-const AppWrapper = styled.div`
-  //max-width: calc(768px + 16px * 2);
-  //margin: 0 auto;
-  //display: flex;
-  //min-height: 100%;
-  //padding: 0 16px;
-  //flex-direction: column;
-`;
-
 export default function App() {
   const [userInfo, setUserInfo] = useState(null);
 
@@ -45,7 +35,7 @@ export default function App() {
   }, []);
 
   return (
-    <AppWrapper>
+    <>
       <Helmet titleTemplate="%s - ChargeTIM" defaultTitle="ChargeTIM">
         <meta name="description" content="Electric Station Booking App" />
       </Helmet>
@@ -73,6 +63,6 @@ export default function App() {
         <Route exact path="/profile" component={ProfileContainer} />
         <Route path="" component={NotFoundPage} />
       </Switch>
-    </AppWrapper>
+    </>
   );
 }

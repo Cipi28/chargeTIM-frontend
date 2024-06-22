@@ -3,7 +3,6 @@ import * as T from './constants';
 import { BOOKING_STATUS_ACTIVE, BOOKING_STATUS_REJECTED } from './constants';
 
 export const initialState = {
-  isLoading: false,
   error: null,
   bookings: {},
   acceptedSuccessful: false,

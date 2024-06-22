@@ -9,7 +9,6 @@ import {
   Stack,
   List,
   ListItem,
-  ListIcon,
   Button,
   useColorModeValue,
   Flex,

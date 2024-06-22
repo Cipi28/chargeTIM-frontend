@@ -16,7 +16,6 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { MdRateReview } from 'react-icons/md';
-import StarRatingDisplay from '../StarRaitingInteracting';
 import StarRatingInteracting from '../StarRaitingInteracting';
 
 function ReviewModal({ booking, setIsOpen, saveReview, updateBooking }) {

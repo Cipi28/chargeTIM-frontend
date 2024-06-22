@@ -1,20 +1,14 @@
 import 'react-dates/initialize';
 import { createBrowserHistory } from 'history';
-import {
-  connectRouter,
-  routerMiddleware,
-  routerActions,
-} from 'connected-react-router';
+import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { createStore, applyMiddleware, compose } from 'redux';
 import createSagaMiddleware from 'redux-saga';
-import { connectedReduxRedirect } from 'redux-auth-wrapper/history4/redirect';
-// import locationHelperBuilder from 'redux-auth-wrapper/history4/locationHelper';
 import initialState from './state';
 import createReducer from './reducers';
 import sagas from './sagas';
 import { LOCALSTORAGE_KEY } from './containers/App/constants';
 import { loadUserAction } from './containers/App/actions';
-import {validateUserData} from "./components/Utils";
+import { validateUserData } from './components/Utils';
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -41,7 +35,8 @@ if (isProd) {
   const loggerMiddleware = createLogger();
   middlewares.push(loggerMiddleware);
 
-  const composeWithDevTools = require('redux-devtools-extension').composeWithDevTools; // eslint-disable-line
+  const composeWithDevTools = require('redux-devtools-extension')
+    .composeWithDevTools; // eslint-disable-line
   composedEnhancers = composeWithDevTools(
     applyMiddleware(...middlewares),
     ...enhancers,
@@ -56,13 +51,6 @@ const store = createStore(combinedReducers, initialState, composedEnhancers);
 // running sagas
 sagas.map(sagaMiddleware.run);
 
-// todo: see if this is needed
-// validate to many login attempts
-// const attempts = localStorage.getItem(LOCALSTORAGE_ATTEMPTS_KEY);
-// if (validateAttempts(attempts)) {
-//   // todo: backend validation login throttle
-//   localStorage.removeItem(LOCALSTORAGE_ATTEMPTS_KEY);
-
 const userRaw = localStorage.getItem(LOCALSTORAGE_KEY);
 if (userRaw) {
   const user = JSON.parse(userRaw);
@@ -74,43 +62,6 @@ if (userRaw) {
   }
 }
 
-// todo: see if this is needed
-
-// const isAllowed = (module, permission, state) => {
-//   const permissions = state.app.user?.permissions;
-//   if (!isNil(permissions) && !isNil(module) && !isNil(permission)) {
-//     return !!find(permissions, { module, name: permission });
-//   }
-//
-//   return !!state.app.user;
-// };
-
-const redirectPathTo = (state) =>
-  !state.global.user ? '/' : '/';
-
-const userIsAuthenticated = () =>
-  connectedReduxRedirect({
-    redirectPath: state => redirectPathTo(state),
-    authenticatingSelector: state => () => {},
-    // authenticatedSelector: state => isAllowed(module, permission, state),
-    redirectAction: routerActions.replace,
-    wrapperDisplayName: 'UserIsAuthenticated',
-  });
-
-// const locationHelper = locationHelperBuilder({});
-
-const userIsNotAuthenticated = connectedReduxRedirect({
-  // redirectPath: (state, ownProps) =>
-  //   locationHelper.getRedirectQueryParam(ownProps) ||
-  //   state.app.user?.role === '/',
-  redirectPath: '/',
-  allowRedirectBack: false,
-  // authenticatedSelector: state => !state.app,
-  // authenticatedSelector: state => !state.app.user,
-  wrapperDisplayName: 'UserIsNotAuthenticated',
-  redirectAction: routerActions.replace,
-});
-
-export { history, store, userIsAuthenticated, userIsNotAuthenticated };
+export { history, store };
 
 export default store;

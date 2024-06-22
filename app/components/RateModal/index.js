@@ -76,10 +76,6 @@ function RateModal({ booking, setIsOpen, rateUser, updateBooking }) {
                 updateBooking({ ...booking, is_user_rated: true });
                 setIsOpen(false);
               }}
-              _hover={{
-                transform: 'translateY(-2px)',
-                boxShadow: 'lg',
-              }}
             >
               Submit
             </Button>

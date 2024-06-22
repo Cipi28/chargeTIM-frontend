@@ -23,45 +23,12 @@ export const initialState = {
   user: null,
 };
 
-/* eslint-disable default-case, no-param-reassign */
-// const appReducer = (state = initialState, action) =>
-//   produce(state, draft => {
-//     switch (action.type) {
-//       case LOAD_REPOS:
-//         draft.loading = true;
-//         draft.error = false;
-//         draft.userData.repositories = false;
-//         break;
-//
-//       case LOAD_REPOS_SUCCESS:
-//         draft.userData.repositories = action.repos;
-//         draft.loading = false;
-//         draft.currentUser = action.username;
-//         break;
-//
-//       case LOAD_REPOS_ERROR:
-//         draft.error = action.error;
-//         draft.loading = false;
-//         break;
-//     }
-//   });
-
 export const writeLocalStorage = (data, key) => {
   localStorage.setItem(key, JSON.stringify(data));
 };
 
-const updateUserStore = (path, data, mergeData = true) => {
-  const localStorageUser = JSON.parse(localStorage.getItem(T.LOCALSTORAGE_KEY));
-  const newData = mergeData
-    ? merge(get(localStorageUser, path, {}), data)
-    : data;
-  set(localStorageUser, path, newData);
-  writeLocalStorage(localStorageUser, T.LOCALSTORAGE_KEY);
-};
-
 const appReducer = handleActions(
   {
-    // [T.APPCONTAINER_DEFAULT_ACTION]: state => ({ ...state }),
     [T.LOAD_DATA_SUCCESS]: (state, action) => {
       if (action.payload.rememberMe) {
         localStorage.MVPU = JSON.stringify(action.payload);
@@ -77,11 +44,7 @@ const appReducer = handleActions(
     [T.USER]: (state, action) => ({ ...state, user: action.payload }),
 
     [T.STORE_USER]: (state, { payload }) => {
-      const {
-        token,
-        user,
-        role = null,
-      } = payload;
+      const { token, user, role = null } = payload;
       const lastLogin = moment();
       const userData = validateUserData({ token, lastLogin });
       let storeUser = null;
