@@ -22,16 +22,7 @@ function* register(action) {
       }),
     );
 
-    //todo: see if store directly the user and go to home or to login
-    // const { user } = result.data;
-    // yield put(
-    //   storeUserAction({
-    //     user,
-    //     token: result.meta.token,
-    //   }),
-    // );
-
-    window.location.href = '/login'; //todo: try to redirect using store
+    window.location.href = '/login';
   } catch (e) {
     yield put(A.registerActionFailure(e.response));
   }

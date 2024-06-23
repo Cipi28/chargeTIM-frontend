@@ -563,7 +563,6 @@ export function HomepageContainer(props) {
 }
 
 const mapStateToProps = state => ({
-  isLoading: false,
   userCars: S.selectUserCars(state),
   allStations: S.selectAllStations(state),
   errorMessages: S.selectErrorMessages(state),

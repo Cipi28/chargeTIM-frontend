@@ -330,7 +330,6 @@ export function RegisterContainer(props) {
 }
 
 const mapStateToProps = state => ({
-  isLoading: false,
   errorMessages: selectErrorMessages(state),
 });
 

@@ -220,9 +220,6 @@ export function MapContainer(props) {
     <div style={{ display: 'flex' }}>
       {showFirstDiv && (
         <div style={{ width: '240px', flexShrink: 0 }}>
-          {' '}
-          {/* Added flexShrink: 0 */}
-          {/* Content for the first div */}
         </div>
       )}
       <div style={{ height: '91vh', width: '100%' }}>
@@ -292,7 +289,7 @@ export function MapContainer(props) {
                       <img
                         key={index}
                         src="https://play-lh.googleusercontent.com/kV8Xljl5eRVBCNkyO_W8riz5Ad4x6OyuYxqP-hQPTmMk_0Fp4P6Qhf59ELkyu1W8Y3c"
-                        // src="https://cdn-icons-png.flaticon.com/256/12338/12338156.png"
+                        // src2="https://cdn-icons-png.flaticon.com/256/12338/12338156.png"
                         width={50}
                         height={50}
                       />
@@ -460,7 +457,6 @@ export function MapContainer(props) {
 }
 
 const mapStateToProps = state => ({
-  // errorLoading: selectError(state),
   stations: S.selectStations(state),
   favouriteStations: S.selectFavouriteStations(state),
   selectedPlugs: S.selectSelectedPlugs(state),

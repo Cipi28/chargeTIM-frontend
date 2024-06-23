@@ -243,5 +243,4 @@ const ConnectedLoginContainer = compose(
   ),
 )(LoginContainer);
 
-// export default userIsNotAuthenticated(ConnectedLoginContainer);
 export default ConnectedLoginContainer;
