@@ -529,7 +529,6 @@ export function ProfileContainer(props) {
 }
 
 const mapStateToProps = state => ({
-  isLoading: false,
   user: S.selectUser(state),
   errorMessages: S.selectErrorMessages(state),
   updateSuccess: S.selectUpdateSuccess(state),
